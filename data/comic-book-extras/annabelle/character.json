@@ -3,5 +3,9 @@
   "location": null,
   "motto": null,
   "special_power": null,
-  "common_powers": []
+  "common_powers": [
+    "Arcane Mastery",
+    "Toughness",
+    "Swiftness"
+  ]
 }

@@ -14,33 +14,6 @@
     ]
   },
   "common_powers": [
-    {
-      "name": "Marksman",
-      "is_special": false,
-      "levels": [
-        {
-          "level": 1,
-          "description": "You may attack a target"
-        }
-      ]
-    },
-    {
-      "name": "Toughness",
-      "is_special": false,
-      "levels": [
-        {
-          "level": 1,
-          "description": "You have 1 free reroll when attacked or rolling for Fire. Instead, goin @ while your sanity ison a oR"
-        },
-        {
-          "level": 2,
-          "description": "space back. Gain HE when attacking a target not In your space. Instead, you may reduce wounds sanity by 1 when attacked or rolling for Fire. Instead, gain Instead, gain SOrrile your evens - your sanity is on sanity is on a OR I space back. GORI space back, You may oitock fo6 arteck per tur a target 1 additional Ps space away (2 fotal). Sains! a target not in your space. Instead, you may Instead, you may reduce wounds reduce wounds"
-        },
-        {
-          "level": 3,
-          "description": "ANY SOURCE. ANY SOURCE."
-        }
-      ]
-    }
+    "Toughness"
   ]
 }
