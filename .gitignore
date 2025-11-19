@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Temporary files (keep character zip files - they're stored in git)
+*.tmp
+*.temp
+
+# Temporary OCR files (PNG grayscale converted on-the-fly from WebP)
+data/**/*.png
