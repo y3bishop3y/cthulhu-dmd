@@ -1,0 +1,332 @@
+{
+  "Arcane Mastery": {
+    "name": "Arcane Mastery",
+    "levels": [
+      {
+        "level": 3,
+        "description": "Arcane Mastery4-4"
+      },
+      {
+        "level": 17,
+        "description": "There arecharacters who have the Arcane Mastery trait. Adilah Vidal (13), Ahmed Yasin (8), Annabelle Laveau (31), Albert Einstein (21) Ernest Hemingway (21), Fatima Safar (9), Hailia Hovath (15), Father Luke (15), Lysa (32), Marjorie \u2018Margie\u2019 Westmoreland (24), Maxim Grey (25), Meryl Starling (25), \u2018Pops\u2019 Duperon (26), Rasputin (11), The Kid (12), Professor Vincent Haas (28), Walter Bagget (29)"
+      },
+      {
+        "level": 30,
+        "description": "Allan \uf0fc \uf0fc"
+      },
+      {
+        "level": 31,
+        "description": "Annabelle \uf0fc \uf0fc"
+      },
+      {
+        "level": 31,
+        "description": "Jack \uf0fc \uf0fc"
+      },
+      {
+        "level": 32,
+        "description": "Lysa \uf0fc \uf0fc"
+      },
+      {
+        "level": 32,
+        "description": "Rocco \uf0fc \uf0fc"
+      },
+      {
+        "level": 33,
+        "description": "Tamara \uf0fc \uf0fcJack Munoz (Jack) \u201cJust more meat for my macuahuitl!\u201d"
+      },
+      {
+        "level": 12,
+        "description": "25 Maki Smith (Maki) Adilah Vidal (Adilah) \u201cRange targets are too easy. I like hitting Season Two something on the run!\u201d \u201cMagic and religion are the same. You cannot do one without t\u2019other.\u201d"
+      },
+      {
+        "level": 24,
+        "description": "13 Alex Parker (Alex) Jospehine Leclerc (Jospehine) \u201cTell me about this slime you found. Was it \u201cWhat good is money if there is no world to screaming or did it smell purple?\u201d spend it in?\u201d Common Skills: Stealth, Swiftness Common Skills: Marksman, Swiftness Ariele Venturi (Ariele) Julia Hollister (Julia) \u201cLions, sharks, elephants\u2026 BORING! Gimme \u201cKeep calm and aim for the eyes.\u201d something that hunts back.\u201d"
+      }
+    ]
+  },
+  "Brawling": {
+    "name": "Brawling",
+    "levels": [
+      {
+        "level": 1,
+        "description": "Brawling23 -"
+      },
+      {
+        "level": 15,
+        "description": "There arecharacters with the Brawling trait. Adilah Vidal (13), Eddie the Head (19), Jack Munoz (31), Julia Hollister (23), Machinist\u2019s Mate Tony Boyle (18), Marcelo \u2018Gonk\u2019 Goncalves (22), Margarethe Richter (16), Maxim Grey (25), Rasputin (11), Rocco (32), Roxie Mitchell Williams (27), Scarlett Hayes (19), Sergeant Ian Welles (10), Sister Beth (11), Tina Macshane (28) namskraM htlaetS ssentfiwS yretsaM enacrA gnilwarB ssenhguoT rebmuN"
+      },
+      {
+        "level": 7,
+        "description": "Adam \uf0fc \uf0fc"
+      },
+      {
+        "level": 8,
+        "description": "Ahmed \uf0fc \uf0fc"
+      },
+      {
+        "level": 8,
+        "description": "Borden \uf0fc \uf0fc"
+      },
+      {
+        "level": 9,
+        "description": "Elizabeth \uf0fc \uf0fc"
+      },
+      {
+        "level": 9,
+        "description": "Fatima \uf0fc \uf0fc"
+      },
+      {
+        "level": 10,
+        "description": "Ian \uf0fc \uf0fc"
+      },
+      {
+        "level": 10,
+        "description": "Morgan \uf0fc \uf0fc"
+      },
+      {
+        "level": 11,
+        "description": "Rasputin \uf0fc \uf0fc"
+      },
+      {
+        "level": 11,
+        "description": "Sister Beth \uf0fc \uf0fc"
+      },
+      {
+        "level": 12,
+        "description": "The Kid \uf0fc \uf0fc"
+      },
+      {
+        "level": 34,
+        "description": "3 Common Trait Quick Season Two Chart Cont. namskraM htlaetS ssentfiwS yretsaM enacrA gnilwarB ssenhguoT rebmuN"
+      },
+      {
+        "level": 13,
+        "description": "Adilah \uf0fc \uf0fc"
+      },
+      {
+        "level": 14,
+        "description": "Alex \uf0fc \uf0fc"
+      },
+      {
+        "level": 14,
+        "description": "Ariele \uf0fc \uf0fc"
+      },
+      {
+        "level": 15,
+        "description": "Hailia \uf0fc \uf0fc"
+      },
+      {
+        "level": 15,
+        "description": "Luke \uf0fc \uf0fc"
+      },
+      {
+        "level": 16,
+        "description": "Margarethe \uf0fc \uf0fc"
+      },
+      {
+        "level": 16,
+        "description": "Mario \uf0fc \uf0fc"
+      },
+      {
+        "level": 17,
+        "description": "Mary \uf0fc \uf0fc"
+      },
+      {
+        "level": 17,
+        "description": "Sam \uf0fc \uf0fc"
+      },
+      {
+        "level": 18,
+        "description": "Tony \uf0fc \uf0fc Extra Promos namskraM htlaetS ssentfiwS yretsaM enacrA gnilwarB ssenhguoT rebmuN Tamara \u201cCanvases, brushes, and colors are my weapons!\u201d"
+      },
+      {
+        "level": 20,
+        "description": "Al \uf0fc \uf0fc"
+      },
+      {
+        "level": 21,
+        "description": "Bert \uf0fc \uf0fc"
+      },
+      {
+        "level": 21,
+        "description": "Ernest \uf0fc \uf0fc"
+      },
+      {
+        "level": 22,
+        "description": "Fleur \uf0fc \uf0fc"
+      },
+      {
+        "level": 22,
+        "description": "Gonk \uf0fc \uf0fc"
+      },
+      {
+        "level": 23,
+        "description": "Jospehine \uf0fc \uf0fc"
+      },
+      {
+        "level": 23,
+        "description": "Julia \uf0fc \uf0fc"
+      },
+      {
+        "level": 24,
+        "description": "Maki \uf0fc \uf0fc"
+      },
+      {
+        "level": 24,
+        "description": "Margie \uf0fc \uf0fc"
+      },
+      {
+        "level": 25,
+        "description": "Maxim \uf0fc \uf0fc"
+      },
+      {
+        "level": 25,
+        "description": "Meryl \uf0fc \uf0fc"
+      },
+      {
+        "level": 26,
+        "description": "Olivia \uf0fc \uf0fc"
+      },
+      {
+        "level": 26,
+        "description": "Pops \uf0fc \uf0fc"
+      },
+      {
+        "level": 27,
+        "description": "Richard \uf0fc \uf0fc"
+      },
+      {
+        "level": 27,
+        "description": "Roxie \uf0fc \uf0fc"
+      },
+      {
+        "level": 28,
+        "description": "Tina \uf0fc \uf0fc"
+      },
+      {
+        "level": 28,
+        "description": "Vincent \uf0fc \uf0fc"
+      },
+      {
+        "level": 29,
+        "description": "Walter \uf0fc \uf0fc"
+      },
+      {
+        "level": 32,
+        "description": "5 Common Trait Quick Comic Book Extras Chart Cont. namskraM htlaetS ssentfiwS yretsaM enacrA gnilwarB ssenhguoT rebmuN Annabelle Laveau (Annabelle) \u201cWhen you can communicate with the spirits, you know how to deal with a ghoul.\u201d"
+      },
+      {
+        "level": 6,
+        "description": "31 Allan Jenkins (Allan) Comic Book Extras Characters The following sections show each character, their photo, their associate quote, their common skills, and their special skill. Each section is broken \u201cAn investigation is conduction with purpose, down by which box or expansion the character can be found. and a couple of revolvers don\u2019t hurt neither.\u201d Lord Adam Benchley (Adam)"
+      },
+      {
+        "level": 10,
+        "description": "27 Olivia Duchamp (Olivia) Rasputin \u201cI swear, I thought that would miss.\u201d \u201cSigh\u2026 Dead again.\u201d Common Skills: Stealth, Swiftness Common Skills: Arcane Mastery, Brawling \u2018Pops\u2019 Duperon (Pops) Sister Beth \u201cRemember that Death himself may die.\u201d \u201cTheir lack of faith should disturb them.\u201d Common Skills: Arcane Mastery, Toughness Common Skills: Brawling, Toughness"
+      },
+      {
+        "level": 26,
+        "description": "11 The Kid Maxim Grey (Maxim) \u201cHAHAHAHA HAHAHAHA HAHAHAHA \u201cIf a man asks for a fight, who is to blame if he HAHAHAHA!!!\u201d is himself destroyed?\u201d Common Skills: Marksman, Arcane Mastery Common Skills: Arcane Mastery, Brawling Meryl Starling (Meryl) \u201cI prefer the stage, but moving pictures offer a wider venue.\u201d"
+      },
+      {
+        "level": 18,
+        "description": "19"
+      }
+    ]
+  },
+  "Marksman": {
+    "name": "Marksman",
+    "levels": [
+      {
+        "level": 4,
+        "description": "Marksman -31"
+      },
+      {
+        "level": 14,
+        "description": "There arecharacters who have the Marksman trait. Al Capone (20), Allan Jenkins (30), Ariele Venturi (14), Elizabeth Ives (9), Ernest Hemingway (21), Fleur Debois (22), Josephine Leclerc (23), Lord Adam Benchley (7), Maki Smith (24), Mary Diaz (17), Rocco (32), Sergeant Mario Braghieri (16), The Kid (12), Walter Bagget (29)"
+      },
+      {
+        "level": 30,
+        "description": "7 Ahmed Yasin (Ahmed) Walter Bagget (Walter) \u201cWhat is written is written.\u201d \u201cTag your prey and let it lead you back to its lair.\u201d"
+      },
+      {
+        "level": 14,
+        "description": "23 Fleur Debois (Fleur) Hailia Hovath (Hailia) \u201cThe Great War saw more action, though it \u201cWhat do the Signs say?\u201d was less horrific.\u201d"
+      },
+      {
+        "level": 22,
+        "description": "15 Margarethe Richter Albert Einstein (Bert) (Margarethe) \u201cThe cults would experience more success if they understood mathematics. No one tell \u201cIf the meat is too tough, you just need a them.\u201d sharper knife.\u201d"
+      },
+      {
+        "level": 16,
+        "description": "21 Mary Diaz (Mary) Al Capone (Al) Unspeakable Box \u201cDon\u2019t worry about me. It\u2019s just a flesh wound.\u201d \u201cI let \u2018em think the scar\u2019s from some mook that slashed me in Brooklyn.\u201d"
+      }
+    ]
+  },
+  "Stealth": {
+    "name": "Stealth",
+    "levels": [
+      {
+        "level": 4,
+        "description": "Stealth-40"
+      },
+      {
+        "level": 14,
+        "description": "There arecharacters with the Stealth trait. Ahmed Yasin (8), Alex Parker (14), Ariele Venturi (14), Borden (8), Elizabeth Ives (9), Fleur Debois (22), Hailia Hovath (15), Lysa (32), Maki Smith (24), Margarethe Richter (16), Meryl Starling (25), Olivia Duchamp (26), Tamara (33), Tina Macshane (28)"
+      },
+      {
+        "level": 2,
+        "description": "35"
+      },
+      {
+        "level": 19,
+        "description": "Scarlett \uf0fc \uf0fc"
+      },
+      {
+        "level": 4,
+        "description": "33 \u201cMalacoda is not a goat! Common Trait Quick Unspeakable Box Chart Cont."
+      },
+      {
+        "level": 8,
+        "description": "29 Tina Macshane (Tina) Elizabeth Ives (Elizabeth) \u201cI don\u2019t go looking for trouble. It finds me \u201cHeads! I win again. Best six out of eleven, without any help.\u201d luv?\u201d Common Skills: Stealth, Brawling Common Skills: Marksman, Stealth Professor Vincent Haas (Vincent) Fatima Safar (Fatima) \u201cYes! Exactly like that. Now, you may destroy \u201cAdmittedly, Old One names are easier to read them at will.\u201d than say.\u201d Common Skills: Arcane Mastery, Swiftness Common Skills: Arcane Mastery, Swiftness"
+      },
+      {
+        "level": 28,
+        "description": "9 Sergeant Ian Welles (Ian) Richard Irons (Richard) \u201cThey have us surrounded, those poor \u201cI\u2019m a licensed troubleshooter.\u201d bastards.\u201d"
+      }
+    ]
+  },
+  "Swiftness": {
+    "name": "Swiftness",
+    "levels": [
+      {
+        "level": 3,
+        "description": "Swiftness4 -5"
+      },
+      {
+        "level": 18,
+        "description": "There arecharacters with the Swiftness trait. All characters will have two of the follow six traits as well as their own special traits. Al Capone (20), Alex Parker (14), Borden (8), Eddie The Head (19), Fatima Safar (9), Jack Munoz (31), John Morgan (10), Josephine Leclerc (23), Julia Hollister (23), Marjorie \u2018Margie\u2019 Westmoreland (24) Mary Diaz (17), Olivia Duchamp (26), Professor Vincent Haas (28), Richard Irons (27), Sam Wood (17), Scarlett Hayes (19), Sergeant Ian Welles (10), Tamara (33)"
+      },
+      {
+        "level": 20,
+        "description": "17 Machinist\u2019s Mate Tony Boyle (Tony) Scarlett Hayes (Scarlett) Extra Promos \u201cNorth is to your right. \u2026Your other right.\u201d \u201cTen buts says you\u2019ll never guess my real name, sugar.\u201d"
+      }
+    ]
+  },
+  "Toughness": {
+    "name": "Toughness",
+    "levels": [
+      {
+        "level": 3,
+        "description": "Toughness04- namskraM htlaetS ssentfiwS yretsaM enacrA gnilwarB ssenhguoT Elizabeth (9) Mary (17) The Kid (12) Adam (7) Ariele (14) Marksman - Al (20) Ernest (21) Rocco (32) Mario (16) Fleur (22) Jospehine (23) Walter (29) Allan (30) Maki (24) Elizabeth (9) Borden (8) Ahmed (8) Ariele (14) Alex (14) Hailia (15) Margarethe (16)"
+      },
+      {
+        "level": 14,
+        "description": "There arecharacters with the Toughness trait. Albert Einstein (21), Allan Jenkins (30), Annabelle Laveau (31), Father Luke (15), John Morgan (10), Lord Adam Benchley (7), Machinist\u2019s Mate Tony Boyle (18), Marcel \u2018Gonk\u2019 Goncalves (22), \u2018Pops\u2019 Duperon (26), Richard Irons (27), Roxie Mitchell Williams (27), Sam Wood (17), Sergeant Mario Braghieri (16), Sister Beth (11)"
+      },
+      {
+        "level": 36,
+        "description": "1"
+      }
+    ]
+  }
+}

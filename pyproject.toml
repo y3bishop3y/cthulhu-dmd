@@ -1,0 +1,73 @@
+[project]
+name = "cthulhu-dmd"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "rich>=13.0.0",
+    "click>=8.0.0",
+    "requests>=2.31.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=4.9.0",
+    "pydantic>=2.0.0",
+    "pytesseract>=0.3.10",
+    "pillow>=10.0.0",
+    "opencv-python>=4.8.0",
+    "pyyaml>=6.0.0",
+    "pypdf>=3.17.0",
+    "pdfplumber>=0.10.0",
+    "coqui-tts>=0.24.0",
+]
+
+# Build system removed - no package to build yet
+# Uncomment when you have a Python package to build:
+# [build-system]
+# requires = ["hatchling"]
+# build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "mypy>=1.5.0",
+    "ruff>=0.1.0",
+    "types-requests>=2.31.0",
+    "types-beautifulsoup4>=4.12.0",
+    "types-PyYAML>=6.0.0",
+]
+
+[tool.uv.sources]
+# Add source-specific configurations here if needed
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+
+[tool.ruff]
+line-length = 100
+target-version = "py38"
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by formatter)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"

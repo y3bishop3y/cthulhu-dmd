@@ -1,0 +1,875 @@
+{
+  "_comment": "VCTK Speaker Metadata - This file contains speaker information for the VCTK TTS model. IMPORTANT: Most entries below are placeholders with incomplete data. The actual VCTK dataset includes 109 speakers with various accents including English (various regions), Scottish, Irish, and Northern Irish. American accents are NOT included in the VCTK dataset. Only the first ~20 speakers have verified metadata. The rest need to be updated with actual data from the VCTK corpus speaker-info.txt file. To update: 1) Download speaker-info.txt from the VCTK corpus, 2) Run scripts/update_speaker_metadata.py to populate this file.",
+  "ED": {
+    "name": "Edinburgh",
+    "age": null,
+    "gender": "male",
+    "accent": "Scottish",
+    "region": "Edinburgh",
+    "description": "Scottish accent, male voice"
+  },
+  "p225": {
+    "name": "Speaker 225",
+    "age": 23,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Female, age 23, English accent (Southern England)"
+  },
+  "p226": {
+    "name": "Speaker 226",
+    "age": 22,
+    "gender": "male",
+    "accent": "English",
+    "region": "Surrey",
+    "description": "Male, age 22, English accent (Surrey)"
+  },
+  "p227": {
+    "name": "Speaker 227",
+    "age": 38,
+    "gender": "male",
+    "accent": "English",
+    "region": "Cumbria",
+    "description": "Male, age 38, English accent (Cumbria)"
+  },
+  "p228": {
+    "name": "Speaker 228",
+    "age": 22,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Female, age 22, English accent (Southern England)"
+  },
+  "p229": {
+    "name": "Speaker 229",
+    "age": 23,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Female, age 23, English accent (Southern England)"
+  },
+  "p230": {
+    "name": "Speaker 230",
+    "age": 22,
+    "gender": "female",
+    "accent": "English",
+    "region": "Stockton-on-Tees",
+    "description": "Female, age 22, English accent (Stockton-on-Tees)"
+  },
+  "p231": {
+    "name": "Speaker 231",
+    "age": 23,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Female, age 23, English accent (Southern England)"
+  },
+  "p232": {
+    "name": "Speaker 232",
+    "age": 23,
+    "gender": "male",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Male, age 23, English accent (Southern England)"
+  },
+  "p233": {
+    "name": "Speaker 233",
+    "age": 23,
+    "gender": "female",
+    "accent": "English",
+    "region": "Staffordshire",
+    "description": "Female, age 23, English accent (Staffordshire)"
+  },
+  "p234": {
+    "name": "Speaker 234",
+    "age": 22,
+    "gender": "female",
+    "accent": "Scottish",
+    "region": "West Dumfries",
+    "description": "Female, age 22, Scottish accent (West Dumfries)"
+  },
+  "p236": {
+    "name": "Speaker 236",
+    "age": 23,
+    "gender": "female",
+    "accent": "English",
+    "region": "Manchester",
+    "description": "Female, age 23, English accent (Manchester)"
+  },
+  "p237": {
+    "name": "Speaker 237",
+    "age": 22,
+    "gender": "male",
+    "accent": "Scottish",
+    "region": "Fife",
+    "description": "Male, age 22, Scottish accent (Fife)"
+  },
+  "p238": {
+    "name": "Speaker 238",
+    "age": 22,
+    "gender": "female",
+    "accent": "Northern Irish",
+    "region": "Belfast",
+    "description": "Female, age 22, Northern Irish accent (Belfast)"
+  },
+  "p239": {
+    "name": "Speaker 239",
+    "age": 22,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southwest England",
+    "description": "Female, age 22, English accent (Southwest England)"
+  },
+  "p240": {
+    "name": "Speaker 240",
+    "age": 21,
+    "gender": "female",
+    "accent": "English",
+    "region": "Southern England",
+    "description": "Female, age 21, English accent (Southern England)"
+  },
+  "p241": {
+    "name": "Speaker 241",
+    "age": 21,
+    "gender": "male",
+    "accent": "Scottish",
+    "region": "Perth",
+    "description": "Male, age 21, Scottish accent (Perth)"
+  },
+  "p243": {
+    "name": "Speaker 243",
+    "age": 22,
+    "gender": "male",
+    "accent": "English",
+    "region": "London",
+    "description": "Male, age 22, English accent (London)"
+  },
+  "p244": {
+    "name": "Speaker 244",
+    "age": 22,
+    "gender": "female",
+    "accent": "English",
+    "region": "Manchester",
+    "description": "Female, age 22, English accent (Manchester)"
+  },
+  "p245": {
+    "name": "Speaker 245",
+    "age": 25,
+    "gender": "male",
+    "accent": "Irish",
+    "region": "Dublin",
+    "description": "Male, age 25, Irish accent (Dublin)"
+  },
+  "p246": {
+    "name": "Speaker 246",
+    "age": 22,
+    "gender": "male",
+    "accent": "Scottish",
+    "region": "Selkirk",
+    "description": "Male, age 22, Scottish accent (Selkirk)"
+  },
+  "p247": {
+    "name": "Speaker 247",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p248": {
+    "name": "Speaker 248",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p249": {
+    "name": "Speaker 249",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p250": {
+    "name": "Speaker 250",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p251": {
+    "name": "Speaker 251",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p252": {
+    "name": "Speaker 252",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p253": {
+    "name": "Speaker 253",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p254": {
+    "name": "Speaker 254",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p255": {
+    "name": "Speaker 255",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p256": {
+    "name": "Speaker 256",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p257": {
+    "name": "Speaker 257",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p258": {
+    "name": "Speaker 258",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p259": {
+    "name": "Speaker 259",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p260": {
+    "name": "Speaker 260",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p261": {
+    "name": "Speaker 261",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p262": {
+    "name": "Speaker 262",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p263": {
+    "name": "Speaker 263",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p264": {
+    "name": "Speaker 264",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p265": {
+    "name": "Speaker 265",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p266": {
+    "name": "Speaker 266",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p267": {
+    "name": "Speaker 267",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p268": {
+    "name": "Speaker 268",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p269": {
+    "name": "Speaker 269",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p270": {
+    "name": "Speaker 270",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p271": {
+    "name": "Speaker 271",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p272": {
+    "name": "Speaker 272",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p273": {
+    "name": "Speaker 273",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p274": {
+    "name": "Speaker 274",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p275": {
+    "name": "Speaker 275",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p276": {
+    "name": "Speaker 276",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p277": {
+    "name": "Speaker 277",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p278": {
+    "name": "Speaker 278",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p279": {
+    "name": "Speaker 279",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p280": {
+    "name": "Speaker 280",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p281": {
+    "name": "Speaker 281",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p282": {
+    "name": "Speaker 282",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p283": {
+    "name": "Speaker 283",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p284": {
+    "name": "Speaker 284",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p285": {
+    "name": "Speaker 285",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p286": {
+    "name": "Speaker 286",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p287": {
+    "name": "Speaker 287",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p288": {
+    "name": "Speaker 288",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p292": {
+    "name": "Speaker 292",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p293": {
+    "name": "Speaker 293",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p294": {
+    "name": "Speaker 294",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p295": {
+    "name": "Speaker 295",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p297": {
+    "name": "Speaker 297",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p298": {
+    "name": "Speaker 298",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p299": {
+    "name": "Speaker 299",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p300": {
+    "name": "Speaker 300",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p301": {
+    "name": "Speaker 301",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p302": {
+    "name": "Speaker 302",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p303": {
+    "name": "Speaker 303",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p304": {
+    "name": "Speaker 304",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p305": {
+    "name": "Speaker 305",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p306": {
+    "name": "Speaker 306",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p307": {
+    "name": "Speaker 307",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p308": {
+    "name": "Speaker 308",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p310": {
+    "name": "Speaker 310",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p311": {
+    "name": "Speaker 311",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p312": {
+    "name": "Speaker 312",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p313": {
+    "name": "Speaker 313",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p314": {
+    "name": "Speaker 314",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p316": {
+    "name": "Speaker 316",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p317": {
+    "name": "Speaker 317",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p318": {
+    "name": "Speaker 318",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p323": {
+    "name": "Speaker 323",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p326": {
+    "name": "Speaker 326",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p329": {
+    "name": "Speaker 329",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p330": {
+    "name": "Speaker 330",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p333": {
+    "name": "Speaker 333",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p334": {
+    "name": "Speaker 334",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p335": {
+    "name": "Speaker 335",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p336": {
+    "name": "Speaker 336",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p339": {
+    "name": "Speaker 339",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p340": {
+    "name": "Speaker 340",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p341": {
+    "name": "Speaker 341",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p343": {
+    "name": "Speaker 343",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p345": {
+    "name": "Speaker 345",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p347": {
+    "name": "Speaker 347",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p351": {
+    "name": "Speaker 351",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p360": {
+    "name": "Speaker 360",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p361": {
+    "name": "Speaker 361",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p362": {
+    "name": "Speaker 362",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p363": {
+    "name": "Speaker 363",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p364": {
+    "name": "Speaker 364",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  },
+  "p374": {
+    "name": "Speaker 374",
+    "age": null,
+    "gender": "female",
+    "accent": "English",
+    "region": null,
+    "description": "Female, English accent"
+  },
+  "p376": {
+    "name": "Speaker 376",
+    "age": null,
+    "gender": "male",
+    "accent": "English",
+    "region": null,
+    "description": "Male, English accent"
+  }
+}

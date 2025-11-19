@@ -1,0 +1,18 @@
+{
+  // Project-specific color theme
+  // Change this to any theme installed in Cursor
+  // Popular themes: "Dark+ (default dark)", "Light+ (default light)", 
+  // "Monokai", "Solarized Dark", "One Dark Pro", etc.
+  "workbench.colorTheme": "Monokai Dimmed",
+  
+  // Optional: Icon theme
+  // "workbench.iconTheme": "vs-seti",
+  
+  // Optional: Customize specific colors
+  // Uncomment and modify these to customize specific UI elements
+  // "workbench.colorCustomizations": {
+  //   "editorCursor.foreground": "#FF75D8",
+  //   "terminalCursor.foreground": "#FF75D8"
+  // }
+}
+

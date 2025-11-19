@@ -1,0 +1,46 @@
+{
+  "name": "Adam",
+  "location": "Manchester, England",
+  "motto": "“Shoot first. Never ask.”",
+  "story": "Lord Benchley’s signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare. Lord Benchley is quite mad of course, having battled the cults for decades and always maintaining the upper hand, if only bar rd-Benchley himself relies on a stiff upper lip, stoic resolve, and indulging his psychotic tendencies",
+  "special_power": {
+    "name": "Fueled by Madness",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Goin @ while your sanity isone 5"
+      }
+    ]
+  },
+  "common_powers": [
+    {
+      "name": "Marksman",
+      "is_special": false,
+      "levels": [
+        {
+          "level": 1,
+          "description": "You may attack a target"
+        }
+      ]
+    },
+    {
+      "name": "Toughness",
+      "is_special": false,
+      "levels": [
+        {
+          "level": 1,
+          "description": "You have 1 free reroll when attacked or rolling for Fire. Instead, goin @ while your sanity ison a oR"
+        },
+        {
+          "level": 2,
+          "description": "space back. Gain HE when attacking a target not In your space. Instead, you may reduce wounds sanity by 1 when attacked or rolling for Fire. Instead, gain Instead, gain SOrrile your evens - your sanity is on sanity is on a OR I space back. GORI space back, You may oitock fo6 arteck per tur a target 1 additional Ps space away (2 fotal). Sains! a target not in your space. Instead, you may Instead, you may reduce wounds reduce wounds"
+        },
+        {
+          "level": 3,
+          "description": "ANY SOURCE. ANY SOURCE."
+        }
+      ]
+    }
+  ]
+}
