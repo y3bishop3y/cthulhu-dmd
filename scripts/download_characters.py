@@ -314,11 +314,12 @@ def find_season_for_heading(heading_text: str) -> Optional[str]:
 
 def extract_story_text_for_character(char_name: str, content: Tag) -> Optional[str]:
     """Extract story text for a character from HTML content."""
-    # Look for the character's name in headings or bold text
+    # Look for the character's name in headings, bold text, or strong tags
     char_name_variations = [
         char_name,
         char_name.replace(SPACE, HYPHEN),
         char_name.replace(SPACE, ""),
+        char_name.replace("-", " "),  # Handle hyphenated names
     ]
 
     for variation in char_name_variations:
@@ -328,22 +329,43 @@ def extract_story_text_for_character(char_name: str, content: Tag) -> Optional[s
             headings = content.find_all(tag_name)
             for heading in headings:
                 heading_text = heading.get_text(strip=True)
+                # More flexible matching - check if variation is in heading or vice versa
+                heading_lower = heading_text.lower()
+                variation_lower = variation.lower()
                 if (
-                    variation.lower() in heading_text.lower()
-                    or heading_text.lower() == variation.lower()
+                    variation_lower in heading_lower
+                    or heading_lower == variation_lower
+                    or heading_lower.startswith(variation_lower)
                 ):
                     name_heading = heading
                     break
             if name_heading:
                 break
 
-        # If we found a heading, get text from following siblings
+        # Also try to find character name in bold/strong tags near images
+        if not name_heading:
+            # Look for bold/strong tags containing the character name
+            for bold_tag in content.find_all(["b", "strong"]):
+                bold_text = bold_tag.get_text(strip=True)
+                if variation.lower() in bold_text.lower() or bold_text.lower() == variation.lower():
+                    # Check if there's an image nearby (within same parent or next siblings)
+                    parent = bold_tag.parent if bold_tag.parent else None
+                    if parent:
+                        # Look for images in the same parent or nearby
+                        nearby_imgs = parent.find_all(TAG_IMAGE)
+                        if nearby_imgs:
+                            # Found character name in bold near images, use parent as starting point
+                            name_heading = parent
+                            break
+
+        # If we found a heading or parent element, get text from following siblings
         if name_heading:
             story_paragraphs = []
+            # Start from the next sibling of the heading/parent
             current = name_heading.find_next_sibling()
 
             # Collect paragraphs until we hit another character heading or section
-            for _ in range(15):  # Limit search
+            for _ in range(20):  # Increased limit for better extraction
                 if current is None:
                     break
 
@@ -357,7 +379,7 @@ def extract_story_text_for_character(char_name: str, content: Tag) -> Optional[s
                         and heading_text.lower() != variation.lower()
                         and not any(
                             section in heading_text.lower()
-                            for section in ["common", "trait", "season", "box", "characters"]
+                            for section in ["common", "trait", "season", "box", "characters", "set"]
                         )
                     ):
                         break
@@ -367,13 +389,31 @@ def extract_story_text_for_character(char_name: str, content: Tag) -> Optional[s
                     text = current.get_text(strip=True)
                     # Skip very short text, navigation, or metadata
                     if (
-                        len(text) > 50
+                        len(text) > 30  # Lowered threshold to catch shorter stories
                         and not text.startswith("Share")
                         and "Jump To" not in text
                         and "Toggle" not in text
                         and not text.startswith("Check out")
+                        and "Click to" not in text.lower()
+                        and not text.lower().startswith("download")
                     ):
                         story_paragraphs.append(text)
+
+                # Also check divs that might contain story text
+                elif current.name == "div":
+                    div_text = current.get_text(strip=True)
+                    # If div contains substantial text and no images, it might be story text
+                    if (
+                        len(div_text) > 50
+                        and not current.find_all(TAG_IMAGE)
+                        and not any(
+                            skip in div_text.lower()
+                            for skip in ["share", "jump", "toggle", "check out", "click"]
+                        )
+                    ):
+                        # Check if it's a paragraph-like div
+                        if not current.find_all(["h1", "h2", "h3", "h4", "h5", "h6"]):
+                            story_paragraphs.append(div_text)
 
                 current = (
                     current.find_next_sibling() if hasattr(current, "find_next_sibling") else None
@@ -384,7 +424,9 @@ def extract_story_text_for_character(char_name: str, content: Tag) -> Optional[s
                 story = " ".join(story_paragraphs)
                 # Remove extra whitespace
                 story = re.sub(r"\s+", " ", story).strip()
-                return story
+                # Remove common prefixes/suffixes that aren't part of the story
+                story = re.sub(r"^(Share|Jump|Toggle|Check out).*?\.\s*", "", story, flags=re.I)
+                return story if len(story) > 30 else None
 
     return None
 
