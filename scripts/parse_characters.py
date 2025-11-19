@@ -800,9 +800,13 @@ def main(
             if season_dir.is_dir():
                 for char_dir in season_dir.iterdir():
                     if char_dir.is_dir():
+                        # Check if images exist (either as files or in zip)
+                        char_name = char_dir.name
+                        zip_path = char_dir / f"{char_name}.zip"
                         front_path = char_dir / FILENAME_FRONT
                         back_path = char_dir / FILENAME_BACK
-                        if front_path.exists() and back_path.exists():
+
+                        if zip_path.exists() or (front_path.exists() and back_path.exists()):
                             characters_to_process.append(char_dir)
 
     if not characters_to_process:

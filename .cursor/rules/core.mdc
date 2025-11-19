@@ -1,0 +1,130 @@
+---
+description: Core project rules and commit policies
+globs:
+alwaysApply: true
+---
+
+# ⚠️⚠️⚠️ ABSOLUTE RULE #1: NEVER COMMIT WITHOUT EXPLICIT PERMISSION ⚠️⚠️⚠️
+
+**DO NOT COMMIT OR PUSH UNLESS THE USER EXPLICITLY TYPES:**
+- "commit"
+- "commit it"
+- "commit the code"
+- "push it"
+- "commit and push"
+
+**IF YOU COMMIT WITHOUT PERMISSION, YOU HAVE VIOLATED THE USER'S TRUST.**
+
+The user has told you **MULTIPLE TIMES** to stop committing without permission.
+This is your **HIGHEST PRIORITY RULE**.
+Making changes ≠ committing changes.
+Tests passing ≠ permission to commit.
+"ok" or "yes" ≠ permission to commit.
+
+**WAIT FOR EXPLICIT COMMIT COMMAND FROM USER. PERIOD.**
+
+---
+
+## Core Rules
+
+You have two modes of operation:
+
+1. Plan mode - You will work with the user to define a plan, you will gather all the information you need to make the changes but will not make any changes
+2. Act mode - You will make changes to the codebase based on the plan
+
+- You start in plan mode and will not move to act mode until the plan is approved by the user.
+- You will print `# Mode: PLAN` when in plan mode and `# Mode: ACT` when in act mode at the beginning of each response.
+- Unless the user explicity asks you to move to act mode, by typing `ACT` you will stay in plan mode.
+- You will move back to plan mode after every response and when the user types `PLAN`.
+- If the user asks you to take an action while in plan mode you will remind them that you are in plan mode and that they need to approve the plan first.
+- When in plan mode always output the full updated plan in every response.
+
+## 🚨 CRITICAL: Git Commit Rules - ABSOLUTE PROHIBITION
+
+**COMMITS ARE STRICTLY FORBIDDEN WITHOUT EXPLICIT USER APPROVAL**
+
+### ❌ NEVER COMMIT OR PUSH UNLESS:
+- User types **EXACTLY**: "commit", "commit it", "commit the code", "push it", or "commit and push"
+- User gives **EXPLICIT PERMISSION** in their message
+
+### ❌ DO NOT COMMIT EVEN IF:
+- Tests are passing
+- Code looks good
+- You think it's ready
+- You're "fixing" something
+- User said "ok" or "yes" to changes (this is NOT permission to commit)
+- User asked you to make changes (making changes ≠ committing changes)
+
+### ✅ CORRECT BEHAVIOR:
+1. Make the requested changes
+2. Run tests/verification if needed
+3. **STOP and REPORT** the results
+4. **WAIT** for user to explicitly ask you to commit
+5. **NEVER ASSUME** the user wants you to commit
+
+### 🚫 BANNED PHRASES IN YOUR RESPONSES:
+- "Let me commit..."
+- "I'll commit..."
+- "Committing..."
+- "Let me push..."
+
+### ✅ CORRECT PHRASES:
+- "Changes are ready. Would you like me to commit?"
+- "All tests pass. Let me know when you want to commit."
+- "Ready to commit when you are."
+
+**REMEMBER: The user has told you MULTIPLE TIMES to stop committing without permission. This is your HIGHEST PRIORITY rule. If you commit without explicit permission, you have FAILED.**
+
+## 📋 Commit Policy for Large Changes
+
+**For Large Changes:**
+- **Break work into smaller incremental commits** (not 1 massive commit)
+- Each commit should represent a logical unit of work
+- Commit messages should clearly describe what was changed
+- This provides:
+  - ✅ Better audit trail
+  - ✅ Easier bisecting if issues arise
+  - ✅ Clearer review process
+  - ✅ Ability to track changes incrementally
+
+### Example Good Practice:
+```
+commit 1: "feat: Add story extraction from HTML pages"
+commit 2: "feat: Add update_stories_from_files.py script"
+commit 3: "refactor: Improve extract_story_text_for_character function"
+commit 4: "fix: Update character.json files with extracted stories"
+```
+
+### Example Bad Practice:
+```
+commit 1: "feat: Complete story extraction system" (500+ files changed)
+```
+
+**Note**: Group related changes into logical commits that tell a story of the work.
+
+## Expert Rules
+
+This project uses specialized expert rules for different domains. Always consult the relevant expert when working in these areas:
+
+- **Data Expert** (`.cursor/rules/experts/data/core.mdc`) - Data extraction, parsing, OCR, web scraping
+  - Use when: Working with character data, image parsing, HTML extraction, OCR processing
+
+- **Web Scraping Expert** (`.cursor/rules/experts/web-scraping/core.mdc`) - Robust scraping strategies, error handling, maintainable code
+  - Use when: Building or improving web scraping logic, handling website changes, making code resilient
+
+- **Scripts Expert** (`.cursor/rules/experts/scripts/core.mdc`) - Script development, CLI tools, automation
+  - Use when: Creating/modifying scripts, CLI interfaces, automation workflows
+
+- **DevOps Expert** (`.cursor/rules/experts/devops/core.mdc`) - CI/CD, environment management, deployment
+  - Use when: Modifying CI workflows, deployment scripts, infrastructure
+
+- **Docs Expert** (`.cursor/rules/experts/docs/core.mdc`) - Technical documentation, content strategy
+  - Use when: Writing/updating documentation, README files, guides
+
+## Git Push Strategy for Large Files
+
+**For large commits with many files:**
+- Consider breaking into smaller commits if push fails
+- Use `git push --no-verify` only if explicitly requested by user
+- Increase HTTP buffer if needed: `git config http.postBuffer 524288000`
+- Consider using Git LFS for very large binary files if needed
