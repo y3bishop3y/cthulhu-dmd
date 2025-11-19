@@ -119,8 +119,227 @@ def extract_text_from_image(image_path: Path) -> str:
         return ""
 
 
+def normalize_dice_symbols(text: str) -> str:
+    """Normalize dice symbol references in text."""
+    import re
+    
+    normalized = text
+    
+    # Replace various OCR patterns for green dice
+    normalized = re.sub(
+        r'(\d+)\s*(?:g|●|○|◉|green)\s*(?:dice|die|d)\b',
+        r'\1 green dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Replace various OCR patterns for black dice
+    normalized = re.sub(
+        r'(\d+)\s*(?:b|●|○|black)\s*(?:dice|die|d)\b',
+        r'\1 black dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Normalize "gain X green dice" patterns
+    normalized = re.sub(
+        r'(?:gain|get|use|add)\s+(\d+)\s*(?:green|g|●|○|◉)\s*(?:dice|die|d)\b',
+        r'gain \1 green dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    normalized = re.sub(
+        r'(?:gain|get|use|add)\s+(\d+)\s*(?:black|b|●|○)\s*(?:dice|die|d)\b',
+        r'gain \1 black dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    return normalized
+
+
+def normalize_red_swirl_symbols(text: str) -> str:
+    """Normalize red swirl/sanity threshold references."""
+    import re
+    
+    normalized = text
+    
+    # Normalize various patterns for red sanity marker/threshold
+    normalized = re.sub(
+        r'(?:when|while|if)\s+(?:your\s+)?sanity\s+(?:is\s+)?(?:on|at|reaches?)\s*(?:a\s+)?(?:red|marker|threshold|swirl)',
+        r'when sanity is on red sanity marker',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    normalized = re.sub(
+        r'sanity\s+(?:on|at|reaches?)\s*(?:a\s+)?(?:red\s+)?(?:sanity\s+)?marker',
+        r'sanity on red sanity marker',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    return normalized
+
+
+def normalize_dice_symbols(text: str) -> str:
+    """Normalize dice symbol references in text.
+    
+    Dice symbols in OCR might appear as:
+    - @ (common symbol for green dice)
+    - B or b (for black dice)
+    - Numbers followed by g/G or b/B
+    - Actual words "green dice" or "black dice"
+    """
+    normalized = text
+    
+    # Pattern 1: "gain @" or "gain @ while" -> "gain 1 green dice"
+    # The @ symbol often represents a green dice
+    normalized = re.sub(
+        r'gain\s+@\s+(?:while|when|if)',
+        r'gain 1 green dice while',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 2: "gain @" standalone -> "gain 1 green dice"
+    normalized = re.sub(
+        r'gain\s+@\b',
+        r'gain 1 green dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 3: "Gain B" or "gain B when" -> "gain 1 black dice"
+    normalized = re.sub(
+        r'gain\s+B\s+(?:when|while|if|attacking)',
+        r'gain 1 black dice when',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 4: "Gain B" standalone -> "gain 1 black dice"
+    normalized = re.sub(
+        r'gain\s+B\b',
+        r'gain 1 black dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 5: Numbers with dice indicators
+    # "2 green dice" or "2 g dice" or "2 ● dice" -> "2 green dice"
+    normalized = re.sub(
+        r'(\d+)\s*(?:g|●|○|◉|green|@)\s*(?:dice|die|d)\b',
+        r'\1 green dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 6: "1 black dice" or "1 b dice" -> "1 black dice"
+    normalized = re.sub(
+        r'(\d+)\s*(?:b|●|○|black)\s*(?:dice|die|d)\b',
+        r'\1 black dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 7: "gain X green dice" patterns
+    normalized = re.sub(
+        r'(?:gain|get|use|add)\s+(\d+)\s*(?:green|g|●|○|◉|@)\s*(?:dice|die|d)\b',
+        r'gain \1 green dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern 8: "gain X black dice" patterns
+    normalized = re.sub(
+        r'(?:gain|get|use|add)\s+(\d+)\s*(?:black|b|●|○)\s*(?:dice|die|d)\b',
+        r'gain \1 black dice',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    return normalized
+
+
+def normalize_red_swirl_symbols(text: str) -> str:
+    """Normalize red swirl/sanity threshold references."""
+    normalized = text
+    
+    # Handle OCR errors first: "ison" -> "is on"
+    normalized = re.sub(r'\bison\b', 'is on', normalized, flags=re.IGNORECASE)
+    
+    # Handle red swirl symbols: "@®" or "oR" when in context of sanity
+    # Pattern: "sanity sono @®" or "sanity ison oR" -> "sanity is on red"
+    normalized = re.sub(
+        r'sanity\s+(?:sono|ison|is\s+on)\s*(?:@®|oR|red)',
+        r'sanity is on red',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Handle "@®" as red swirl symbol when near sanity context
+    normalized = re.sub(
+        r'sanity\s+(?:is\s+on|ison|sono)\s*@®',
+        r'sanity is on red sanity marker',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Handle "oR" -> "red" but only in sanity context (not "or" as conjunction)
+    # Only replace "oR" when it's clearly part of "red" (after sanity/on/at)
+    normalized = re.sub(
+        r'(?:sanity|on|at)\s+oR\b(?!\s+(?:rolling|attacking|fighting))',
+        r'red',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Normalize various patterns for red sanity marker/threshold
+    # Pattern: "when sanity is on red marker" -> "when sanity is on red sanity marker"
+    normalized = re.sub(
+        r'(?:when|while|if)\s+(?:your\s+)?sanity\s+(?:is\s+)?(?:on|at|reaches?)\s*(?:a\s+)?(?:red|marker|threshold|swirl)',
+        r'when sanity is on red sanity marker',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern: "sanity on red" -> "sanity on red sanity marker"
+    normalized = re.sub(
+        r'sanity\s+(?:is\s+)?(?:on|at|reaches?)\s*(?:a\s+)?(?:red\s+)?(?:sanity\s+)?marker',
+        r'sanity is on red sanity marker',
+        normalized,
+        flags=re.IGNORECASE,
+    )
+    
+    # Pattern: "while sanity is on red" -> "while sanity is on red sanity marker"
+    # But avoid double "sanity marker"
+    if 'sanity marker' not in normalized.lower():
+        normalized = re.sub(
+            r'(?:while|when)\s+(?:your\s+)?sanity\s+(?:is\s+)?(?:on|at)\s*(?:a\s+)?red(?!\s+sanity\s+marker)',
+            r'while sanity is on red sanity marker',
+            normalized,
+            flags=re.IGNORECASE,
+        )
+    
+    # Clean up any duplicate "sanity marker" phrases
+    normalized = re.sub(r'sanity marker\s+sanity marker', 'sanity marker', normalized, flags=re.IGNORECASE)
+    
+    return normalized
+
+
 def clean_ocr_text(text: str, preserve_newlines: bool = False) -> str:
-    """Clean up OCR artifacts from text."""
+    """Clean up OCR artifacts from text, preserving dice and red swirl symbols."""
+    # First apply basic OCR corrections (like "goin" -> "gain", "ison" -> "is on")
+    # Then normalize dice and red swirl symbols
+    text = text.replace("goin", "gain").replace("Goin", "Gain")
+    text = text.replace("isone", "is on").replace("Isone", "Is on")
+    
+    # Now normalize dice and red swirl symbols
+    text = normalize_dice_symbols(text)
+    text = normalize_red_swirl_symbols(text)
+    
     if preserve_newlines:
         # Preserve newlines, only clean within lines
         lines = text.split("\n")
@@ -128,7 +347,7 @@ def clean_ocr_text(text: str, preserve_newlines: bool = False) -> str:
         for line in lines:
             # Remove excessive whitespace within line
             line = re.sub(r"[ \t]+", " ", line)
-            # Remove common OCR artifacts
+            # Remove common OCR artifacts but preserve dice/sanity references
             line = re.sub(r"\s*[|]\s*", " ", line)  # Vertical bars
             line = re.sub(r"\s*[~]\s*", " ", line)  # Tildes
             cleaned_lines.append(line.strip())
@@ -136,7 +355,7 @@ def clean_ocr_text(text: str, preserve_newlines: bool = False) -> str:
     else:
         # Remove all whitespace including newlines
         text = re.sub(r"\s+", " ", text)
-        # Remove common OCR artifacts
+        # Remove common OCR artifacts but preserve dice/sanity references
         text = re.sub(r"\s*[|]\s*", " ", text)  # Vertical bars
         text = re.sub(r"\s*[~]\s*", " ", text)  # Tildes
         return text.strip()

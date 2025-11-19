@@ -5,19 +5,19 @@
     "levels": [
       {
         "level": 1,
-        "description": "space of a gate, you are always considered safe to Rest. You may attack a target 1 additional space away (2 total). Heal | stress for each you count as a success, If you are within 1 space of a Gate, you gain @ ond have"
+        "description": "space of a Gate, you are always considered safe to Rest. You may attack a target 1 additional space away (2 total). Heal stress for each you count as a success, If you are within 1 space of a Gate, you"
       },
       {
         "level": 2,
-        "description": "successes each. FDISCOVERY CARDS A I"
+        "description": "Instead, you may count any number of Yi as successes,"
       },
       {
         "level": 3,
-        "description": ". investigate , ° when making any roll, instead, you may | heal | stress for | you may count any a Discovery cord. of a fay: OF Pa fa] 73 fot | lg be kad ID yr: DISCOVERY CARDS Otherwise, enemies attack you. me"
+        "description": "Instead, when you Run, you may Sneak 3 times. You may choose to not lose sanity for a when using this skill, Heal stress for each you count"
       },
       {
         "level": 4,
-        "description": ".resotve— ff | bmi END OF TURN. ; When you attack, you may target ANY] You have 2 free When you attack Gain @ when attacking) NUMBER of figures rerolls when figures in your space, a target in your space. in your space (split | attacking a target | deal the full wounds the wounds as you in your space. to EACH target. like)."
+        "description": "Level 4 description - Not found in character cards"
       }
     ]
   },
@@ -27,19 +27,19 @@
     "levels": [
       {
         "level": 1,
-        "description": "investigator with you when leaving a space, You have 1 extra action each turn. When you Run, you may | You have | free Run move 1 additional space. action each turn. attacker’s space and | attacker’s space and | attacker's space and My"
+        "description": "BRAWLING When you attack, you may target You have 2 freee When you attack gain 1 green dice while attacking ANY NUMBER of rerolls when figuresures in your space, a target in your space. figuresures in your space attacking a target deal the full wounds WOISCOVERY CARDS you like). i i, (split the wounds as in your space. to EACH target."
       },
       {
         "level": 2,
-        "description": "Level 2 description - Not found in character cards"
+        "description": "Instead, you may reduce wounds taken and loss of attacked or railing for Fire. sanity by 1 when attacked or rolling for Fire,"
       },
       {
         "level": 3,
-        "description": "card i a o—____+]] By i When you attack, te i ii have 2 free When you attack ta | you may target You have y of > Oven | Gain @ when attacking | ANY NUMBER of rerolls when figures in your space, ey . | a target in your space. figures in your space | attacking a target | deal the full wounds a Discovery card. | ie ! you like). Otherwise, i enemies attack you. If ae ~~ Lc > —- -—-—>"
+        "description": "Instead, the other heals 3 wounds/ stress as if they were Resting. When you attack, you may target You have 2 freee When you attack ANY NUMBER of rerolls when figuresures in your space, figuresures in your space attacking a target deal the full wounds split the wounds as in your space. to EACH target. you like)."
       },
       {
         "level": 4,
-        "description": ", resolve END OF TURN SWIFTNESS ccceerntnstnisinioincn nme nena gn emmamnninnnac GAS During o Run,"
+        "description": ". Also, all other investigators in your _, Also you may i Your double the number space may heal 1 of successes. wound AND 1 stress"
       }
     ]
   },
@@ -49,19 +49,19 @@
     "levels": [
       {
         "level": 1,
-        "description": "investigator with you when leaving a space. You have 1 extra action each turn. aan nc"
+        "description": "Marksman also works in your space. While you are at full stress, gain 7 level in Marksman and Brawling"
       },
       {
         "level": 2,
-        "description": "stress/health (total 5}, Gain Q® when attacking a target not in your space. Instead, when you Run, you may Sneak 3 times. When you Rest, deal 2 wounds to an enemy within 1 space. You may attack a target 1 additional space away (2 total). Deal 1 wound to each enemy you Sneak past. Instead, deal"
+        "description": "stress/health (total 5, Gain 1 when attacking a target not in your space. Instead, when you Run, you may Sneak 3 times."
       },
       {
         "level": 3,
-        "description": "Level 3 description - Not found in character cards"
+        "description": ". You have 2 freee When you attack rerolls when figuresures in your space, attacking a target deal the full wounds in your space. to EACH target."
       },
       {
         "level": 4,
-        "description": ", resolve END OF TURN fig Swarts When you Run, you may You have i free Run move 1 additional space. action each turn. During a Run,"
+        "description": "Level 4 description - Not found in character cards"
       }
     ]
   },
@@ -71,15 +71,15 @@
     "levels": [
       {
         "level": 1,
-        "description": "wound for your"
+        "description": "STEALTH When you Run, you may Sneak once (1 enemy doesnt follow you). BINS gain 1 green dice while attacking a target in your space."
       },
       {
         "level": 2,
-        "description": "successes exch."
+        "description": "Instead, Sneak once (I enemy when you Run, you doesnt follow you). may Sneak 3 times. MASTERY When making any roll,"
       },
       {
         "level": 3,
-        "description": "Level 3 description - Not found in character cards"
+        "description": "Instead, you may you may count 1 Yx- count any number as a success. of as successes. Also, deal 1 wound to all enemies in your space. Deal 1 wound to each enemy you Sneak past. Heal 1 stress for each you count as a success."
       },
       {
         "level": 4,
@@ -93,11 +93,11 @@
     "levels": [
       {
         "level": 1,
-        "description": "additional wound (2 total). You have 1 free Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no other enemies in its space, heal all your stress. During a Run, T investigator with you when leaving a space. Deal 1 wound to each enemy you Sneak past. You may deal"
+        "description": "additional wound (2 total). You have 1 freee Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no"
       },
       {
         "level": 2,
-        "description": "wounds to cancel any Mythos card’s special effects and enemy summoning. You mey count any number of as"
+        "description": "successes each. You have 1 extra action each turn."
       },
       {
         "level": 3,
@@ -115,19 +115,19 @@
     "levels": [
       {
         "level": 1,
-        "description": "space back. Goin HE when attacking a target not In your space. Instead, you may reduce wounds sanity by 1 when attacked or rolling for Fire. Instead, gain Instead, gain PSOne your ewes val your sanity is on sanity ison a OR I space back. | G81 space back, You may ateck | fre oneck per urn a target } additional a Pr against a target space away (2 total). : not in your space. Instead, you may | Instead, you may reduce wounds reduce wounds"
+        "description": "TOUGHNESS You have 1 freee reroll when attacked or rolling for Fire. You may also discard a Detectitve token to reroll 1 die. gain 1 black dice when attacking a target not in your space."
       },
       {
         "level": 2,
-        "description": "successes each. Instead, you may"
+        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when. attacked or rolling for Fire. You may also add aff AND your Gift to rolls of investigators in your space. Heal I stress for each  you count as a success."
       },
       {
         "level": 3,
-        "description": "Level 3 description - Not found in character cards"
+        "description": "Instead, you may"
       },
       {
         "level": 4,
-        "description": "Level 4 description - Not found in character cards"
+        "description": "Instead, you may re bce wou 5 reduce wounds reduce wounds taken and loss o! taken and loss of taken by 2 and loss You have 1 freee reroll when attacked or ity by tw rolling for Fire, stocks Y wll sanity by T from of sanity by from ee orrolling ANY SOURCE. ANY SOURCE, for Fire. , ,"
       }
     ]
   }
