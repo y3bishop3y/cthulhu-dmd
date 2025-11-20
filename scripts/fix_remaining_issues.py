@@ -14,8 +14,6 @@ try:
     import click
     from rich.console import Console
     from rich.panel import Panel
-
-    from scripts.models.character import CommonPower as CommonPowerModel
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -84,6 +82,9 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
     console.print(f"[cyan]Loading {common_powers_path}...[/cyan]")
     with open(common_powers_path, encoding="utf-8") as f:
         powers_data_dict = json.load(f)
+
+    # Import here to avoid circular dependencies and mypy confusion with CommonPower enum
+    from scripts.models.character import CommonPower as CommonPowerModel
 
     # Parse all powers into Pydantic models
     powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]
