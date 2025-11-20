@@ -1,0 +1,63 @@
+{
+  "dice": {
+    "standard_dice": {
+      "type": "black",
+      "count": 3,
+      "description": "Standard black dice that are always rolled when making a roll"
+    },
+    "bonus_dice": {
+      "type": "green",
+      "description": "Bonus green dice added by skills, cards, or insanity thresholds. There is no limit to the number of bonus dice that may be added to a roll."
+    },
+    "dice_faces": [
+      {
+        "symbol": "success",
+        "icon": "star",
+        "description": "This means that you (or the enemy) succeeded at your attempt (or partially succeeded). If you were attacking, it means you hit. If an enemy is attacking, it means they hit you. In some cases, you need to reach a target amount of successes in a single roll.",
+        "effect": "success"
+      },
+      {
+        "symbol": "elder_sign",
+        "icon": "elder_sign",
+        "description": "These mean nothing unless you have a skill or card that uses them.",
+        "effect": "none_unless_skill_or_card"
+      },
+      {
+        "symbol": "tentacle",
+        "icon": "tentacle",
+        "description": "Madness! For each tentacle, you lose 1 sanity, moving your tracker 1 space to the right. IMPORTANT: Tentacles on EVERY roll cost you sanity, whether you're attacking, being attacked, or just \"making a roll\".",
+        "effect": "lose_1_sanity"
+      },
+      {
+        "symbol": "blank",
+        "icon": "blank",
+        "description": "No effect",
+        "effect": "none"
+      }
+    ]
+  },
+  "rolls": {
+    "investigator_rolls": {
+      "standard_dice_count": 3,
+      "standard_dice_type": "black",
+      "bonus_dice_type": "green",
+      "description": "When investigators make a roll, you always roll 3 standard black dice (and may also be allowed to add bonus green dice)."
+    },
+    "enemy_rolls": {
+      "description": "Enemies roll a specific number and type of dice for their attacks, as indicated on their reference card."
+    }
+  },
+  "insanity_thresholds": {
+    "red_sanity_marker": {
+      "description": "Reaching certain Insanity Thresholds will add permanent bonus dice to all your rolls. The red swirl symbol indicates when sanity reaches a threshold where powers activate or bonus dice are gained.",
+      "symbol": "red_swirl"
+    }
+  },
+  "sanity": {
+    "tentacle_cost": {
+      "per_tentacle": 1,
+      "description": "For each tentacle rolled, you lose 1 sanity, moving your tracker 1 space to the right. This applies to EVERY roll - attacking, being attacked, or just making a roll."
+    }
+  }
+}
+

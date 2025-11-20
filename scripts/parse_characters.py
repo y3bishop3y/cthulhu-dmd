@@ -18,6 +18,8 @@ try:
     import pytesseract
     import yaml
     from pydantic import BaseModel, Field
+
+from scripts.models.game_mechanics import DiceType, GameMechanics
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
