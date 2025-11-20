@@ -46,6 +46,11 @@ class ParsingPatternsConfig(BaseSettings):
     key_phrases_success: List[str] = Field(default_factory=list)
     key_phrases_attack: List[str] = Field(default_factory=list)
     key_phrases_action: List[str] = Field(default_factory=list)
+    key_phrases_reroll: List[str] = Field(default_factory=list)
+    key_phrases_sneak: List[str] = Field(default_factory=list)
+    key_phrases_heal: List[str] = Field(default_factory=list)
+    key_phrases_wound: List[str] = Field(default_factory=list)
+    key_phrases_stress: List[str] = Field(default_factory=list)
 
     @classmethod
     def load_from_file(cls, file_path: Optional[Path] = None) -> "ParsingPatternsConfig":
@@ -98,6 +103,11 @@ class ParsingPatternsConfig(BaseSettings):
             config_data["key_phrases_success"] = key_phrases.get("success", [])
             config_data["key_phrases_attack"] = key_phrases.get("attack", [])
             config_data["key_phrases_action"] = key_phrases.get("action", [])
+            config_data["key_phrases_reroll"] = key_phrases.get("reroll", [])
+            config_data["key_phrases_sneak"] = key_phrases.get("sneak", [])
+            config_data["key_phrases_heal"] = key_phrases.get("heal", [])
+            config_data["key_phrases_wound"] = key_phrases.get("wound", [])
+            config_data["key_phrases_stress"] = key_phrases.get("stress", [])
 
             return cls(**config_data)
         except Exception as e:

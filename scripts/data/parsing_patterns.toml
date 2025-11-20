@@ -40,8 +40,13 @@ sanity_patterns = [
 [patterns.key_phrases]
 # Key phrases for power description analysis
 dice = ['green dice', 'black dice', 'dice']
-elder_sign = ['elder sign', 'arcane']
-success = ['success', 'succeed']
+elder_sign = ['elder sign', 'arcane', 'elder signs']
+success = ['success', 'succeed', 'successes']
 attack = ['attack', 'attacking']
 action = ['action', 'actions']
+reroll = ['reroll', 'rerolls']
+sneak = ['sneak', 'sneaking']
+heal = ['heal', 'healing']
+wound = ['wound', 'wounds']
+stress = ['stress']
 
