@@ -235,13 +235,39 @@ class TestPowerLevelStatistics:
             base_tentacle_risk=1.5,
         )
 
-        # Create mock effects
-        from scripts.cleanup_and_improve_common_powers import (
-            ConditionalEffects,
-            DefensiveEffects,
-            HealingEffects,
-            RerollEffects,
-        )
+        # Create mock effects (define inline to avoid import issues)
+        from pydantic import BaseModel, Field
+
+        class ConditionalEffects(BaseModel):
+            conditions: list = Field(default_factory=list)
+
+            @property
+            def is_conditional(self) -> bool:
+                return len(self.conditions) > 0
+
+        class RerollEffects(BaseModel):
+            rerolls_added: int = Field(default=0)
+            reroll_type: str | None = Field(default=None)
+
+            @property
+            def has_reroll(self) -> bool:
+                return self.rerolls_added > 0
+
+        class HealingEffects(BaseModel):
+            wounds_healed: int = Field(default=0)
+            stress_healed: int = Field(default=0)
+
+            @property
+            def has_healing(self) -> bool:
+                return self.wounds_healed > 0 or self.stress_healed > 0
+
+        class DefensiveEffects(BaseModel):
+            wound_reduction: int = Field(default=0)
+            sanity_reduction: int = Field(default=0)
+
+            @property
+            def has_defensive(self) -> bool:
+                return self.wound_reduction > 0 or self.sanity_reduction > 0
 
         conditional_effects = ConditionalEffects(conditions=["when attacking"])
         reroll_effects = RerollEffects(rerolls_added=1, reroll_type="free")
@@ -304,10 +330,12 @@ class TestCommonPowerLevelData:
         CommonPowerLevelData(level=4, description="Test", statistics=stats, effect="")
 
         # Invalid levels
-        with pytest.raises(Exception):  # Pydantic validation error
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
             CommonPowerLevelData(level=0, description="Test", statistics=stats, effect="")
 
-        with pytest.raises(Exception):  # Pydantic validation error
+        with pytest.raises(ValidationError):
             CommonPowerLevelData(level=5, description="Test", statistics=stats, effect="")
 
 
