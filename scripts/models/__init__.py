@@ -9,6 +9,7 @@ from .character import (
     PowerLevel,
     PowerLevelStatistics,
 )
+from .character_build import CharacterBuild, CharacterStatistics
 from .constants import (
     CommonPower,
     Directory,
@@ -33,6 +34,7 @@ from .game_mechanics import (
     SanityCost,
     StandardDice,
 )
+from .character_build import CharacterBuild, CharacterStatistics
 from .power_combination import (
     PowerCombination,
     PowerCombinationCalculator,
@@ -54,8 +56,10 @@ __all__ = [
     # Models
     "BackCardData",
     "BonusDice",
+    "CharacterBuild",
     "CharacterData",
     "CharacterReference",
+    "CharacterStatistics",
     "CommonPowerLevelData",
     "Dice",
     "DiceFace",

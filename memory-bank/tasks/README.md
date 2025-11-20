@@ -67,6 +67,20 @@ Critical system affecting power upgrades and tentacle risk:
 
 ---
 
+### `04-character-build-analysis.md`
+**Character Build Analysis Plan**
+
+Bridges individual power statistics with full character analysis:
+- Character build models (combining all powers)
+- Full character statistics calculation
+- Power value metrics
+- Build comparison and optimization
+
+**Status:** Planning Phase  
+**Last Updated:** 2024-12-19
+
+---
+
 ## How to Use
 
 1. **Review plans** - Read through the planning documents to understand the scope
