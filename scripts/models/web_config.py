@@ -15,8 +15,7 @@ try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: uv add pydantic-settings\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: uv add pydantic-settings\n",
         file=sys.stderr,
     )
     raise
@@ -131,7 +130,9 @@ class WebScrapingConfig(BaseSettings):
             # File patterns
             file_patterns = data.get("file_patterns", {})
             config_data["file_patterns_back_image"] = file_patterns.get("back_image", [])
-            config_data["file_patterns_image_extensions"] = file_patterns.get("image_extensions", [])
+            config_data["file_patterns_image_extensions"] = file_patterns.get(
+                "image_extensions", []
+            )
             config_data["file_patterns_pdf_extension"] = file_patterns.get("pdf_extension")
 
             # Image sizes
@@ -153,7 +154,9 @@ class WebScrapingConfig(BaseSettings):
             config_data["limits_max_siblings_to_check"] = limits.get("max_siblings_to_check", 50)
             config_data["limits_min_char_name_length"] = limits.get("min_char_name_length", 2)
             config_data["limits_max_char_name_length"] = limits.get("max_char_name_length", 30)
-            config_data["limits_max_images_per_character"] = limits.get("max_images_per_character", 2)
+            config_data["limits_max_images_per_character"] = limits.get(
+                "max_images_per_character", 2
+            )
             config_data["limits_max_chars_to_display"] = limits.get("max_chars_to_display", 5)
 
             # Constants
@@ -224,8 +227,7 @@ class WebSettingsConfig(BaseSettings):
             )
         except Exception as e:
             print(
-                f"Warning: Could not load web settings from {file_path}: {e}\n"
-                "Using defaults.",
+                f"Warning: Could not load web settings from {file_path}: {e}\nUsing defaults.",
                 file=sys.stderr,
             )
             return cls()
@@ -262,4 +264,3 @@ def get_web_settings() -> WebSettingsConfig:
     if _web_settings_config is None:
         _web_settings_config = WebSettingsConfig.load_from_file()
     return _web_settings_config
-

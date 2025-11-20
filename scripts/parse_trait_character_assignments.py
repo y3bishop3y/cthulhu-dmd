@@ -1,25 +1,28 @@
 #!/usr/bin/env python3
 """
-Parse pages 3-4 of traits_booklet.pdf to extract which characters have which common traits.
+Parse pages 3-5 of traits_booklet.pdf to extract which characters have which common traits.
 
 This helps us understand trait distribution and can be used to:
 - Verify character data
 - Find characters for OCR extraction
 - Understand trait combinations
+
+Parsing logic is encapsulated in Pydantic models for better organization.
 """
 
 import json
-import re
 import sys
-from collections import defaultdict
 from pathlib import Path
-from typing import Dict, Final, List, Set
+from typing import Final, Optional
 
 try:
     import click
-    import pdfplumber
     from rich.console import Console
     from rich.table import Table
+
+    from scripts.models.constants import CommonPower, Filename
+    from scripts.models.trait_assignments import TraitCharacterAssignments
+    from scripts.utils.pdf import extract_text_from_pdf
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -34,82 +37,7 @@ except ImportError as e:
 console = Console()
 
 # Constants
-FILENAME_TRAITS_BOOKLET: Final[str] = "traits_booklet.pdf"
 DATA_DIR: Final[str] = "data"
-
-# Common trait names
-COMMON_TRAITS: Final[List[str]] = [
-    "Arcane Mastery",
-    "Brawling",
-    "Marksman",
-    "Stealth",
-    "Swiftness",
-    "Toughness",
-]
-
-
-def extract_character_name(line: str) -> tuple[str, int] | None:
-    """Extract character name and number from a line like 'Al Capone (20)' or 'Lord Adam Benchley (7)'.
-    
-    Returns:
-        Tuple of (character_name, character_number) or None if not found
-    """
-    # Pattern: "Name (Number)" or "Name, Name (Number)"
-    # Handle names with quotes, apostrophes, titles, etc.
-    pattern = r"([A-Z][a-zA-Z\s'\-\.]+?)\s*\((\d+)\)"
-    match = re.search(pattern, line)
-    if match:
-        name = match.group(1).strip()
-        number = int(match.group(2))
-        return (name, number)
-    return None
-
-
-def parse_trait_section(text: str, trait_name: str) -> List[tuple[str, int]]:
-    """Parse a trait section to extract character names and numbers.
-    
-    Args:
-        text: Full text from pages 3-4
-        trait_name: Name of the trait (e.g., "Swiftness", "Toughness")
-        
-    Returns:
-        List of (character_name, character_number) tuples
-    """
-    characters: List[tuple[str, int]] = []
-    
-    # Find the trait section
-    lines = text.split("\n")
-    in_section = False
-    
-    for i, line in enumerate(lines):
-        # Look for trait name as heading
-        # Handle both "Trait Appendix" and "Trait Common Trait Quick" patterns
-        trait_upper = trait_name.upper()
-        line_upper = line.upper()
-        if trait_upper in line_upper and ("Appendix" in line or "Common Trait" in line or "trait" in line.lower()):
-            in_section = True
-            continue
-        
-        # Stop if we hit another trait section
-        if in_section:
-            for other_trait in COMMON_TRAITS:
-                if other_trait != trait_name and other_trait.upper() in line.upper() and "Appendix" in line:
-                    return characters
-            
-            # Extract character names from this line
-            # Handle multiple characters per line: "Name1 (1), Name2 (2), Name3 (3)"
-            # Split by comma first, then extract each
-            parts = line.split(",")
-            for part in parts:
-                part = part.strip()
-                if not part:
-                    continue
-                
-                char_info = extract_character_name(part)
-                if char_info:
-                    characters.append(char_info)
-    
-    return characters
 
 
 @click.command()
@@ -124,39 +52,33 @@ def parse_trait_section(text: str, trait_name: str) -> List[tuple[str, int]]:
     type=click.Path(path_type=Path),
     help="Output JSON file with character-trait assignments (optional)",
 )
-def main(data_dir: Path, output_json: Path | None):
-    """Parse pages 3-4 of traits booklet to extract character-trait assignments."""
+def main(data_dir: Path, output_json: Optional[Path]):
+    """Parse pages 3-5 of traits booklet to extract character-trait assignments."""
     console.print("[bold cyan]Parsing Trait Character Assignments[/bold cyan]\n")
 
-    pdf_path = data_dir / FILENAME_TRAITS_BOOKLET
+    pdf_path = data_dir / Filename.TRAITS_BOOKLET_PDF
     if not pdf_path.exists():
         console.print(f"[red]Error: {pdf_path} not found![/red]")
         sys.exit(1)
 
-    # Extract pages 3, 4, and 5 (0-indexed: 2, 3, 4)
+    # Extract pages 3, 4, and 5
     # Page 3-4: Swiftness, Toughness, Marksman, Stealth
     # Page 5: Arcane Mastery, Brawling
     console.print(f"[cyan]Extracting pages 3-5 from {pdf_path.name}...[/cyan]")
-    text_parts: List[str] = []
-    
-    with pdfplumber.open(pdf_path) as pdf:
-        for page_num in [2, 3, 4]:  # Pages 3, 4, and 5
-            if page_num < len(pdf.pages):
-                text = pdf.pages[page_num].extract_text() or ""
-                text_parts.append(text)
-    
-    full_text = "\n".join(text_parts)
+    # Note: start_page/end_page are 0-indexed in extract_text_from_pdf, so pages 3-5 are indices 2-4
+    full_text = extract_text_from_pdf(pdf_path, start_page=2, end_page=5)
     console.print(f"[green]✓ Extracted {len(full_text)} characters of text[/green]\n")
 
-    # Parse each trait section
-    trait_characters: Dict[str, List[tuple[str, int]]] = {}
-    
-    for trait_name in COMMON_TRAITS:
-        characters = parse_trait_section(full_text, trait_name)
-        trait_characters[trait_name] = characters
-        console.print(
-            f"[green]✓ {trait_name}:[/green] Found {len(characters)} characters"
-        )
+    # Parse using Pydantic model
+    assignments = TraitCharacterAssignments.parse_from_text(full_text)
+
+    # Display parsed results
+    for trait_name in [cp.value for cp in CommonPower]:
+        section = assignments.get_trait_section(trait_name)
+        if section:
+            console.print(
+                f"[green]✓ {trait_name}:[/green] Found {section.character_count} characters"
+            )
 
     console.print()
 
@@ -167,34 +89,25 @@ def main(data_dir: Path, output_json: Path | None):
     table1.add_column("Character Count", justify="right")
     table1.add_column("Characters", style="green")
 
-    for trait_name in COMMON_TRAITS:
-        characters = trait_characters[trait_name]
-        char_names = [f"{name} ({num})" for name, num in characters[:5]]
-        if len(characters) > 5:
-            char_names.append(f"... and {len(characters) - 5} more")
-        table1.add_row(
-            trait_name,
-            str(len(characters)),
-            ", ".join(char_names),
-        )
+    for trait_name in [cp.value for cp in CommonPower]:
+        section = assignments.get_trait_section(trait_name)
+        if section:
+            char_names = section.character_names[:5]
+            if len(section.characters) > 5:
+                char_names.append(f"... and {len(section.characters) - 5} more")
+            table1.add_row(
+                trait_name,
+                str(section.character_count),
+                ", ".join(char_names),
+            )
 
     console.print(table1)
     console.print()
 
     # Table 2: Trait combinations (which characters have which trait pairs)
     console.print("[cyan]Analyzing trait combinations...[/cyan]\n")
-    
-    # Build character -> traits mapping
-    char_to_traits: Dict[str, Set[str]] = defaultdict(set)
-    for trait_name, characters in trait_characters.items():
-        for char_name, char_num in characters:
-            char_key = f"{char_name} ({char_num})"
-            char_to_traits[char_key].add(trait_name)
 
-    # Find characters with multiple traits
-    multi_trait_chars = {
-        char: traits for char, traits in char_to_traits.items() if len(traits) > 1
-    }
+    multi_trait_chars = assignments.characters_with_multiple_traits
 
     if multi_trait_chars:
         table2 = Table(title="Characters with Multiple Traits")
@@ -208,21 +121,30 @@ def main(data_dir: Path, output_json: Path | None):
         console.print(table2)
         console.print()
 
+    # Display summary statistics
+    stats = assignments.get_summary_stats()
+    console.print(f"[cyan]Summary:[/cyan] {stats['total_traits']} traits, "
+                  f"{stats['total_characters']} characters, "
+                  f"{stats['characters_with_multiple_traits']} with multiple traits\n")
+
     # Save to JSON if requested
     if output_json:
         output_data = {
             "trait_characters": {
-                trait: [{"name": name, "number": num} for name, num in chars]
-                for trait, chars in trait_characters.items()
+                trait_name: [
+                    {"name": char.name, "number": char.number}
+                    for char in section.characters
+                ]
+                for trait_name, section in assignments.trait_sections.items()
             },
             "character_traits": {
-                char: list(traits) for char, traits in char_to_traits.items()
+                char: list(traits) for char, traits in assignments.character_to_traits.items()
             },
         }
-        
+
         with open(output_json, "w", encoding="utf-8") as f:
             json.dump(output_data, f, indent=2, ensure_ascii=False)
-        
+
         console.print(f"[green]✓ Saved to {output_json}[/green]")
 
     console.print("\n[green]✓ Complete![/green]")

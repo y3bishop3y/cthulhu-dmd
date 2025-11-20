@@ -14,8 +14,7 @@ try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: uv add pydantic-settings\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: uv add pydantic-settings\n",
         file=sys.stderr,
     )
     raise
@@ -81,8 +80,7 @@ class OCRSettingsConfig(BaseSettings):
             )
         except Exception as e:
             print(
-                f"Warning: Could not load OCR settings from {file_path}: {e}\n"
-                "Using defaults.",
+                f"Warning: Could not load OCR settings from {file_path}: {e}\nUsing defaults.",
                 file=sys.stderr,
             )
             return cls()
@@ -104,4 +102,3 @@ def get_ocr_settings() -> OCRSettingsConfig:
     if _ocr_settings_config is None:
         _ocr_settings_config = OCRSettingsConfig.load_from_file()
     return _ocr_settings_config
-

@@ -18,25 +18,29 @@ OCR_CORRECTIONS: Final[Dict[str, str]] = get_ocr_corrections()
 
 # Load effect indicators from TOML config (simple keywords)
 _parsing_config = get_parsing_patterns()
-EFFECT_INDICATORS: Final[List[str]] = _parsing_config.effect_indicators if _parsing_config.effect_indicators else [
-    "gain",
-    "add",
-    "count",
-    "may",
-    "when",
-    "instead",
-    "also",
-    "per turn",
-    "free",
-    "attack",
-    "dice",
-    "success",
-    "elder sign",
-    "tentacle",
-    "sanity",
-    "stress",
-    "wound",
-]
+EFFECT_INDICATORS: Final[List[str]] = (
+    _parsing_config.effect_indicators
+    if _parsing_config.effect_indicators
+    else [
+        "gain",
+        "add",
+        "count",
+        "may",
+        "when",
+        "instead",
+        "also",
+        "per turn",
+        "free",
+        "attack",
+        "dice",
+        "success",
+        "elder sign",
+        "tentacle",
+        "sanity",
+        "stress",
+        "wound",
+    ]
+)
 
 # Dice symbol patterns that OCR might misinterpret
 # Note: Complex regex patterns stay in code for maintainability
@@ -73,18 +77,18 @@ POWER_LEVEL_PATTERNS: Final[List[str]] = [
 
 def normalize_dice_symbols(text: str) -> str:
     """Normalize dice symbol references in text.
-    
+
     OCR often misinterprets dice symbols. This function normalizes
     various OCR interpretations to standard text.
-    
+
     Args:
         text: Raw OCR text
-        
+
     Returns:
         Text with normalized dice symbol references
     """
     normalized = text
-    
+
     # Normalize green dice references
     green_patterns = [
         r"[●○◉🟢🟩]",
@@ -94,7 +98,7 @@ def normalize_dice_symbols(text: str) -> str:
     ]
     for pattern in green_patterns:
         normalized = re.sub(pattern, "green dice", normalized, flags=re.IGNORECASE)
-    
+
     # Normalize black dice references
     black_patterns = [
         r"[■□⬛⬜]",
@@ -104,21 +108,21 @@ def normalize_dice_symbols(text: str) -> str:
     ]
     for pattern in black_patterns:
         normalized = re.sub(pattern, "black dice", normalized, flags=re.IGNORECASE)
-    
+
     return normalized
 
 
 def normalize_red_swirl_symbols(text: str) -> str:
     """Normalize red swirl/sanity threshold references.
-    
+
     Args:
         text: Raw OCR text
-        
+
     Returns:
         Text with normalized red swirl references
     """
     normalized = text
-    
+
     # Red swirl patterns
     swirl_patterns = [
         r"[🌀🌀🌀🌀]",
@@ -131,35 +135,35 @@ def normalize_red_swirl_symbols(text: str) -> str:
     ]
     for pattern in swirl_patterns:
         normalized = re.sub(pattern, "red swirl", normalized, flags=re.IGNORECASE)
-    
+
     return normalized
 
 
 def apply_ocr_corrections(text: str) -> str:
     """Apply comprehensive OCR error corrections.
-    
+
     Args:
         text: Raw OCR text
-        
+
     Returns:
         Text with common OCR errors corrected
     """
     corrected = text
-    
+
     # Apply dictionary-based corrections
     for error, correction in OCR_CORRECTIONS.items():
         corrected = corrected.replace(error, correction)
-    
+
     return corrected
 
 
 def clean_whitespace(text: str, preserve_newlines: bool = False) -> str:
     """Clean excessive whitespace from text.
-    
+
     Args:
         text: Text to clean
         preserve_newlines: If True, preserve newlines and only clean within lines
-        
+
     Returns:
         Text with cleaned whitespace
     """
@@ -178,27 +182,27 @@ def clean_whitespace(text: str, preserve_newlines: bool = False) -> str:
 
 def remove_ocr_artifacts(text: str, preserve_symbols: bool = True) -> str:
     """Remove common OCR artifacts while preserving important symbols.
-    
+
     Args:
         text: Text to clean
         preserve_symbols: If True, preserve dice/sanity-related symbols
-        
+
     Returns:
         Text with OCR artifacts removed
     """
     cleaned = text
-    
+
     # Remove vertical bars, tildes, etc.
     cleaned = re.sub(r"\s*[|]\s*", " ", cleaned)
     cleaned = re.sub(r"\s*[~]\s*", " ", cleaned)
-    
+
     if preserve_symbols:
         # Keep letters, numbers, spaces, punctuation, and dice/sanity symbols
         cleaned = re.sub(r"[^\w\s\.,;:!?\-\(\)\[\]\/●○◉🌀■□⬛⬜]", "", cleaned)
     else:
         # More aggressive cleaning
         cleaned = re.sub(r"[^\w\s\.,;:!?\-\(\)\[\]\/]", "", cleaned)
-    
+
     return cleaned
 
 
@@ -210,48 +214,48 @@ def clean_ocr_text(
     normalize_swirl: bool = True,
 ) -> str:
     """Comprehensive OCR text cleaning pipeline.
-    
+
     This is the main function to use for cleaning OCR text. It applies
     all cleaning steps in the correct order.
-    
+
     Args:
         text: Raw OCR text
         preserve_newlines: If True, preserve newlines for line-by-line parsing
         preserve_symbols: If True, preserve dice/sanity-related symbols
         normalize_dice: If True, normalize dice symbol references
         normalize_swirl: If True, normalize red swirl references
-        
+
     Returns:
         Cleaned text ready for parsing
     """
     cleaned = text
-    
+
     # Step 1: Apply basic OCR corrections (word-level fixes)
     cleaned = apply_ocr_corrections(cleaned)
-    
+
     # Step 2: Normalize dice and red swirl symbols (before other cleaning)
     if normalize_dice:
         cleaned = normalize_dice_symbols(cleaned)
     if normalize_swirl:
         cleaned = normalize_red_swirl_symbols(cleaned)
-    
+
     # Step 3: Clean whitespace
     cleaned = clean_whitespace(cleaned, preserve_newlines=preserve_newlines)
-    
+
     # Step 4: Remove OCR artifacts
     cleaned = remove_ocr_artifacts(cleaned, preserve_symbols=preserve_symbols)
-    
+
     return cleaned.strip()
 
 
 def extract_power_level_number(text: str) -> Optional[int]:
     """Extract power level number from text.
-    
+
     Looks for patterns like "Level 1", "L1", "1:", etc.
-    
+
     Args:
         text: Text that may contain a level number
-        
+
     Returns:
         Level number if found, None otherwise
     """
@@ -267,40 +271,40 @@ def extract_power_level_number(text: str) -> Optional[int]:
 
 def is_likely_power_description(text: str, min_length: int = 10) -> bool:
     """Check if text is likely a power description.
-    
+
     Uses heuristics to determine if text contains power description content.
-    
+
     Args:
         text: Text to check
         min_length: Minimum length to consider
-        
+
     Returns:
         True if text appears to be a power description
     """
     if len(text) < min_length:
         return False
-    
+
     text_lower = text.lower()
-    
+
     # Check for effect indicators
     effect_count = sum(1 for indicator in EFFECT_INDICATORS if indicator in text_lower)
-    
+
     # If it has multiple effect indicators, it's likely a power description
     return effect_count >= 2
 
 
 def extract_sentences(text: str) -> List[str]:
     """Extract sentences from text, handling OCR errors.
-    
+
     Args:
         text: Text to extract sentences from
-        
+
     Returns:
         List of sentences
     """
     # Split on sentence endings, but be lenient with OCR errors
     sentences = re.split(r"[.!?]\s+", text)
-    
+
     # Clean each sentence
     cleaned_sentences = []
     for sentence in sentences:
@@ -310,52 +314,52 @@ def extract_sentences(text: str) -> List[str]:
             sentence = re.sub(r"[.!?]+$", "", sentence)
             if sentence:
                 cleaned_sentences.append(sentence)
-    
+
     return cleaned_sentences
 
 
 def find_power_section(text: str, power_name: str, context_lines: int = 5) -> Optional[str]:
     """Find the section of text related to a specific power.
-    
+
     Args:
         text: Full text to search
         power_name: Name of the power to find
         context_lines: Number of lines of context to include
-        
+
     Returns:
         Power section text if found, None otherwise
     """
     lines = text.split("\n")
     power_start = None
-    
+
     # Find where the power is mentioned
     for i, line in enumerate(lines):
         if power_name.lower() in line.lower():
             power_start = i
             break
-    
+
     if power_start is None:
         return None
-    
+
     # Extract section with context
     start = max(0, power_start - context_lines)
     end = min(len(lines), power_start + 20)  # Look ahead more
-    
+
     section_lines = lines[start:end]
     return "\n".join(section_lines)
 
 
 def normalize_power_name(name: str) -> str:
     """Normalize power name for consistent matching.
-    
+
     Args:
         name: Power name (may have OCR errors)
-        
+
     Returns:
         Normalized power name
     """
     normalized = name.strip()
-    
+
     # Common power name corrections
     corrections = {
         "Arcane Master": "Arcane Mastery",
@@ -366,23 +370,23 @@ def normalize_power_name(name: str) -> str:
         "Swiftness": "Swiftness",
         "Toughness": "Toughness",
     }
-    
+
     # Try to match with corrections
     for key, value in corrections.items():
         if key.lower() in normalized.lower():
             return value
-    
+
     return normalized
 
 
 def extract_numbers_from_text(text: str) -> List[int]:
     """Extract all numbers from text.
-    
+
     Useful for finding dice counts, levels, etc.
-    
+
     Args:
         text: Text to extract numbers from
-        
+
     Returns:
         List of numbers found
     """
@@ -392,33 +396,32 @@ def extract_numbers_from_text(text: str) -> List[int]:
 
 def validate_power_description(description: str) -> Tuple[bool, List[str]]:
     """Validate a power description and return issues found.
-    
+
     Args:
         description: Power description to validate
-        
+
     Returns:
         Tuple of (is_valid, list_of_issues)
     """
     issues = []
-    
+
     if not description or len(description.strip()) < 5:
         issues.append("Description too short")
         return False, issues
-    
+
     if len(description) > 500:
         issues.append("Description suspiciously long (possible OCR error)")
-    
+
     # Check for common OCR error patterns
     if re.search(r"[|]{2,}", description):
         issues.append("Contains multiple vertical bars (OCR artifact)")
-    
+
     if re.search(r"[~]{2,}", description):
         issues.append("Contains multiple tildes (OCR artifact)")
-    
+
     # Check for suspicious character patterns
     if re.search(r"[^\w\s\.,;:!?\-\(\)\[\]\/]{3,}", description):
         issues.append("Contains suspicious character patterns")
-    
+
     is_valid = len(issues) == 0
     return is_valid, issues
-

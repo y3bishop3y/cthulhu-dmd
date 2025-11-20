@@ -20,8 +20,6 @@ try:
     import click
     from rich.console import Console
     from rich.panel import Panel
-    from rich.syntax import Syntax
-    from rich.table import Table
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -109,28 +107,17 @@ def compare_descriptions(
     ocr_errors = OCR_CORRECTIONS
 
     json_lower = json_desc.lower()
-    pdf_lower = pdf_desc.lower()
 
     # Check for OCR errors in JSON
     for error, correction in ocr_errors.items():
         if error in json_lower and correction not in json_lower:
             issues.append(f"OCR error: '{error}' should be '{correction}'")
 
-    # Check if key phrases are missing (load from TOML config)
-    from scripts.models.parsing_config import get_parsing_patterns
-
-    patterns_config = get_parsing_patterns()
-    key_phrases = {
-        "dice": patterns_config.key_phrases_dice,
-        "elder sign": patterns_config.key_phrases_elder_sign,
-        "success": patterns_config.key_phrases_success,
-        "attack": patterns_config.key_phrases_attack,
-        "action": patterns_config.key_phrases_action,
-    }
-
     # Compare lengths (PDF should be more complete)
     if len(pdf_desc) > len(json_desc) * 1.5:
-        issues.append(f"JSON description is significantly shorter ({len(json_desc)} vs {len(pdf_desc)} chars)")
+        issues.append(
+            f"JSON description is significantly shorter ({len(json_desc)} vs {len(pdf_desc)} chars)"
+        )
         suggestions.append("Consider using PDF description as it appears more complete")
 
     # Check for garbled text in JSON
@@ -190,7 +177,9 @@ def main(data_dir: Path, power: Optional[str]):
     pages_data = extract_text_from_pdf_pages(pdf_path, start_page=34, end_page=38)
     pdf_text = "\n\n".join([page["text"] for page in pages_data])
     page_count = get_pdf_page_count(pdf_path)
-    console.print(f"[green]✓ Extracted {len(pdf_text)} characters from appendix pages (34-37)[/green]\n")
+    console.print(
+        f"[green]✓ Extracted {len(pdf_text)} characters from appendix pages (34-37)[/green]\n"
+    )
 
     # Analyze each power
     powers_to_analyze = [p for p in powers_data if not power or p["name"] == power]
@@ -225,11 +214,15 @@ def main(data_dir: Path, power: Optional[str]):
             comparison = compare_descriptions(pdf_desc, json_desc, power_name, level)
 
             # Show JSON description
-            console.print(f"[yellow]JSON:[/yellow] {json_desc[:150]}{'...' if len(json_desc) > 150 else ''}")
+            console.print(
+                f"[yellow]JSON:[/yellow] {json_desc[:150]}{'...' if len(json_desc) > 150 else ''}"
+            )
 
             # Show PDF description if available
             if pdf_desc:
-                console.print(f"[green]PDF:[/green] {pdf_desc[:150]}{'...' if len(pdf_desc) > 150 else ''}")
+                console.print(
+                    f"[green]PDF:[/green] {pdf_desc[:150]}{'...' if len(pdf_desc) > 150 else ''}"
+                )
 
             # Show issues
             if comparison["issues"]:
@@ -263,4 +256,3 @@ def main(data_dir: Path, power: Optional[str]):
 
 if __name__ == "__main__":
     main()
-

@@ -31,7 +31,9 @@ class Power(BaseModel):
     """Represents a character power (special or common)."""
 
     name: str = Field(..., description="Name of the power")
-    is_special: bool = Field(default=False, description="Whether this is a special power (vs common)")
+    is_special: bool = Field(
+        default=False, description="Whether this is a special power (vs common)"
+    )
     levels: List[PowerLevel] = Field(default_factory=list, description="Power levels (1-4)")
 
     @computed_field
@@ -231,8 +233,16 @@ class BackCardData(BaseModel):
             from scripts.models.parsing_config import get_parsing_patterns
 
             patterns_config = get_parsing_patterns()
-            gain_patterns = patterns_config.power_parsing_gain_patterns if patterns_config.power_parsing_gain_patterns else ["gain", "goin", "go in"]
-            sanity_patterns = patterns_config.power_parsing_sanity_patterns if patterns_config.power_parsing_sanity_patterns else ["sanity", "santiy"]
+            gain_patterns = (
+                patterns_config.power_parsing_gain_patterns
+                if patterns_config.power_parsing_gain_patterns
+                else ["gain", "goin", "go in"]
+            )
+            sanity_patterns = (
+                patterns_config.power_parsing_sanity_patterns
+                if patterns_config.power_parsing_sanity_patterns
+                else ["sanity", "santiy"]
+            )
 
             # Check current line and surrounding lines for the pattern
             has_gain = any(g in line_lower for g in gain_patterns)
@@ -314,7 +324,9 @@ class BackCardData(BaseModel):
 
                     # Start new level
                     level_num = int(level_match.group(1))
-                    description = re.sub(r"^(?:level\s*)?\d+[:\-]?\s*", "", line, flags=re.I).strip()
+                    description = re.sub(
+                        r"^(?:level\s*)?\d+[:\-]?\s*", "", line, flags=re.I
+                    ).strip()
                     if description:
                         power_content_lines = [description]
                 else:
@@ -391,8 +403,16 @@ class BackCardData(BaseModel):
             from scripts.models.parsing_config import get_parsing_patterns
 
             patterns_config = get_parsing_patterns()
-            gain_patterns = patterns_config.power_parsing_gain_patterns if patterns_config.power_parsing_gain_patterns else ["gain", "goin", "go in"]
-            sanity_patterns = patterns_config.power_parsing_sanity_patterns if patterns_config.power_parsing_sanity_patterns else ["sanity", "santiy"]
+            gain_patterns = (
+                patterns_config.power_parsing_gain_patterns
+                if patterns_config.power_parsing_gain_patterns
+                else ["gain", "goin", "go in"]
+            )
+            sanity_patterns = (
+                patterns_config.power_parsing_sanity_patterns
+                if patterns_config.power_parsing_sanity_patterns
+                else ["sanity", "santiy"]
+            )
             for i, line in enumerate(lines):
                 line_lower = line.lower()
                 # Check if this line has gain pattern

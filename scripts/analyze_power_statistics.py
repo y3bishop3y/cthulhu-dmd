@@ -34,8 +34,6 @@ except ImportError as e:
 from scripts.models.dice_probabilities import (
     BASE_BLACK_DICE_COUNT,
     BASE_GREEN_DICE_COUNT,
-    analyze_power_dice_impact,
-    get_combined_stats,
     DiceProbabilityCalculator,
 )
 from scripts.models.game_mechanics import ActionType
@@ -383,7 +381,7 @@ def analyze_power_level(power_name: str, level: int, description: str) -> PowerL
         if dice_addition.black_dice > 0:
             dice_desc.append(f"{dice_addition.black_dice} black dice")
         effect_parts.append(f"Adds {' + '.join(dice_desc)}")
-    
+
     if elder_sign_conversion.elder_signs_as_successes > 0:
         if elder_sign_conversion.converts_any_number:
             if elder_sign_conversion.successes_per_elder_sign > 1:
@@ -395,7 +393,7 @@ def analyze_power_level(power_name: str, level: int, description: str) -> PowerL
                 effect_parts.append(f"Counts {elder_sign_conversion.elder_signs_as_successes} elder sign(s) as {elder_sign_conversion.successes_per_elder_sign} successes each")
             else:
                 effect_parts.append(f"Counts {elder_sign_conversion.elder_signs_as_successes} elder sign(s) as success(es)")
-    
+
     if action_addition.actions_added > 0:
         action_name = action_addition.action_type.value
         if action_addition.actions_added == 1:
@@ -404,10 +402,10 @@ def analyze_power_level(power_name: str, level: int, description: str) -> PowerL
             # Handle pluralization
             plural_name = action_name if action_name.endswith("s") else f"{action_name}s"
             effect_parts.append(f"Adds {action_addition.actions_added} free {plural_name} per turn")
-    
+
     if not effect_parts:
         effect_parts.append("Other effect (no dice, elder sign conversion, or actions)")
-    
+
     effect = ". ".join(effect_parts)
 
     return PowerLevelAnalysis(
@@ -470,7 +468,7 @@ def main(data_dir: Path, output_json: Optional[Path]):
 
             has_dice = analysis.green_dice_added > 0 or analysis.black_dice_added > 0
             has_elder_conversion = analysis.elder_sign_conversion.elder_signs_as_successes > 0
-            
+
             if has_dice or has_elder_conversion:
                 effects = []
                 if has_dice:
@@ -480,13 +478,13 @@ def main(data_dir: Path, output_json: Optional[Path]):
                     if analysis.black_dice_added > 0:
                         dice_desc.append(f"{analysis.black_dice_added} black")
                     effects.append(f"Adds {' + '.join(dice_desc)} dice")
-                
+
                 if has_elder_conversion:
                     if analysis.elder_sign_conversion.converts_any_number:
                         effects.append("Counts any number of elder signs as successes")
                     else:
                         effects.append(f"Counts {analysis.elder_sign_conversion.elder_signs_as_successes} elder sign(s) as successes")
-                
+
                 effect_str = " | ".join(effects)
                 console.print(f"  Level {level}: {effect_str}")
                 console.print(
@@ -523,11 +521,11 @@ def main(data_dir: Path, output_json: Optional[Path]):
     for analysis in all_analyses:
         has_dice = analysis.green_dice_added > 0 or analysis.black_dice_added > 0
         has_elder = analysis.elder_sign_conversion.elder_signs_as_successes > 0
-        
+
         if has_dice or has_elder:
             # Show effect summary
             effect_summary = analysis.effect[:40] + "..." if len(analysis.effect) > 40 else analysis.effect
-            
+
             table.add_row(
                 analysis.power_name,
                 str(analysis.level),

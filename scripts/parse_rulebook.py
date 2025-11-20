@@ -11,11 +11,12 @@ from typing import Any, Dict, Final, List, Optional
 
 try:
     import click
-    import pdfplumber
     from pydantic import BaseModel, Field
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
+
+    from scripts.utils.pdf import extract_text_from_pdf_pages
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -75,34 +76,8 @@ def is_section_header(text: str) -> bool:
     return False
 
 
-def extract_text_from_pdf(pdf_path: Path) -> List[Dict[str, Any]]:
-    """Extract text from PDF with page information."""
-    pages_data: List[Dict[str, Any]] = []
-
-    try:
-        with pdfplumber.open(pdf_path) as pdf:
-            total_pages = len(pdf.pages)
-
-            with Progress(
-                SpinnerColumn(),
-                TextColumn("[progress.description]{task.description}"),
-                BarColumn(),
-                TaskProgressColumn(),
-                console=console,
-            ) as progress:
-                task = progress.add_task("Extracting text from PDF", total=total_pages)
-
-                for page_num, page in enumerate(pdf.pages, start=1):
-                    text = page.extract_text()
-                    if text:
-                        pages_data.append({"page": page_num, "text": text})
-                    progress.update(task, advance=1)
-
-        return pages_data
-
-    except Exception as e:
-        console.print(f"[red]Error extracting text from PDF:[/red] {e}")
-        return []
+# PDF extraction now uses utils/pdf.py
+# extract_text_from_pdf() returns List[Dict[str, Any]] with 'page' and 'text' keys
 
 
 def parse_rulebook_structure(pages_data: List[Dict[str, Any]]) -> Rulebook:
@@ -305,7 +280,7 @@ def main(
 
     # Extract text from PDF
     console.print("\n[cyan]Extracting text from PDF...[/cyan]")
-    pages_data = extract_text_from_pdf(pdf_file)
+    pages_data = extract_text_from_pdf_pages(pdf_file, console=console)
 
     if not pages_data:
         console.print("[red]Failed to extract text from PDF[/red]")

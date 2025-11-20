@@ -38,21 +38,21 @@ def preprocess_image_for_ocr(
     denoise_strength: Optional[int] = None,
 ) -> np.ndarray:
     """Preprocess image to improve OCR accuracy.
-    
+
     This function applies an enhanced preprocessing pipeline:
     1. Convert to grayscale
     2. Apply contrast enhancement (optional, defaults to TOML config)
     3. Apply thresholding (OTSU)
     4. Denoise with configurable strength (defaults to TOML config)
-    
+
     Args:
         image_path: Path to image file
         enhance_contrast: If True, apply CLAHE contrast enhancement (defaults to TOML config)
         denoise_strength: Denoising strength (higher = more aggressive, defaults to TOML config)
-        
+
     Returns:
         Preprocessed image as numpy array
-        
+
     Raises:
         ValueError: If image cannot be read
     """
@@ -92,17 +92,17 @@ def extract_text_from_image(
     denoise_strength: int = 10,
 ) -> str:
     """Extract text from image using OCR.
-    
+
     Args:
         image_path: Path to image file
         psm_mode: Page segmentation mode (default: 3 for automatic)
         oem_mode: OCR engine mode (default: 3 for default)
         enhance_contrast: If True, apply contrast enhancement before OCR
         denoise_strength: Denoising strength (higher = more aggressive)
-        
+
     Returns:
         Extracted text as string
-        
+
     Raises:
         ValueError: If image cannot be read or processed
     """
@@ -130,9 +130,9 @@ def extract_text_from_image_region(
     psm_mode: int = DEFAULT_PSM_MODE,
 ) -> str:
     """Extract text from a specific region of an image.
-    
+
     Useful for extracting text from specific card sections.
-    
+
     Args:
         image_path: Path to image file
         x: X coordinate of region start
@@ -140,19 +140,18 @@ def extract_text_from_image_region(
         width: Width of region
         height: Height of region
         psm_mode: Page segmentation mode
-        
+
     Returns:
         Extracted text from region
     """
     # Read and preprocess full image
     processed_img = preprocess_image_for_ocr(image_path)
-    
+
     # Extract region
     region = processed_img[y : y + height, x : x + width]
-    
+
     # Extract text from region
     custom_config = f"--oem {DEFAULT_OEM_MODE} --psm {psm_mode}"
     text: str = pytesseract.image_to_string(region, config=custom_config)
-    
-    return text.strip()
 
+    return text.strip()

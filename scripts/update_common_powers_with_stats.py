@@ -98,7 +98,7 @@ def main(data_dir: Path, dry_run: bool):
 
             has_dice = analysis.dice_addition.adds_any_dice
             has_elder_conversion = analysis.elder_sign_conversion.elder_signs_as_successes > 0
-            
+
             if has_dice or has_elder_conversion:
                 effects = []
                 if has_dice:
@@ -108,13 +108,13 @@ def main(data_dir: Path, dry_run: bool):
                     if analysis.black_dice_added > 0:
                         dice_info.append(f"{analysis.black_dice_added} black")
                     effects.append(f"Adds {' + '.join(dice_info)} dice")
-                
+
                 if has_elder_conversion:
                     if analysis.elder_sign_conversion.converts_any_number:
                         effects.append("Counts any number of elder signs as successes")
                     else:
                         effects.append(f"Counts {analysis.elder_sign_conversion.elder_signs_as_successes} elder sign(s) as successes")
-                
+
                 effect_str = " | ".join(effects)
                 console.print(
                     f"  Level {level}: {effect_str} "

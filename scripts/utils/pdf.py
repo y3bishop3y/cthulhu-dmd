@@ -7,7 +7,7 @@ This module provides common PDF parsing functions used across scripts.
 
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
     import pdfplumber
@@ -116,6 +116,75 @@ def extract_tables_from_pdf(
                 all_tables.extend(tables)
 
     return all_tables
+
+
+def extract_text_from_pdf_pages(
+    pdf_path: Path,
+    start_page: Optional[int] = None,
+    end_page: Optional[int] = None,
+    console: Optional[Any] = None,
+) -> List[Dict[str, Any]]:
+    """Extract text from PDF pages with page information.
+    
+    Args:
+        pdf_path: Path to PDF file
+        start_page: Optional starting page number (1-indexed)
+        end_page: Optional ending page number (1-indexed, inclusive)
+        console: Optional Rich console for progress display
+        
+    Returns:
+        List of dicts with 'page' and 'text' keys
+    """
+    pages_data: List[Dict[str, Any]] = []
+
+    if not pdf_path.exists():
+        raise FileNotFoundError(f"PDF file not found: {pdf_path}")
+
+    try:
+        with pdfplumber.open(pdf_path) as pdf:
+            total_pages = len(pdf.pages)
+            start_idx = (start_page - 1) if start_page else 0
+            end_idx = end_page if end_page else total_pages
+
+            # Show progress if console provided
+            if console:
+                from rich.progress import (
+                    BarColumn,
+                    Progress,
+                    SpinnerColumn,
+                    TaskProgressColumn,
+                    TextColumn,
+                )
+                with Progress(
+                    SpinnerColumn(),
+                    TextColumn("[progress.description]{task.description}"),
+                    BarColumn(),
+                    TaskProgressColumn(),
+                    console=console,
+                ) as progress:
+                    task = progress.add_task("Extracting text from PDF", total=end_idx - start_idx)
+                    for page_num in range(start_idx, min(end_idx, total_pages)):
+                        page = pdf.pages[page_num]
+                        text = page.extract_text()
+                        if text:
+                            pages_data.append({"page": page_num + 1, "text": text})
+                        progress.update(task, advance=1)
+            else:
+                for page_num in range(start_idx, min(end_idx, total_pages)):
+                    page = pdf.pages[page_num]
+                    text = page.extract_text()
+                    if text:
+                        pages_data.append({"page": page_num + 1, "text": text})
+
+        return pages_data
+
+    except Exception as e:
+        error_msg = f"Error extracting text from PDF: {e}"
+        if console:
+            console.print(f"[red]{error_msg}[/red]")
+        else:
+            print(error_msg, file=sys.stderr)
+        return []
 
 
 def get_pdf_page_count(pdf_path: Path) -> int:

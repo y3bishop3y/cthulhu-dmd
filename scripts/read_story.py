@@ -27,9 +27,9 @@ except ImportError as e:
     )
     sys.exit(1)
 
-console = Console()
-
 from scripts.models.tts_settings_config import get_tts_settings
+
+console = Console()
 
 # Constants
 FILENAME_STORY_TXT: Final[str] = "story.txt"
@@ -37,7 +37,9 @@ FILENAME_CHARACTER_JSON: Final[str] = "character.json"
 # Load TTS model from TOML config
 _tts_settings = get_tts_settings()
 DEFAULT_TTS_MODEL: Final[str] = (
-    _tts_settings.tts_default_model if _tts_settings.tts_default_model else "tts_models/en/vctk/vits"
+    _tts_settings.tts_default_model
+    if _tts_settings.tts_default_model
+    else "tts_models/en/vctk/vits"
 )
 OUTPUT_AUDIO_EXT: Final[str] = ".wav"
 SPEAKER_METADATA_FILE: Final[str] = "scripts/data/vctk_speakers.json"
@@ -98,7 +100,9 @@ def load_speaker_metadata() -> Dict[str, Dict[str, Any]]:
         return {}
 
 
-def get_speaker_description(speaker_id: str, metadata: Dict[str, Dict[str, Any]]) -> Tuple[str, str]:
+def get_speaker_description(
+    speaker_id: str, metadata: Dict[str, Dict[str, Any]]
+) -> Tuple[str, str]:
     """Get name and description for a VCTK speaker ID."""
     if speaker_id in metadata:
         meta = metadata[speaker_id]
@@ -348,4 +352,3 @@ def main(
 
 if __name__ == "__main__":
     main()
-

@@ -155,7 +155,7 @@ CLASS_CONTENT: Final[str] = "content"
 EXT_JPG: Final[str] = ".jpg"
 EXT_PDF: Final[str] = ".pdf"
 
-# Season/Box mappings loaded from TOML config
+# Season/Box mappings loaded from TOML config (imported after other imports)
 from scripts.models.web_config import get_web_scraping_config
 
 _web_scraping_config = get_web_scraping_config()
@@ -724,8 +724,7 @@ def main(data_dir: str, dry_run: bool, season: str):
             # Map to the actual season folder name
             for season_name in SEASON_MAPPINGS.values():
                 if season_key == season_name or (
-                    season_key in season_urls
-                    and season_urls[season_key] == url
+                    season_key in season_urls and season_urls[season_key] == url
                 ):
                     if season_name not in discovered_pdfs:
                         discovered_pdfs[season_name] = []
@@ -804,9 +803,7 @@ def main(data_dir: str, dry_run: bool, season: str):
 
         # Skip if PDF already exists
         if pdf_filepath.exists():
-            console.print(
-                f"[yellow]Skipping PDF for {season} (already exists)[/yellow]"
-            )
+            console.print(f"[yellow]Skipping PDF for {season} (already exists)[/yellow]")
             continue
 
         console.print(f"[cyan]Downloading PDF for {season}...[/cyan]")

@@ -7,15 +7,14 @@ Loads regex patterns and keywords from TOML file for easy maintenance.
 
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 try:
     from pydantic import Field
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: uv add pydantic-settings\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: uv add pydantic-settings\n",
         file=sys.stderr,
     )
     raise
@@ -83,7 +82,9 @@ class ParsingPatternsConfig(BaseSettings):
             patterns = data.get("patterns", {})
 
             # Effect indicators (simple keywords)
-            config_data["effect_indicators"] = patterns.get("effect_indicators", {}).get("keywords", [])
+            config_data["effect_indicators"] = patterns.get("effect_indicators", {}).get(
+                "keywords", []
+            )
 
             # Power parsing keywords (simple strings)
             power_parsing = patterns.get("power_parsing", {})
@@ -124,4 +125,3 @@ def get_parsing_patterns() -> ParsingPatternsConfig:
     if _parsing_config is None:
         _parsing_config = ParsingPatternsConfig.load_from_file()
     return _parsing_config
-

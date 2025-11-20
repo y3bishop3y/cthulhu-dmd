@@ -14,8 +14,7 @@ try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: uv add pydantic-settings\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: uv add pydantic-settings\n",
         file=sys.stderr,
     )
     raise
@@ -70,8 +69,7 @@ class TTSSettingsConfig(BaseSettings):
             return cls(tts_default_model=tts.get("default_model"))
         except Exception as e:
             print(
-                f"Warning: Could not load TTS settings from {file_path}: {e}\n"
-                "Using defaults.",
+                f"Warning: Could not load TTS settings from {file_path}: {e}\nUsing defaults.",
                 file=sys.stderr,
             )
             return cls()
@@ -93,4 +91,3 @@ def get_tts_settings() -> TTSSettingsConfig:
     if _tts_settings_config is None:
         _tts_settings_config = TTSSettingsConfig.load_from_file()
     return _tts_settings_config
-
