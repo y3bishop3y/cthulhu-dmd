@@ -15,13 +15,24 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Counts 1 elder sign(s) as success(es)"
       },
       {
         "level": 2,
-        "description": "Instead, you may count any number of elder signs as successes,",
+        "description": "Instead, you may count any number of elder signs as successes.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -31,7 +42,18 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Counts any elder signs as successes"
       },
@@ -47,13 +69,24 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 1,
+          "has_healing": true,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Counts any elder signs as successes"
       },
       {
         "level": 4,
-        "description": "You may perform 1 free attack per turn against a target in your space",
+        "description": "You may perform 1 free attack per turn against a target in your space.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -63,7 +96,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 free attack per turn"
       }
@@ -75,7 +119,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "BRAWLING When you attack, you may target You have 2 freee When you attack gain 1 green dice while attacking ANY NUMBER of rerolls when figuresures in your space, a target in your space. figuresures in your space attacking a target deal the full wounds WOISCOVERY CARDS you like). i i, (split the wounds as in your space. to EACH target.",
+        "description": "When you attack, you may target figures in your space. Gain 1 green dice while attacking a target in your space.",
         "statistics": {
           "green_dice_added": 1,
           "black_dice_added": 0,
@@ -85,13 +129,26 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 1,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacking"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 green dice"
       },
       {
         "level": 2,
-        "description": "Instead, you may reduce wounds taken and loss of attacked or railing for Fire. sanity by 1 when attacked or rolling for Fire,",
+        "description": "Instead, you may reduce wounds taken and loss of sanity when attacked or rolling for Fire. sanity by 1 when attacked or rolling for Fire.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -101,13 +158,26 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacked or rolling for fire"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Instead, the other heals 3 wounds/ stress as if they were Resting. When you attack, you may target You have 2 freee When you attack ANY NUMBER of rerolls when figuresures in your space, figuresures in your space attacking a target deal the full wounds split the wounds as in your space. to EACH target. you like).",
+        "description": "Instead, the other heals 3 wounds/ stress as if they were Resting. When you attack, you may target You have 2 free rerolls when you attack ANY of rerolls when figures in your space, figures in your space attacking a target deal the full wounds split the wounds as in your space. to EACH target. you like).",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -117,13 +187,24 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 2,
+          "reroll_type": "free",
+          "has_reroll": true,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": ". Also, all other investigators in your _, Also you may i Your double the number space may heal 1 of successes. wound AND 1 stress",
+        "description": ". Also, all other investigators in your _, Also you may i Your double the number space may heal 1 of successes. wound AND 1 stress.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -133,7 +214,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       }
@@ -145,7 +237,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "You may attack a target 1 space away",
+        "description": "You may attack a target 1 space away.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -155,13 +247,24 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 2,
-        "description": "Gain 2 Green dice when attacking a target not in your space",
+        "description": "Gain 2 Green dice when attacking a target not in your space.",
         "statistics": {
           "green_dice_added": 2,
           "black_dice_added": 0,
@@ -171,13 +274,27 @@
           "expected_successes_percent_increase": 66.67,
           "max_successes_increase": 2,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacking",
+            "when attacking target not in your space"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 2 green dice"
       },
       {
         "level": 3,
-        "description": "You may attack a target 1 additional space away (2 total)",
+        "description": "You may attack a target 1 additional space away (2 total).",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -187,13 +304,24 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "You may perform 1 free attack per turn against a target in your space",
+        "description": "You may perform 1 free attack per turn against a target in your space.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -203,7 +331,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 free attack per turn"
       }
@@ -215,7 +354,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "STEALTH When you Run, you may Sneak once (1 enemy doesnt follow you). BINS gain 1 green dice while attacking a target in your space.",
+        "description": "When you Run, you may Sneak once (1 enemy doesn't follow you). When gain 1 green dice while attacking a target in your space.",
         "statistics": {
           "green_dice_added": 1,
           "black_dice_added": 0,
@@ -225,13 +364,26 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 1,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacking"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 green dice"
       },
       {
         "level": 2,
-        "description": "Instead, Sneak once (I enemy when you Run, you doesnt follow you). may Sneak 3 times. MASTERY When making any roll,",
+        "description": "Instead, Sneak once (1 enemy when you Run, you doesn't follow you). may Sneak 3 times. When making any roll.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -241,7 +393,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
@@ -257,13 +420,24 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 1,
+          "has_healing": true,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Counts any elder signs as successes"
       },
       {
         "level": 4,
-        "description": "You may perform 1 free attack per turn against a target in your space",
+        "description": "You may perform 1 free attack per turn against a target in your space.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -273,7 +447,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 free attack per turn"
       }
@@ -285,7 +470,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "additional wound (2 total). You have 1 freee Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no",
+        "description": "additional wound (2 total). You have 1 free Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -295,7 +480,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
@@ -311,13 +507,24 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
-        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+        "effect": "Adds 1 free action per turn"
       },
       {
         "level": 3,
-        "description": "Level 3 description - Not found in character cards",
+        "description": "You may perform 1 free Run action each turn. When you Run, you may Sneak 3 times.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -327,13 +534,24 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "You may perform 1 free attack per turn against a target in your space",
+        "description": "You may perform 1 free attack per turn against a target in your space.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -343,7 +561,18 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 free attack per turn"
       }
@@ -355,7 +584,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "TOUGHNESS You have 1 freee reroll when attacked or rolling for Fire. You may also discard a Detectitve token to reroll 1 die. gain 1 black dice when attacking a target not in your space.",
+        "description": "You have 1 free reroll when attacked or rolling for Fire. You may also discard a detective token to reroll 1 die. gain 1 black dice when attacking a target not in your space.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 1,
@@ -365,13 +594,28 @@
           "expected_successes_percent_increase": 33.33,
           "max_successes_increase": 1,
           "tentacle_risk": 2.0,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacking",
+            "when attacking target not in your space",
+            "when attacked or rolling for fire"
+          ],
+          "rerolls_added": 1,
+          "reroll_type": "standard",
+          "has_reroll": true,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Adds 1 black dice"
       },
       {
         "level": 2,
-        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when. attacked or rolling for Fire. You may also add aff AND your Gift to rolls of investigators in your space. Heal I stress for each  you count as a success.",
+        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when attacked or rolling for Fire. You may also add and your Gift to rolls of investigators in your space. Heal 1 stress for each you count as a success.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -381,13 +625,26 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacked or rolling for fire"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 1,
+          "has_healing": true,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Instead, you may",
+        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when attacked or rolling for Fire.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -397,13 +654,26 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacked or rolling for fire"
+          ],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "Instead, you may re bce wou 5 reduce wounds reduce wounds taken and loss o! taken and loss of taken by 2 and loss You have 1 freee reroll when attacked or ity by tw rolling for Fire, stocks Y wll sanity by T from of sanity by from ee orrolling ANY SOURCE. ANY SOURCE, for Fire. , ,",
+        "description": "Instead, you may reduce wounds taken and loss of sanity by 2 when attacked or rolling for Fire. You have 1 free reroll when attacked or rolling for Fire.",
         "statistics": {
           "green_dice_added": 0,
           "black_dice_added": 0,
@@ -413,7 +683,20 @@
           "expected_successes_percent_increase": 0.0,
           "max_successes_increase": 0,
           "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5
+          "base_tentacle_risk": 1.5,
+          "is_conditional": true,
+          "conditions": [
+            "when attacked or rolling for fire"
+          ],
+          "rerolls_added": 1,
+          "reroll_type": "free",
+          "has_reroll": true,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false
         },
         "effect": "Other effect (no dice, elder sign conversion, or actions)"
       }

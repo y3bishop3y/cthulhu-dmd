@@ -1,0 +1,16 @@
+{
+  "season_urls": {
+    "season1": "https://makecraftgame.com/2022/10/21/dmd-character-guide/",
+    "season2": "https://makecraftgame.com/2022/10/21/dmd-character-guide/",
+    "season3": "https://makecraftgame.com/2025/01/17/dmd-fear-of-the-unknown/",
+    "season4": "https://makecraftgame.com/2025/01/17/dmd-season-4/",
+    "comic-book-v2": "https://makecraftgame.com/2025/01/17/dmd-comic-book-v2/",
+    "unknowable-box": "https://makecraftgame.com/2025/01/17/dmd-unknowable-box/"
+  },
+  "season_pdf_urls": {
+    "season3": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Fear-of-the-Unknown.pdf",
+    "season4": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Unknowable-Box.pdf",
+    "unknowable-box": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Unknowable-Box.pdf"
+  }
+}
+

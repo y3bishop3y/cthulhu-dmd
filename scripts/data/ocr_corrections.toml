@@ -1,0 +1,33 @@
+# OCR Corrections Configuration
+# Common OCR errors and their corrections
+# Add new corrections here without modifying code
+
+[corrections]
+# Common word corrections
+"freee" = "free"
+"detectitve" = "detective"
+"figuresures" = "figures"
+"railing" = "rolling"
+"aff" = "and"
+"BINS" = "When"
+"I enemy" = "1 enemy"
+"wou" = "wound"
+"o!" = "of"
+"re bce" = "reduce"
+"rero" = "reroll"
+"santiy" = "sanity"
+"goin" = "gain"
+"ison" = "is on"
+"isone" = "is on"
+"doesnt" = "doesn't"
+"Goin" = "Gain"
+"Isone" = "Is on"
+"Is on" = "Is on"
+"Yi" = "elder signs"
+"Yx-" = "elder signs"
+
+# Common OCR artifacts
+"|" = " "
+"~" = " "
+"—" = "-"
+"–" = "-"
