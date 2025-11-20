@@ -34,6 +34,7 @@ except ImportError as e:
     sys.exit(1)
 
 from scripts.analyze_power_statistics import analyze_power_level
+from scripts.models.character import CommonPowerLevelData, PowerLevelStatistics
 from scripts.models.constants import CommonPower
 from scripts.utils.parsing import OCR_CORRECTIONS, fix_number_ocr_errors
 
