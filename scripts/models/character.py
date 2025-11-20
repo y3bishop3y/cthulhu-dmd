@@ -584,3 +584,37 @@ class CharacterData(BaseModel):
     def get_common_power_names(self) -> List[str]:
         """Get list of common power names."""
         return self.common_powers.copy()
+
+
+class PowerLevelStatistics(BaseModel):
+    """Statistics for a power level from common_powers.json."""
+
+    green_dice_added: int = Field(default=0, ge=0, description="Number of green dice added")
+    black_dice_added: int = Field(default=0, ge=0, description="Number of black dice added")
+    base_expected_successes: float = Field(default=0.0, ge=0.0, description="Expected successes with base dice")
+    enhanced_expected_successes: float = Field(default=0.0, ge=0.0, description="Expected successes with enhancement")
+    expected_successes_increase: float = Field(default=0.0, description="Absolute increase in expected successes")
+    expected_successes_percent_increase: float = Field(default=0.0, description="Percentage increase in expected successes")
+    max_successes_increase: int = Field(default=0, ge=0, description="Increase in maximum possible successes")
+    tentacle_risk: float = Field(default=0.0, ge=0.0, description="Expected tentacles with enhancement")
+    base_tentacle_risk: float = Field(default=0.0, ge=0.0, description="Expected tentacles with base dice")
+    is_conditional: bool = Field(default=False, description="Whether this power has conditional effects")
+    conditions: List[str] = Field(default_factory=list, description="List of condition strings")
+    rerolls_added: int = Field(default=0, ge=0, description="Number of rerolls added")
+    reroll_type: Optional[str] = Field(default=None, description="Type of reroll: 'free' or 'standard'")
+    has_reroll: bool = Field(default=False, description="Whether this power adds any rerolls")
+    wounds_healed: int = Field(default=0, ge=0, description="Number of wounds healed")
+    stress_healed: int = Field(default=0, ge=0, description="Number of stress healed")
+    has_healing: bool = Field(default=False, description="Whether this power has any healing effects")
+    wound_reduction: int = Field(default=0, ge=0, description="Wound damage reduction")
+    sanity_reduction: int = Field(default=0, ge=0, description="Sanity loss reduction")
+    has_defensive: bool = Field(default=False, description="Whether this power has any defensive effects")
+
+
+class CommonPowerLevelData(BaseModel):
+    """Represents a power level from common_powers.json with statistics."""
+
+    level: int = Field(..., ge=1, le=4, description="Power level (1-4)")
+    description: str = Field(..., description="Power level description")
+    statistics: PowerLevelStatistics = Field(..., description="Statistical analysis of this power level")
+    effect: str = Field(..., description="Summary of what this power level does")
