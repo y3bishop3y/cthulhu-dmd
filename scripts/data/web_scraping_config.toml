@@ -1,0 +1,62 @@
+# Web Scraping Configuration
+# HTML tags, CSS classes, and web scraping settings
+
+[html_tags]
+heading_levels = ['h2', 'h3', 'h4']
+content_containers = ['div', 'main', 'article']
+image = 'img'
+link = 'a'
+bold = ['strong', 'b']
+text_containers = ['p', 'li']
+
+[css_classes]
+entry_content = 'entry-content'
+post_content = 'post-content'
+content = 'content'
+
+[file_patterns]
+back_image = ['back.webp', 'back.jpg']
+image_extensions = ['.jpg', '.jpeg', '.webp', '.png']
+pdf_extension = '.pdf'
+
+[image_sizes]
+# Image size suffixes to remove from URLs
+sizes = ['-150x', '-300x', '-768x', '-1024x']
+
+[search_keywords]
+character = 'character'
+dmd = 'dmd'
+death = 'death'
+
+[season_mappings]
+# Mapping of display names to season slugs
+# This is frequently updated as new seasons are added
+"Base Box" = "season1"
+"Season 2" = "season2"
+"Season 3" = "season3"
+"Fear of the Unknown" = "season3"
+"Season 4" = "season4"
+"Extra Promo" = "extra-promos"
+"Extra Promos" = "extra-promos"
+"Unspeakable Box" = "unspeakable-box"
+"Unknowable Box" = "unknowable-box"
+"Comic Book Extra" = "comic-book-extras"
+"Comic Book Extras" = "comic-book-extras"
+"Comic Book Vol. 2" = "comic-book-v2"
+"Comic Book Volume 2" = "comic-book-v2"
+
+[limits]
+max_parent_levels = 5
+max_siblings_to_check = 50
+min_char_name_length = 2
+max_char_name_length = 30
+max_images_per_character = 2
+max_chars_to_display = 5
+
+[constants]
+query_param_separator = '?'
+path_separator = '/'
+hyphen = '-'
+space = ' '
+back_card_suffix = '.1'
+

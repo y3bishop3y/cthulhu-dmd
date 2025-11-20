@@ -7,33 +7,39 @@ functions that can be used across all parsing scripts.
 """
 
 import re
-from typing import Final, Dict, List, Optional, Tuple
+from typing import Dict, Final, List, Optional, Tuple
 
-# Comprehensive OCR error corrections
-# Format: (incorrect_ocr_text, correct_text)
-OCR_CORRECTIONS: Final[Dict[str, str]] = {
-    # Common word errors
-    "goin": "gain",
-    "Goin": "Gain",
-    "isone": "is on",
-    "Isone": "Is on",
-    "ison": "is on",
-    "Is on": "Is on",
-    "Yi": "elder signs",
-    "Yx-": "elder signs",
-    "elder sign": "elder sign",  # Keep for normalization
-    "elder signs": "elder signs",
-    # Number/letter confusions
-    "0": "O",  # Context-dependent, but often O in text
-    "1": "I",  # Context-dependent
-    # Common OCR artifacts
-    "|": " ",
-    "~": " ",
-    "—": "-",
-    "–": "-",
-}
+from scripts.models.ocr_config import get_ocr_corrections
+from scripts.models.parsing_config import get_parsing_patterns
+
+# Load OCR corrections from TOML configuration file
+# This allows adding corrections without modifying code
+OCR_CORRECTIONS: Final[Dict[str, str]] = get_ocr_corrections()
+
+# Load effect indicators from TOML config (simple keywords)
+_parsing_config = get_parsing_patterns()
+EFFECT_INDICATORS: Final[List[str]] = _parsing_config.effect_indicators if _parsing_config.effect_indicators else [
+    "gain",
+    "add",
+    "count",
+    "may",
+    "when",
+    "instead",
+    "also",
+    "per turn",
+    "free",
+    "attack",
+    "dice",
+    "success",
+    "elder sign",
+    "tentacle",
+    "sanity",
+    "stress",
+    "wound",
+]
 
 # Dice symbol patterns that OCR might misinterpret
+# Note: Complex regex patterns stay in code for maintainability
 DICE_SYMBOL_PATTERNS: Final[List[Tuple[str, str]]] = [
     # Green dice patterns (various OCR interpretations)
     (r"[●○◉🟢🟩]", "green dice"),
@@ -62,26 +68,7 @@ POWER_LEVEL_PATTERNS: Final[List[str]] = [
     r"^(\d+)\s+",
 ]
 
-# Common phrases that indicate power effects
-EFFECT_INDICATORS: Final[List[str]] = [
-    "gain",
-    "add",
-    "count",
-    "may",
-    "when",
-    "instead",
-    "also",
-    "per turn",
-    "free",
-    "attack",
-    "dice",
-    "success",
-    "elder sign",
-    "tentacle",
-    "sanity",
-    "stress",
-    "wound",
-]
+# Note: EFFECT_INDICATORS is now loaded from TOML config above
 
 
 def normalize_dice_symbols(text: str) -> str:

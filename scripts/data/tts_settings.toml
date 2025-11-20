@@ -1,0 +1,7 @@
+# Text-to-Speech Settings Configuration
+# TTS model and speaker defaults
+
+[tts]
+# Default TTS model to use
+default_model = "tts_models/en/vctk/vits"
+

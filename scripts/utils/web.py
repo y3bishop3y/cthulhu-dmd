@@ -21,12 +21,15 @@ except ImportError as e:
     )
     raise
 
-# Constants
-DEFAULT_TIMEOUT: Final[int] = 30
+from scripts.models.web_config import get_web_settings
+
+# Load web settings from TOML config
+_web_settings = get_web_settings()
+DEFAULT_TIMEOUT: Final[int] = _web_settings.http_default_timeout
 DEFAULT_USER_AGENT: Final[str] = (
-    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-    "AppleWebKit/537.36 (KHTML, like Gecko) "
-    "Chrome/120.0.0.0 Safari/537.36"
+    _web_settings.http_default_user_agent
+    if _web_settings.http_default_user_agent
+    else "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
 )
 
 
@@ -98,11 +101,18 @@ def find_links(
     """
     import re
 
-    links = soup.find_all("a" if link_type == "href" else ["img", "link", "script"])
+    if link_type == "href":
+        links = soup.find_all("a")
+    else:
+        links = soup.find_all(["img", "link", "script"])
 
     if pattern:
-        regex = re.compile(pattern)
-        links = [link for link in links if regex.search(link.get(link_type, ""))]
+        regex = re.compile(pattern, re.I)
+        links = [
+            link
+            for link in links
+            if regex.search(str(link.get(link_type, "")))
+        ]
 
     return links
 

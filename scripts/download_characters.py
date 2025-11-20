@@ -13,7 +13,6 @@ from urllib.parse import urljoin
 
 try:
     import click
-    import requests
     from bs4 import BeautifulSoup, Tag
     from pydantic import BaseModel, Field
     from rich.console import Console
@@ -26,6 +25,9 @@ try:
         TextColumn,
     )
     from rich.table import Table
+
+    from scripts.models.constants import Filename
+    from scripts.utils.web import download_file, fetch_html, find_links
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -65,12 +67,8 @@ TAG_LINK: Final[str] = "a"
 TAG_BOLD: Final[Tuple[str, ...]] = ("strong", "b")
 TAG_TEXT_CONTAINERS: Final[Tuple[str, ...]] = ("p", "li")
 
-# File Naming Constants
-FILENAME_FRONT: Final[str] = "front.jpg"
-FILENAME_BACK: Final[str] = "back.jpg"
+# File Naming Constants (using shared Filename class where applicable)
 FILENAME_CHARACTER_BOOK: Final[str] = "character-book.pdf"
-FILENAME_CHARACTER_JSON: Final[str] = "character.json"
-FILENAME_STORY_TXT: Final[str] = "story.txt"
 BACK_CARD_SUFFIX: Final[str] = ".1"
 QUERY_PARAM_SEPARATOR: Final[str] = "?"
 PATH_SEPARATOR: Final[str] = "/"
@@ -88,9 +86,7 @@ KEYWORD_CHARACTER: Final[str] = "character"
 KEYWORD_DMD: Final[str] = "dmd"
 KEYWORD_DEATH: Final[str] = "death"
 
-# Numeric Constants
-HTTP_TIMEOUT_SECONDS: Final[int] = 30
-DOWNLOAD_CHUNK_SIZE: Final[int] = 8192
+# Numeric Constants (timeout and chunk_size now handled by utils/web.py)
 MAX_PARENT_LEVELS: Final[int] = 5
 MAX_SIBLINGS_TO_CHECK: Final[int] = 50
 MIN_CHAR_NAME_LENGTH: Final[int] = 2
@@ -159,39 +155,43 @@ CLASS_CONTENT: Final[str] = "content"
 EXT_JPG: Final[str] = ".jpg"
 EXT_PDF: Final[str] = ".pdf"
 
-# Season/Box mappings based on the website structure
-SEASON_MAPPINGS: Final[Dict[str, str]] = {
-    "Base Box": "season1",
-    "Season 2": "season2",
-    "Season 3": "season3",
-    "Fear of the Unknown": "season3",
-    "Season 4": "season4",
-    "Extra Promo": "extra-promos",
-    "Extra Promos": "extra-promos",
-    "Unspeakable Box": "unspeakable-box",
-    "Unknowable Box": "unknowable-box",
-    "Comic Book Extra": "comic-book-extras",
-    "Comic Book Extras": "comic-book-extras",
-    "Comic Book Vol. 2": "comic-book-v2",
-    "Comic Book Volume 2": "comic-book-v2",
-}
+# Season/Box mappings loaded from TOML config
+from scripts.models.web_config import get_web_scraping_config
 
-# Additional URLs for different seasons
-SEASON_URLS: Final[Dict[str, str]] = {
-    "season1": "https://makecraftgame.com/2022/10/21/dmd-character-guide/",
-    "season2": "https://makecraftgame.com/2022/10/21/dmd-character-guide/",
-    "season3": "https://makecraftgame.com/2025/01/17/dmd-fear-of-the-unknown/",
-    "season4": "https://makecraftgame.com/2025/01/17/dmd-season-4/",
-    "comic-book-v2": "https://makecraftgame.com/2025/01/17/dmd-comic-book-v2/",
-    "unknowable-box": "https://makecraftgame.com/2025/01/17/dmd-unknowable-box/",
-}
+_web_scraping_config = get_web_scraping_config()
+SEASON_MAPPINGS: Final[Dict[str, str]] = _web_scraping_config.season_mappings
 
-# PDF URLs for character booklets by season/box
-SEASON_PDF_URLS: Final[Dict[str, str]] = {
-    "season3": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Fear-of-the-Unknown.pdf",
-    "season4": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Unknowable-Box.pdf",
-    "unknowable-box": "https://makecraftgame.com/wp-content/uploads/2025/01/Chthulu-Death-May-Die-Character-Book-Unknowable-Box.pdf",
-}
+# Path to season URLs data file
+SEASON_URLS_FILE: Final[Path] = Path(__file__).parent / "data" / "season_urls.json"
+
+
+def load_season_urls() -> Tuple[Dict[str, str], Dict[str, str]]:
+    """Load season URLs from data file.
+
+    Returns:
+        Tuple of (season_urls, season_pdf_urls) dictionaries.
+        Returns empty dicts if file doesn't exist or is invalid.
+    """
+    season_urls_file = SEASON_URLS_FILE
+    if not season_urls_file.exists():
+        console.print(
+            f"[yellow]Warning: Season URLs file not found: {season_urls_file}[/yellow]\n"
+            f"[yellow]Using empty dictionaries. Create {season_urls_file} to configure season URLs.[/yellow]"
+        )
+        return {}, {}
+
+    try:
+        with open(season_urls_file, encoding="utf-8") as f:
+            data = json.load(f)
+        season_urls = data.get("season_urls", {})
+        season_pdf_urls = data.get("season_pdf_urls", {})
+        return season_urls, season_pdf_urls
+    except (json.JSONDecodeError, KeyError) as e:
+        console.print(
+            f"[red]Error loading season URLs from {season_urls_file}: {e}[/red]\n"
+            f"[yellow]Using empty dictionaries.[/yellow]"
+        )
+        return {}, {}
 
 
 def slugify(text: str) -> str:
@@ -206,9 +206,7 @@ def get_page_content(url: str) -> Optional[BeautifulSoup]:
     """Fetch and parse the webpage."""
     try:
         console.print(f"[cyan]Fetching[/cyan] {url}")
-        response = requests.get(url, timeout=HTTP_TIMEOUT_SECONDS)
-        response.raise_for_status()
-        return BeautifulSoup(response.content, "lxml")
+        return fetch_html(url)
     except Exception as e:
         console.print(f"[red]Error fetching page:[/red] {e}")
         return None
@@ -549,15 +547,7 @@ def extract_characters_from_page(soup: BeautifulSoup) -> CharactersBySeason:
 def download_image(url: str, filepath: Path) -> bool:
     """Download an image from URL to filepath."""
     try:
-        response = requests.get(url, timeout=HTTP_TIMEOUT_SECONDS, stream=True)
-        response.raise_for_status()
-
-        filepath.parent.mkdir(parents=True, exist_ok=True)
-
-        with open(filepath, "wb") as f:
-            for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
-                f.write(chunk)
-
+        download_file(url, filepath)
         return True
     except Exception as e:
         console.print(f"[red]Error downloading {url}:[/red] {e}")
@@ -566,10 +556,12 @@ def download_image(url: str, filepath: Path) -> bool:
 
 def find_pdf_links(soup: BeautifulSoup, base_url: str) -> List[str]:
     """Find PDF links on the page, prioritizing character book PDFs."""
+    from scripts.utils.web import clean_url
+
     pdf_urls: List[str] = []
 
-    # Look for links with PDF extension
-    pdf_links = soup.find_all(TAG_LINK, href=re.compile(r"\.pdf", re.I))
+    # Look for links with PDF extension using shared utility
+    pdf_links = find_links(soup, pattern=r"\.pdf", link_type="href")
 
     for link in pdf_links:
         href_attr = link.get("href", "")
@@ -581,18 +573,8 @@ def find_pdf_links(soup: BeautifulSoup, base_url: str) -> List[str]:
         if not isinstance(href, str):
             continue
 
-        # Convert relative URLs to absolute
-        if href.startswith("/"):
-            # Relative to domain root
-            from urllib.parse import urlparse
-            parsed = urlparse(base_url)
-            full_url = f"{parsed.scheme}://{parsed.netloc}{href}"
-        elif href.startswith("http"):
-            # Already absolute
-            full_url = href
-        else:
-            # Relative to current page
-            full_url = urljoin(base_url, href)
+        # Clean and normalize URL using shared utility
+        full_url = clean_url(href, base_url)
 
         # Prioritize character book PDFs
         href_lower = href.lower()
@@ -615,15 +597,7 @@ def find_pdf_links(soup: BeautifulSoup, base_url: str) -> List[str]:
 def download_pdf(url: str, filepath: Path) -> bool:
     """Download a PDF from URL to filepath."""
     try:
-        response = requests.get(url, timeout=HTTP_TIMEOUT_SECONDS, stream=True)
-        response.raise_for_status()
-
-        filepath.parent.mkdir(parents=True, exist_ok=True)
-
-        with open(filepath, "wb") as f:
-            for chunk in response.iter_content(chunk_size=DOWNLOAD_CHUNK_SIZE):
-                f.write(chunk)
-
+        download_file(url, filepath)
         return True
     except Exception as e:
         console.print(f"[red]Error downloading PDF {url}:[/red] {e}")
@@ -632,7 +606,7 @@ def download_pdf(url: str, filepath: Path) -> bool:
 
 def update_character_json(char_path: Path, character_name: str, story: Optional[str]) -> None:
     """Create or update character.json with name and story from HTML extraction."""
-    json_filepath = char_path / FILENAME_CHARACTER_JSON
+    json_filepath = char_path / Filename.CHARACTER_JSON
 
     # Load existing JSON if it exists, otherwise create new structure
     existing_data: Dict[str, Any] = {}
@@ -641,7 +615,7 @@ def update_character_json(char_path: Path, character_name: str, story: Optional[
             existing_data = json.loads(json_filepath.read_text(encoding="utf-8"))
         except (json.JSONDecodeError, Exception) as e:
             console.print(
-                f"[yellow]Warning: Could not parse existing {FILENAME_CHARACTER_JSON} for {character_name}: {e}[/yellow]"
+                f"[yellow]Warning: Could not parse existing {Filename.CHARACTER_JSON} for {character_name}: {e}[/yellow]"
             )
             existing_data = {}
 
@@ -714,17 +688,20 @@ def main(data_dir: str, dry_run: bool, season: str):
 
     data_path = Path(data_dir)
 
+    # Load season URLs from data file
+    season_urls, season_pdf_urls = load_season_urls()
+
     # Determine which URLs to fetch
     urls_to_fetch: List[Tuple[str, str]] = []  # (season_key, url)
     if season.lower() == "all":
         # Fetch all seasons
-        for season_key, url in SEASON_URLS.items():
+        for season_key, url in season_urls.items():
             urls_to_fetch.append((season_key, url))
     else:
         # Fetch specific season
         season_lower = season.lower()
-        if season_lower in SEASON_URLS:
-            urls_to_fetch.append((season_lower, SEASON_URLS[season_lower]))
+        if season_lower in season_urls:
+            urls_to_fetch.append((season_lower, season_urls[season_lower]))
         else:
             console.print(f"[red]Unknown season: {season}[/red]")
             sys.exit(1)
@@ -747,8 +724,8 @@ def main(data_dir: str, dry_run: bool, season: str):
             # Map to the actual season folder name
             for season_name in SEASON_MAPPINGS.values():
                 if season_key == season_name or (
-                    season_key in SEASON_URLS
-                    and SEASON_URLS[season_key] == url
+                    season_key in season_urls
+                    and season_urls[season_key] == url
                 ):
                     if season_name not in discovered_pdfs:
                         discovered_pdfs[season_name] = []
@@ -811,7 +788,8 @@ def main(data_dir: str, dry_run: bool, season: str):
             all_pdf_urls[season] = pdf_list[0]
 
     # Then, override with hardcoded PDFs if they exist
-    for season, hardcoded_pdf_url in SEASON_PDF_URLS.items():
+    _, season_pdf_urls = load_season_urls()
+    for season, hardcoded_pdf_url in season_pdf_urls.items():
         all_pdf_urls[season] = hardcoded_pdf_url
 
     for season in all_characters_by_season.characters.keys():
@@ -876,9 +854,9 @@ def main(data_dir: str, dry_run: bool, season: str):
                     for i, img_url in enumerate(image_urls[:MAX_IMAGES_PER_CHARACTER]):
                         # Determine if front or back
                         if i == 0:
-                            filename = FILENAME_FRONT
+                            filename = Filename.FRONT
                         else:
-                            filename = FILENAME_BACK
+                            filename = Filename.BACK
 
                         filepath = char_path / filename
 
@@ -892,7 +870,8 @@ def main(data_dir: str, dry_run: bool, season: str):
 
                         # Find the base URL for this character's season
                         base_url_for_season = BASE_URL
-                        for season_key, url in SEASON_URLS.items():
+                        season_urls, _ = load_season_urls()
+                        for season_key, url in season_urls.items():
                             if season == SEASON_MAPPINGS.get(season_key, ""):
                                 base_url_for_season = url
                                 break
@@ -907,7 +886,7 @@ def main(data_dir: str, dry_run: bool, season: str):
 
                     # Save story text if available
                     if character.story:
-                        story_file = char_path / FILENAME_STORY_TXT
+                        story_file = char_path / Filename.STORY_TXT
                         existing_story = None
                         if story_file.exists():
                             existing_story = story_file.read_text(encoding="utf-8").strip()

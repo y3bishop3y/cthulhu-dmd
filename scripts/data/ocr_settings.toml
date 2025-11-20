@@ -1,0 +1,17 @@
+# OCR Settings Configuration
+# Tesseract OCR and image preprocessing settings
+
+[ocr.tesseract]
+# PSM (Page Segmentation Mode) - see tesseract --help-psm
+# 3 = Fully automatic page segmentation, but no OSD (default)
+default_psm_mode = 3
+
+# OEM (OCR Engine Mode) - see tesseract --help-oem
+# 3 = Default, based on what is available
+default_oem_mode = 3
+
+[ocr.preprocessing]
+# Image preprocessing settings
+enhance_contrast = true
+denoise_strength = 10
+

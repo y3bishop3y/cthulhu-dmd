@@ -29,10 +29,16 @@ except ImportError as e:
 
 console = Console()
 
+from scripts.models.tts_settings_config import get_tts_settings
+
 # Constants
 FILENAME_STORY_TXT: Final[str] = "story.txt"
 FILENAME_CHARACTER_JSON: Final[str] = "character.json"
-DEFAULT_TTS_MODEL: Final[str] = "tts_models/en/vctk/vits"  # Multi-speaker model
+# Load TTS model from TOML config
+_tts_settings = get_tts_settings()
+DEFAULT_TTS_MODEL: Final[str] = (
+    _tts_settings.tts_default_model if _tts_settings.tts_default_model else "tts_models/en/vctk/vits"
+)
 OUTPUT_AUDIO_EXT: Final[str] = ".wav"
 SPEAKER_METADATA_FILE: Final[str] = "scripts/data/vctk_speakers.json"
 

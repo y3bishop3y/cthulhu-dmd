@@ -1,0 +1,47 @@
+# Parsing Patterns Configuration
+# Simple keywords and phrases used for text parsing
+# Note: Complex regex patterns are kept in code for maintainability
+
+[patterns.effect_indicators]
+# Common phrases that indicate power effects (simple keywords only)
+keywords = [
+    'gain',
+    'add',
+    'count',
+    'may',
+    'when',
+    'instead',
+    'also',
+    'per turn',
+    'free',
+    'attack',
+    'dice',
+    'success',
+    'elder sign',
+    'tentacle',
+    'sanity',
+    'stress',
+    'wound',
+]
+
+[patterns.power_parsing]
+# Simple keywords for power parsing (not regex patterns)
+gain_patterns = [
+    'gain',
+    'goin',
+    'go in',
+]
+
+sanity_patterns = [
+    'sanity',
+    'santiy',
+]
+
+[patterns.key_phrases]
+# Key phrases for power description analysis
+dice = ['green dice', 'black dice', 'dice']
+elder_sign = ['elder sign', 'arcane']
+success = ['success', 'succeed']
+attack = ['attack', 'attacking']
+action = ['action', 'actions']
+
