@@ -34,7 +34,7 @@ except ImportError as e:
     sys.exit(1)
 
 from scripts.analyze_power_statistics import analyze_power_level
-from scripts.utils.parsing import OCR_CORRECTIONS
+from scripts.utils.parsing import OCR_CORRECTIONS, fix_number_ocr_errors
 
 console = Console()
 
@@ -102,31 +102,9 @@ def cleanup_ocr_errors(text: str) -> str:
         pattern = r'\b' + re.escape(error) + r'\b'
         cleaned = re.sub(pattern, correction, cleaned, flags=re.IGNORECASE)
 
-    # Fix specific OCR errors that need context-aware replacement
-    # Fix "I" followed by numbers/quantities -> "1" (but preserve "I" as pronoun)
-    # Pattern: "I" followed by a number word or quantity indicator
-    number_patterns = [
-        (r'\bI\s+enemy\b', '1 enemy'),
-        (r'\bI\s+space\b', '1 space'),
-        (r'\bI\s+free\b', '1 free'),
-        (r'\bI\s+additional\b', '1 additional'),
-        (r'\bI\s+woun', '1 wound'),
-        (r'\bI\s+green\b', '1 green'),
-        (r'\bI\s+black\b', '1 black'),
-        (r'\bI\s+elder\b', '1 elder'),
-        (r'\bI\s+success\b', '1 success'),
-        (r'\bI\s+attack\b', '1 attack'),
-        (r'\bI\s+action\b', '1 action'),
-        (r'\bI\s+reroll\b', '1 reroll'),
-        (r'\bI\s+stress\b', '1 stress'),
-        (r'\bI\s+wound\b', '1 wound'),
-        (r'\bI\s+times\b', '1 times'),
-        (r'\bI\s+die\b', '1 die'),
-        (r'\bI\s+dice\b', '1 dice'),
-    ]
-
-    for pattern, replacement in number_patterns:
-        cleaned = re.sub(pattern, replacement, cleaned, flags=re.IGNORECASE)
+    # Fix context-aware OCR errors where "I" -> "1" in specific contexts
+    # Uses shared patterns from utils/parsing.py
+    cleaned = fix_number_ocr_errors(cleaned)
 
     # Clean up excessive whitespace
     cleaned = re.sub(r'\s+', ' ', cleaned)

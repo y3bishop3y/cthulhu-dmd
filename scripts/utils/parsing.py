@@ -72,6 +72,29 @@ POWER_LEVEL_PATTERNS: Final[List[str]] = [
     r"^(\d+)\s+",
 ]
 
+# Context-aware OCR patterns for fixing "I" -> "1" in specific contexts
+# These patterns preserve "I" as a pronoun while fixing OCR errors
+# Note: Complex regex patterns stay in code for maintainability
+NUMBER_REPLACEMENT_PATTERNS: Final[List[Tuple[str, str]]] = [
+    (r'\bI\s+enemy\b', '1 enemy'),
+    (r'\bI\s+space\b', '1 space'),
+    (r'\bI\s+free\b', '1 free'),
+    (r'\bI\s+additional\b', '1 additional'),
+    (r'\bI\s+woun', '1 wound'),
+    (r'\bI\s+green\b', '1 green'),
+    (r'\bI\s+black\b', '1 black'),
+    (r'\bI\s+elder\b', '1 elder'),
+    (r'\bI\s+success\b', '1 success'),
+    (r'\bI\s+attack\b', '1 attack'),
+    (r'\bI\s+action\b', '1 action'),
+    (r'\bI\s+reroll\b', '1 reroll'),
+    (r'\bI\s+stress\b', '1 stress'),
+    (r'\bI\s+wound\b', '1 wound'),
+    (r'\bI\s+times\b', '1 times'),
+    (r'\bI\s+die\b', '1 die'),
+    (r'\bI\s+dice\b', '1 dice'),
+]
+
 # Note: EFFECT_INDICATORS is now loaded from TOML config above
 
 
@@ -239,10 +262,10 @@ def clean_ocr_text(
     if normalize_swirl:
         cleaned = normalize_red_swirl_symbols(cleaned)
 
-    # Step 3: Clean whitespace
+    # Step 4: Clean whitespace
     cleaned = clean_whitespace(cleaned, preserve_newlines=preserve_newlines)
 
-    # Step 4: Remove OCR artifacts
+    # Step 5: Remove OCR artifacts
     cleaned = remove_ocr_artifacts(cleaned, preserve_symbols=preserve_symbols)
 
     return cleaned.strip()
