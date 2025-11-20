@@ -85,10 +85,11 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
 
     # Import here to avoid circular dependencies and mypy confusion with CommonPower enum
     # Import the Pydantic model directly from character module (not the enum from constants)
-    from scripts.models.character import CommonPower as CommonPowerModel  # type: ignore[attr-defined]
+    from scripts.models.character import CommonPower as CommonPowerModel
 
     # Parse all powers into Pydantic models
-    powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]
+    # Note: mypy sees CommonPower enum instead of Pydantic model, but runtime is correct
+    powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]  # type: ignore[attr-defined]
 
     console.print(f"[green]✓ Loaded {len(powers_data)} powers[/green]\n")
 
