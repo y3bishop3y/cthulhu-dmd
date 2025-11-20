@@ -128,25 +128,47 @@ def check_statistics_consistency(level_data: CommonPowerLevelData) -> List[str]:
     black_dice = stats.black_dice_added
 
     # Check if description mentions dice but stats don't reflect it
-    if "green dice" in description and green_dice == 0:
+    # Use key phrases from config
+    dice_phrases = parsing_config.key_phrases_dice
+    elder_sign_phrases = parsing_config.key_phrases_elder_sign
+    success_phrases = parsing_config.key_phrases_success
+    attack_phrases = parsing_config.key_phrases_attack
+    action_phrases = parsing_config.key_phrases_action
+
+    # Check for green/black dice mentions
+    has_green_dice_mention = any(phrase in description for phrase in dice_phrases if "green" in phrase.lower())
+    has_black_dice_mention = any(phrase in description for phrase in dice_phrases if "black" in phrase.lower())
+
+    if has_green_dice_mention and green_dice == 0:
         # Check if it's conditional (e.g., "when attacking")
         if "when" not in description and "while" not in description:
             issues.append("Description mentions green dice but green_dice_added is 0")
 
-    if "black dice" in description and black_dice == 0:
+    if has_black_dice_mention and black_dice == 0:
         if "when" not in description and "while" not in description:
             issues.append("Description mentions black dice but black_dice_added is 0")
 
     # Check elder sign conversion
-    if "elder sign" in description or "arcane" in description:
-        if "count" in description and "success" in description:
+    has_elder_sign_mention = any(phrase in description for phrase in elder_sign_phrases)
+    has_success_mention = any(phrase in description for phrase in success_phrases)
+
+    if has_elder_sign_mention:
+        if has_success_mention and "count" in description:
             # Should have elder sign conversion effect
-            if "elder sign" not in effect and "success" not in effect:
+            has_elder_in_effect = any(phrase in effect for phrase in elder_sign_phrases)
+            has_success_in_effect = any(phrase in effect for phrase in success_phrases)
+            if not has_elder_in_effect and not has_success_in_effect:
                 issues.append("Description mentions counting elder signs as successes but effect doesn't reflect this")
 
     # Check action additions
-    if "free attack" in description or "free action" in description:
-        if "attack" not in effect and "action" not in effect:
+    has_attack_mention = any(phrase in description for phrase in attack_phrases)
+    has_action_mention = any(phrase in description for phrase in action_phrases)
+    has_free_mention = "free" in description
+
+    if has_free_mention and (has_attack_mention or has_action_mention):
+        has_attack_in_effect = any(phrase in effect for phrase in attack_phrases)
+        has_action_in_effect = any(phrase in effect for phrase in action_phrases)
+        if not has_attack_in_effect and not has_action_in_effect:
             issues.append("Description mentions free attack/action but effect doesn't reflect this")
 
     return issues
