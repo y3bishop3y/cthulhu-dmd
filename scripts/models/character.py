@@ -8,6 +8,7 @@ within the models themselves for better organization and reusability.
 """
 
 import re
+from pathlib import Path
 from typing import TYPE_CHECKING, List, Optional
 
 from pydantic import BaseModel, Field, computed_field
@@ -197,9 +198,38 @@ class FrontCardData(BaseModel):
     story: Optional[str] = Field(default=None, description="Character backstory")
 
     @classmethod
-    def parse_from_text(cls, text: str) -> "FrontCardData":
-        """Parse front card text to extract name, location, motto, and story."""
+    def parse_from_text(cls, text: str, image_path: Optional[Path] = None) -> "FrontCardData":
+        """Parse front card text to extract name, location, motto, and story.
+        
+        Args:
+            text: OCR-extracted text
+            image_path: Optional path to image file for layout-aware extraction
+        """
         from scripts.parsing.text_parsing import clean_ocr_text
+
+        # If image path is provided, try layout-aware extraction first
+        if image_path and image_path.exists():
+            try:
+                from scripts.parsing.layout_aware_ocr import extract_text_layout_aware
+                layout_results = extract_text_layout_aware(image_path)
+                
+                # Use layout-aware results if they look good
+                data = cls()
+                if layout_results.name:
+                    data.name = layout_results.name
+                if layout_results.location:
+                    data.location = layout_results.location
+                if layout_results.motto:
+                    data.motto = layout_results.motto
+                if layout_results.description:
+                    data.story = layout_results.description
+                
+                # If we got all fields from layout-aware extraction, return early
+                if data.is_complete:
+                    return data
+            except Exception:
+                # Fall back to text parsing if layout-aware fails
+                pass
 
         # Clean the text first, preserving newlines for line-by-line parsing
         cleaned_text = clean_ocr_text(text, preserve_newlines=True)
@@ -230,37 +260,96 @@ class FrontCardData(BaseModel):
                     break
 
         # Look for motto (usually in quotes, may span multiple lines)
-        # First try to find quoted text
-        quote_pattern = r'"([^"]+)"'
-        quotes = re.findall(quote_pattern, cleaned_text)
-        if quotes:
-            # Take the first complete quote
-            data.motto = quotes[0].strip()
-        else:
-            # Look for multi-line quotes or motto-like text
-            # Motto is usually short, not all caps, and may contain keywords
-            for i, line in enumerate(lines):
-                line_lower = line.lower()
+        # Mottos are typically:
+        # 1. Short phrases (2-10 words)
+        # 2. Near the top (after name/location, before story)
+        # 3. May be in quotes or not
+        # 4. Often split across 2 lines (e.g., "Shoot first.\nNever ask.")
+        
+        # Strategy 1: Look for quoted text first
+        quote_patterns = [
+            r'"([^"]+)"',  # Standard quotes
+            r"'([^']+)'",  # Single quotes
+            r'["\']([^"\']+)["\']',  # Any quote type
+        ]
+        
+        for pattern in quote_patterns:
+            quotes = re.findall(pattern, cleaned_text)
+            if quotes:
+                # Take the first complete quote that looks like a motto
+                for quote in quotes:
+                    quote_clean = quote.strip()
+                    # Check if it looks like a motto (short, has keywords, not too long)
+                    if (
+                        5 < len(quote_clean) < 150
+                        and any(
+                            word in quote_clean.lower()
+                            for word in ["first", "never", "always", "shoot", "ask", "trust", "certain", "life"]
+                        )
+                    ):
+                        data.motto = quote_clean
+                        break
+                if data.motto:
+                    break
+        
+        # Strategy 2: Look for multi-line mottos (common pattern: "Shoot first.\nNever ask.")
+        if not data.motto:
+            # Look in first 15 lines (motto is usually near the top)
+            for i in range(min(15, len(lines))):
+                line = lines[i]
+                line_lower = line.lower().strip()
+                
+                # Check if this line starts a motto (has motto keywords, short)
+                motto_start_keywords = ["shoot", "never", "always", "first", "trust", "certain"]
                 if (
-                    len(line) < 150
+                    any(keyword in line_lower for keyword in motto_start_keywords)
+                    and len(line.split()) <= 5  # Short line
+                    and not line.isupper()  # Not all caps (name/location are all caps)
+                    and i > 0  # Not the first line (that's usually the name)
+                ):
+                    # Check if next line completes it
+                    if i + 1 < len(lines):
+                        next_line = lines[i + 1].strip()
+                        next_lower = next_line.lower()
+                        
+                        # Check if next line completes the motto
+                        motto_end_keywords = ["ask", "never", "always", "trust", "certain", "life", "things"]
+                        if (
+                            any(keyword in next_lower for keyword in motto_end_keywords)
+                            and len(next_line.split()) <= 5
+                            and not next_line.isupper()
+                        ):
+                            combined = f"{line} {next_line}".strip()
+                            # Clean up punctuation
+                            combined = re.sub(r'\s+', ' ', combined)
+                            if 10 < len(combined) < 100:  # Reasonable motto length
+                                data.motto = combined
+                                break
+        
+        # Strategy 3: Look for single-line mottos without quotes
+        if not data.motto:
+            for i, line in enumerate(lines[:20]):  # Check first 20 lines
+                line_lower = line.lower().strip()
+                # Skip if it's the name or location
+                if (
+                    data.name and data.name.lower() in line_lower
+                ) or (
+                    data.location and data.location.lower() in line_lower
+                ):
+                    continue
+                
+                # Check if it looks like a motto (short, has keywords, not all caps)
+                motto_keywords = ["first", "never", "always", "shoot", "ask", "trust", "certain", "life"]
+                if (
+                    len(line.split()) >= 2
+                    and len(line.split()) <= 8  # Short phrase
                     and not line.isupper()
                     and not line.isdigit()
-                    and data.motto is None
+                    and any(word in line_lower for word in motto_keywords)
+                    and len(line) < 100
                 ):
-                    # Check if it looks like a motto (short, may have keywords)
-                    if any(
-                        word in line_lower
-                        for word in ["first", "never", "always", "shoot", "ask", "trust"]
-                    ):
-                        # Check if next line completes it
-                        if i + 1 < len(lines) and len(lines[i + 1]) < 100:
-                            combined = f"{line} {lines[i + 1]}"
-                            if len(combined) < 150:
-                                data.motto = combined.strip()
-                                break
-                        else:
-                            data.motto = line.strip()
-                            break
+                    data.motto = line.strip()
+                    break
 
         # Story is usually the longest paragraph after the motto
         # Find paragraphs (separated by blank lines or significant whitespace)
@@ -758,22 +847,86 @@ class BackCardData(BaseModel):
             # For special powers, ensure we have 4 levels by checking if descriptions contain "Instead"
             # This handles cases where multiple levels are in one description
             if current_power.is_special and len(current_power.levels) < 4:
-                # Check if any level description contains multiple "Instead" markers
+                # Strategy 1: Check if any level description contains multiple "Instead" markers
                 for level in current_power.levels:
                     desc = level.description
-                    # Count "Instead" occurrences (case-insensitive)
-                    instead_count = len(re.findall(r'\binstead\b', desc, re.I))
+                    # Count "Instead" occurrences (case-insensitive, handle OCR errors)
+                    instead_patterns = [
+                        r'\binstead\b',
+                        r'\binstea\b',  # OCR error
+                        r'\binste\b',   # OCR error
+                        r'\binstea\s+', # OCR error with space
+                    ]
+                    instead_count = 0
+                    for pattern in instead_patterns:
+                        instead_count += len(re.findall(pattern, desc, re.I))
+                    
                     if instead_count > 1 and len(current_power.levels) < 4:
-                        # Try to split on "Instead" to create additional levels
-                        parts = re.split(r'\s+instead[,\s]+', desc, flags=re.I)
-                        if len(parts) > 1:
+                        # Try to split on "Instead" (and variants) to create additional levels
+                        split_patterns = [
+                            r'\s+instead[,\s]+',
+                            r'\s+instea[,\s]+',
+                            r'\s+inste[,\s]+',
+                            r'[,\s]+instead[,\s]+',
+                        ]
+                        parts = None
+                        for split_pattern in split_patterns:
+                            parts = re.split(split_pattern, desc, flags=re.I)
+                            if len(parts) > 1:
+                                break
+                        
+                        if parts and len(parts) > 1:
                             # Update current level with first part
                             level.description = parts[0].strip()
                             # Add remaining parts as new levels
                             for part in parts[1:]:
-                                if len(current_power.levels) < 4:
+                                part_clean = part.strip()
+                                if part_clean and len(part_clean.split()) > 2 and len(current_power.levels) < 4:
                                     new_level_num = len(current_power.levels) + 1
-                                    current_power.add_level_from_text(new_level_num, part.strip())
+                                    current_power.add_level_from_text(new_level_num, part_clean)
+                
+                # Strategy 2: If still missing levels, try to extract from the full text
+                # Look for patterns like "Level 1:", "Level 2:", etc. in the original text
+                if len(current_power.levels) < 4:
+                    # Re-scan the cleaned text for explicit level markers
+                    level_markers = re.finditer(
+                        r'(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)',
+                        cleaned_text,
+                        re.IGNORECASE | re.DOTALL
+                    )
+                    
+                    found_levels = {}
+                    for match in level_markers:
+                        level_num = int(match.group(1))
+                        level_desc = match.group(2).strip()
+                        # Clean up the description
+                        level_desc = re.sub(r'^\s*instead[,\s]+', '', level_desc, flags=re.I).strip()
+                        if level_desc and len(level_desc.split()) > 2:
+                            found_levels[level_num] = level_desc
+                    
+                    # Add missing levels if we found them
+                    for level_num in range(1, 5):
+                        if level_num not in [l.level for l in current_power.levels] and level_num in found_levels:
+                            current_power.add_level_from_text(level_num, found_levels[level_num])
+                
+                # Strategy 3: If still missing, try to infer from "Instead" patterns in full text
+                if len(current_power.levels) < 4:
+                    # Find all "Instead" occurrences in the text after the power name
+                    instead_matches = list(re.finditer(
+                        r'\b(?:instead|instea|inste)[,\s]+([^\.]+?)(?=\b(?:instead|instea|inste)[,\s]|\b(?:level\s*)?[1234][:\-]|\Z)',
+                        cleaned_text,
+                        re.IGNORECASE | re.DOTALL
+                    ))
+                    
+                    # If we found multiple "Instead" patterns, they might be separate levels
+                    if len(instead_matches) >= len(current_power.levels):
+                        # Try to map them to levels
+                        for idx, match in enumerate(instead_matches):
+                            level_num = idx + 1
+                            if level_num not in [l.level for l in current_power.levels] and level_num <= 4:
+                                desc = match.group(1).strip()
+                                if desc and len(desc.split()) > 2:
+                                    current_power.add_level_from_text(level_num, desc)
 
             if current_power.is_special:
                 data.special_power = current_power

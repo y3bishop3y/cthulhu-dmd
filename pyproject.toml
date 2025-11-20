@@ -23,6 +23,7 @@ dependencies = [
     "spacy>=3.8.11",
     "en-core-web-sm",
     "easyocr>=1.7.2",
+    "rapidfuzz>=3.14.3",
 ]
 
 # Build system removed - no package to build yet

@@ -1,0 +1,1225 @@
+{
+  "character": "adam",
+  "season": "season1",
+  "timestamp": "2025-11-20T01:42:15.792620",
+  "total_strategies": 44,
+  "top_score": 80.5,
+  "results": [
+    {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "strategy_description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "overall_score": 80.5,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 62.41,
+        "special_power": 85.19,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 95.65217391304348,
+        "level_3": 95.1219512195122,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchle -twitch is both word ond warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together odmirably, but most investigators know to keep serve around the...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 652,
+      "back_text_length": 1036
+    },
+    {
+      "strategy_name": "tesseract_bilateral_psm3_nlp",
+      "strategy_description": "Bilateral filter + Tesseract PSM 3 + NLP",
+      "overall_score": 80.5,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 62.41,
+        "special_power": 85.19,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 95.65217391304348,
+        "level_3": 95.1219512195122,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchle -twitch is both word ond warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together odmirably, but most investigators know to keep serve around the...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 643,
+      "back_text_length": 1014
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm3",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 3",
+      "overall_score": 68.77,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 66.05,
+        "special_power": 45.66,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 32.62411347517731,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 650,
+      "back_text_length": 863
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm3_nlp",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 3 + NLP",
+      "overall_score": 68.77,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 66.05,
+        "special_power": 45.66,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 32.62411347517731,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 644,
+      "back_text_length": 834
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm4",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 4",
+      "overall_score": 67.35,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 66.05,
+        "special_power": 40.92,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 13.698630136986301,
+        "level_2": 100.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 650,
+      "back_text_length": 960
+    },
+    {
+      "strategy_name": "tesseract_morphological_psm3",
+      "strategy_description": "Morphological preprocessing + Tesseract PSM 3",
+      "overall_score": 67.27,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 0.0,
+        "special_power": 78.66,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 80.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 82.6086956521739,
+        "level_3": 82.05128205128204,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": null,
+        "special_power_levels": 3
+      },
+      "front_text_length": 87,
+      "back_text_length": 827
+    },
+    {
+      "strategy_name": "tesseract_bilateral_sharpened_psm3",
+      "strategy_description": "Bilateral + sharpening + Tesseract PSM 3",
+      "overall_score": 64.32,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 41.71,
+        "special_power": 46.59,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 80.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 36.36363636363637,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare, Lord Benchley is quite mad of course, having battled the cults for decades and always m...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 639,
+      "back_text_length": 986
+    },
+    {
+      "strategy_name": "tesseract_bilateral_sharpened_psm3_nlp",
+      "strategy_description": "Bilateral + sharpening + Tesseract PSM 3 + NLP",
+      "overall_score": 64.32,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 41.71,
+        "special_power": 46.59,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 80.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 36.36363636363637,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare, Lord Benchley is quite mad of course, having battled the cults for decades and always m...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 634,
+      "back_text_length": 956
+    },
+    {
+      "strategy_name": "tesseract_basic_psm3",
+      "strategy_description": "Basic preprocessing + Tesseract PSM 3",
+      "overall_score": 63.28,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 71.72,
+        "special_power": 23.14,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 42.5531914893617,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 647,
+      "back_text_length": 1076
+    },
+    {
+      "strategy_name": "tesseract_high_res_psm3",
+      "strategy_description": "High-resolution preprocessing + Tesseract PSM 3",
+      "overall_score": 62.77,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 66.05,
+        "special_power": 24.26,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 47.05882352941176,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 654,
+      "back_text_length": 931
+    },
+    {
+      "strategy_name": "tesseract_color_psm3",
+      "strategy_description": "Color-enhanced preprocessing + Tesseract PSM 3",
+      "overall_score": 61.41,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 66.05,
+        "special_power": 19.72,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 28.865979381443296,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 682,
+      "back_text_length": 863
+    },
+    {
+      "strategy_name": "tesseract_combined_ultra_psm3",
+      "strategy_description": "Ultra-combined preprocessing + Tesseract PSM 3",
+      "overall_score": 60.74,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 66.05,
+        "special_power": 17.5,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 20.0,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 677,
+      "back_text_length": 1047
+    },
+    {
+      "strategy_name": "tesseract_serif_font_psm3",
+      "strategy_description": "Serif font preprocessing + Tesseract PSM 3",
+      "overall_score": 60.0,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 2.93,
+        "special_power": 46.59,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 100.0,
+        "level_2": 36.36363636363637,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "only barely. Lord B resolve, and indulging his csyehotie fendencies jainst cultists and their foul minions at every opportun:",
+        "special_power_levels": 2
+      },
+      "front_text_length": 416,
+      "back_text_length": 1022
+    },
+    {
+      "strategy_name": "tesseract_sharpened_psm3",
+      "strategy_description": "Sharpened preprocessing + Tesseract PSM 3",
+      "overall_score": 57.34,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 42.17,
+        "special_power": 29.48,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 20.0,
+        "level_2": 28.57142857142857,
+        "level_3": 19.35483870967742,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchleys slgnature eye-twitch Is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but thost-investigdtdrs know. to keep...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 666,
+      "back_text_length": 612
+    },
+    {
+      "strategy_name": "tesseract_sharpened_psm3_nlp",
+      "strategy_description": "Sharpened preprocessing + Tesseract PSM 3 + NLP",
+      "overall_score": 57.34,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 42.17,
+        "special_power": 29.48,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 20.0,
+        "level_2": 28.57142857142857,
+        "level_3": 19.35483870967742,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchleys slgnature eye-twitch Is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but thost-investigdtdrs know. to keep...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 657,
+      "back_text_length": 593
+    },
+    {
+      "strategy_name": "tesseract_deskew_psm3",
+      "strategy_description": "Deskew preprocessing + Tesseract PSM 3",
+      "overall_score": 56.96,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 71.72,
+        "special_power": 22.05,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 50.0
+      },
+      "level_scores": {
+        "level_1": 8.21917808219178,
+        "level_2": 30.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep s...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 647,
+      "back_text_length": 516
+    },
+    {
+      "strategy_name": "tesseract_combined_advanced_psm3",
+      "strategy_description": "Combined advanced preprocessing + Tesseract PSM 3",
+      "overall_score": 56.28,
+      "scores": {
+        "name": 100.0,
+        "location": 80.0,
+        "motto": 91.67,
+        "story": 56.07,
+        "special_power": 25.66,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 52.63157894736842,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, Incland",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchle: nature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together odmirably, but most investigators know fo keep some ...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 690,
+      "back_text_length": 566
+    },
+    {
+      "strategy_name": "tesseract_combined_advanced_psm3_nlp",
+      "strategy_description": "Combined advanced preprocessing + Tesseract PSM 3 + NLP",
+      "overall_score": 56.28,
+      "scores": {
+        "name": 100.0,
+        "location": 80.0,
+        "motto": 91.67,
+        "story": 56.07,
+        "special_power": 25.66,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 52.63157894736842,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, Incland",
+        "motto": "Shoot first. Never ask,",
+        "story": "Lord Benchle: nature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together odmirably, but most investigators know fo keep some ...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 682,
+      "back_text_length": 567
+    },
+    {
+      "strategy_name": "tesseract_histogram_eq_psm3",
+      "strategy_description": "Histogram equalization + Tesseract PSM 3",
+      "overall_score": 53.89,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 46.13,
+        "special_power": 21.02,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 60.0
+      },
+      "level_scores": {
+        "level_1": 11.851851851851853,
+        "level_2": 22.22222222222222,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "demeanor. The man holds himself together admirably, but most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare. Lord Benchley is quite mad of c...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 672,
+      "back_text_length": 390
+    },
+    {
+      "strategy_name": "easyocr_enhanced",
+      "strategy_description": "Enhanced preprocessing + EasyOCR",
+      "overall_score": 53.86,
+      "scores": {
+        "name": 94.44,
+        "location": 80.0,
+        "motto": 93.62,
+        "story": 2.17,
+        "special_power": 33.27,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 95.0
+      },
+      "level_scores": {
+        "level_1": 24.242424242424242,
+        "level_2": 35.8974358974359,
+        "level_3": 22.950819672131146,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benckley",
+        "location": "Manchester,",
+        "motto": "Shoot first. Never ask",
+        "story": "LORD ADAM BENCKLEY MANCHESTER, ENGLAND Shoot first. Never ask Lord Benchleys signature eye-twitch is both and warning of the thoughts beneath his calm, British demeanor: The man holds himself together...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 641,
+      "back_text_length": 983
+    },
+    {
+      "strategy_name": "easyocr_color",
+      "strategy_description": "Color-enhanced preprocessing + EasyOCR",
+      "overall_score": 53.86,
+      "scores": {
+        "name": 94.44,
+        "location": 80.0,
+        "motto": 93.62,
+        "story": 2.17,
+        "special_power": 33.27,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 95.0
+      },
+      "level_scores": {
+        "level_1": 24.242424242424242,
+        "level_2": 35.8974358974359,
+        "level_3": 22.950819672131146,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benckley",
+        "location": "Manchester,",
+        "motto": "Shoot first. Never ask",
+        "story": "LORD ADAM BENCKLEY MANCHESTER, ENGLAND Shoot first. Never ask Lord Benchleys signature eye-twitch both word and warning of the thoughts beneath his calm, British demeanor: The man holds himself togeth...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 640,
+      "back_text_length": 981
+    },
+    {
+      "strategy_name": "easyocr_enhanced_nlp",
+      "strategy_description": "Enhanced preprocessing + EasyOCR + NLP",
+      "overall_score": 53.86,
+      "scores": {
+        "name": 94.44,
+        "location": 80.0,
+        "motto": 93.62,
+        "story": 2.17,
+        "special_power": 33.27,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 95.0
+      },
+      "level_scores": {
+        "level_1": 24.242424242424242,
+        "level_2": 35.8974358974359,
+        "level_3": 22.950819672131146,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benckley",
+        "location": "Manchester,",
+        "motto": "Shoot first. Never ask",
+        "story": "LORD ADAM BENCKLEY MANCHESTER, ENGLAND Shoot first. Never ask Lord Benchleys signature eye-twitch is both and warning of the thoughts beneath his calm, British demeanor: The man holds himself together...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 639,
+      "back_text_length": 969
+    },
+    {
+      "strategy_name": "easyocr_basic",
+      "strategy_description": "Basic preprocessing + EasyOCR",
+      "overall_score": 50.49,
+      "scores": {
+        "name": 100.0,
+        "location": 80.0,
+        "motto": 76.19,
+        "story": 2.18,
+        "special_power": 28.47,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 28.57142857142857,
+        "level_2": 35.294117647058826,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester,",
+        "motto": "Shoot first. ask_",
+        "story": "LORD ADAM BENCHLEY MANCHESTER, ENGLAND Shoot first. ask_ Lord Benchleys signature eye-twitch both and warning of the thoughts beneath his calm, British demeanor: The man holds hirself together admirab...",
+        "special_power_levels": 2
+      },
+      "front_text_length": 638,
+      "back_text_length": 1026
+    },
+    {
+      "strategy_name": "tesseract_small_font_psm3",
+      "strategy_description": "Small font preprocessing + Tesseract PSM 3",
+      "overall_score": 48.22,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 72.57,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 35.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, b but",
+        "special_power_levels": 0
+      },
+      "front_text_length": 237,
+      "back_text_length": 205
+    },
+    {
+      "strategy_name": "easyocr_sharpened",
+      "strategy_description": "Sharpened preprocessing + EasyOCR",
+      "overall_score": 47.57,
+      "scores": {
+        "name": 100.0,
+        "location": 80.0,
+        "motto": 85.11,
+        "story": 2.61,
+        "special_power": 30.56,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 60.0
+      },
+      "level_scores": {
+        "level_1": 24.242424242424242,
+        "level_2": 30.76923076923077,
+        "level_3": 17.24137931034483,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester,",
+        "motto": "Shoot first_ Neyer ask",
+        "story": "LORD ADAM BENCHLEY MANCHESTER, ENGLAND Shoot first_ Neyer ask Lord Banchley s slgnature eye-twltch Is both word and warning of tho roiling thoughts boneath his calm, British demeunor: The man holds hi...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 640,
+      "back_text_length": 946
+    },
+    {
+      "strategy_name": "easyocr_bilateral",
+      "strategy_description": "Bilateral filter preprocessing + EasyOCR",
+      "overall_score": 45.49,
+      "scores": {
+        "name": 100.0,
+        "location": 0.0,
+        "motto": 89.36,
+        "story": 3.95,
+        "special_power": 33.19,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 24.242424242424242,
+        "level_2": 35.55555555555556,
+        "level_3": 22.950819672131146,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": null,
+        "motto": "Shoot first. Neyer ask",
+        "story": "LORD ADAM BENCHLEY MANCHESTER ENGLAND Shoot first. Neyer ask Lord Benchleys signature eye-twitch both word and warning of the thoughts beneath his calm, British demeanor: The man holds himself togethe...",
+        "special_power_levels": 4
+      },
+      "front_text_length": 632,
+      "back_text_length": 996
+    },
+    {
+      "strategy_name": "tesseract_bilateral_aggressive_psm3",
+      "strategy_description": "Aggressive bilateral filter + Tesseract PSM 3",
+      "overall_score": 43.29,
+      "scores": {
+        "name": 24.0,
+        "location": 100.0,
+        "motto": 95.83,
+        "story": 23.64,
+        "special_power": 15.88,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 13.513513513513514,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": "Pss Ann",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask.",
+        "story": "poor fellow, lest the twitch settle into a steely glare. Lord Benchley is quite mad of course, having battled the cults for decades and alweys maintaining the upper hand, if only barely. Lord-Benchley...",
+        "special_power_levels": 1
+      },
+      "front_text_length": 670,
+      "back_text_length": 598
+    },
+    {
+      "strategy_name": "tesseract_bilateral_psm6",
+      "strategy_description": "Bilateral filter + Tesseract PSM 6",
+      "overall_score": 42.32,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 66.67,
+        "story": 85.93,
+        "special_power": 22.55,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 14.285714285714285,
+        "level_2": 25.925925925925924,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": "A Shoot first. - 5 .",
+        "story": "lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British ry it demeanor. The man holds himself together odmirably, but : aS most investigators kno...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 852,
+      "back_text_length": 1476
+    },
+    {
+      "strategy_name": "easyocr_combined_advanced",
+      "strategy_description": "Combined advanced preprocessing + EasyOCR",
+      "overall_score": 41.16,
+      "scores": {
+        "name": 94.44,
+        "location": 80.0,
+        "motto": 83.33,
+        "story": 5.88,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 80.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": "Lord Adam Benckley",
+        "location": "Manchester,",
+        "motto": "Shoot first_ Neyer ask_",
+        "story": "LORD ADAM BENCKLEY MANCHESTER, ENCLAND Shoot first_ Neyer ask_ Lord Benchley s signature eye-twitch is both word and warning of the thoughts bengath his calm, British demeanor The man holds himself to...",
+        "special_power_levels": 0
+      },
+      "front_text_length": 635,
+      "back_text_length": 924
+    },
+    {
+      "strategy_name": "tesseract_adaptive_font_aware_psm3",
+      "strategy_description": "Adaptive font-aware preprocessing + Tesseract PSM 3",
+      "overall_score": 39.8,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 19.22,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 35.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "demeanor: The.man holds himself together admir fy:but Sop soine, fesarya at ilethto 4-steely:glare: L",
+        "special_power_levels": 0
+      },
+      "front_text_length": 302,
+      "back_text_length": 205
+    },
+    {
+      "strategy_name": "tesseract_sans_serif_font_psm3",
+      "strategy_description": "Sans-serif font preprocessing + Tesseract PSM 3",
+      "overall_score": 38.3,
+      "scores": {
+        "name": 100.0,
+        "location": 100.0,
+        "motto": 91.67,
+        "story": 19.22,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 25.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": "Lord Adam Benchley",
+        "location": "Manchester, England",
+        "motto": "Shoot first. Never ask,",
+        "story": "demeanor: The.man holds himself together admir fy:but Sop soine, fesarya at ilethto 4-steely:glare: L",
+        "special_power_levels": 0
+      },
+      "front_text_length": 302,
+      "back_text_length": 137
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm11",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 11",
+      "overall_score": 35.89,
+      "scores": {
+        "name": 0.0,
+        "location": 100.0,
+        "motto": 0.0,
+        "story": 0.0,
+        "special_power": 32.96,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 32.432432432432435,
+        "level_2": 21.138211382113823,
+        "level_3": 28.28282828282828,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": "Manchester, England",
+        "motto": null,
+        "story": null,
+        "special_power_levels": 3
+      },
+      "front_text_length": 821,
+      "back_text_length": 1292
+    },
+    {
+      "strategy_name": "tesseract_bilateral_sharpened_psm6",
+      "strategy_description": "Bilateral + sharpening + Tesseract PSM 6",
+      "overall_score": 28.04,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 55.81,
+        "story": 0.0,
+        "special_power": 21.51,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {
+        "level_1": 15.0,
+        "level_2": 21.052631578947366,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": "7. Never ask. h AY",
+        "story": null,
+        "special_power_levels": 2
+      },
+      "front_text_length": 956,
+      "back_text_length": 1628
+    },
+    {
+      "strategy_name": "tesseract_combined_advanced_psm6",
+      "strategy_description": "Combined advanced preprocessing + Tesseract PSM 6",
+      "overall_score": 26.25,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 75.41,
+        "story": 2.49,
+        "special_power": 22.8,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 60.0
+      },
+      "level_scores": {
+        "level_1": 15.09433962264151,
+        "level_2": 26.08695652173913,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": "Pp Shoot first. oa . im Never ask. .",
+        "story": "LORD ADAM BENCHLEY A BO Zs l ty MANCHESTER, ENGLAND a aN D Pp Shoot first. oa . im Never ask. . - ; ,; a ar id i i Lord Benchleys signature eye-twitch is both word and 1 - Ys sig a warning of the roil...",
+        "special_power_levels": 3
+      },
+      "front_text_length": 859,
+      "back_text_length": 1348
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm6",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 6",
+      "overall_score": 26.16,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 52.38,
+        "story": 0.0,
+        "special_power": 21.39,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 80.0
+      },
+      "level_scores": {
+        "level_1": 14.87603305785124,
+        "level_2": 20.689655172413794,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": "Z Never ask.   AN",
+        "story": null,
+        "special_power_levels": 2
+      },
+      "front_text_length": 854,
+      "back_text_length": 1584
+    },
+    {
+      "strategy_name": "tesseract_sharpened_psm6",
+      "strategy_description": "Sharpened preprocessing + Tesseract PSM 6",
+      "overall_score": 24.64,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 61.54,
+        "story": 0.0,
+        "special_power": 18.29,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 70.0
+      },
+      "level_scores": {
+        "level_1": 23.140495867768596,
+        "level_2": 0.0,
+        "level_3": 0.0,
+        "level_4": 50.0
+      },
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": "we  Shoot first. F a ES i 5",
+        "story": null,
+        "special_power_levels": 1
+      },
+      "front_text_length": 887,
+      "back_text_length": 1479
+    },
+    {
+      "strategy_name": "tesseract_bilateral_psm3_advanced_nlp",
+      "strategy_description": "Bilateral filter + Tesseract PSM 3 + Advanced NLP",
+      "overall_score": 16.33,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 2.19,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": "LORD ADAM BENCHLEY MANCHESTER, ENGLAND - Shoot first. Never ask. Lord Benchle -twitch is both woundndnd warning of the roiling toughness beneath his calm, British demeanor. The man holds himself toget...",
+        "special_power_levels": 0
+      },
+      "front_text_length": 627,
+      "back_text_length": 966
+    },
+    {
+      "strategy_name": "tesseract_bilateral_psm3_enhanced_nlp",
+      "strategy_description": "Bilateral filter + Tesseract PSM 3 + Enhanced NLP",
+      "overall_score": 16.33,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 2.19,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": "LORD ADAM BENCHLEY MANCHESTER, ENGLAND - Shoot first. Never ask. Lord Benchle -twitch is both woundndnd warning of the roiling toughness beneath his calm, British demeanor. The man holds himself toget...",
+        "special_power_levels": 0
+      },
+      "front_text_length": 627,
+      "back_text_length": 966
+    },
+    {
+      "strategy_name": "tesseract_bilateral_sharpened_psm3_enhanced_nlp",
+      "strategy_description": "Bilateral + sharpening + Tesseract PSM 3 + Enhanced NLP",
+      "overall_score": 16.33,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 2.19,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 90.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": "LORD ADAM BENCHLEY MANCHESTER, ENGLAND Shoot first. Never ask. Lord Benchle: nature eye-twitch is both woundndnd and warning of the roiling toughness beneath his calm, British demeanor. The man holds ...",
+        "special_power_levels": 0
+      },
+      "front_text_length": 624,
+      "back_text_length": 911
+    },
+    {
+      "strategy_name": "tesseract_adaptive_font_aware_psm3_nlp",
+      "strategy_description": "Adaptive font-aware + Tesseract PSM 3 + Enhanced NLP",
+      "overall_score": 8.01,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 1.74,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 35.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": "4) a G) LORD ADAM BENCHLEY MANCHESTER, ENGLAND Shoot first. Never ask, Lord Benchleys signaiure: eye-twitch Is both woundndnd and wating of the roilitig thoiights benéath, higicalni, British demeanor:...",
+        "special_power_levels": 0
+      },
+      "front_text_length": 288,
+      "back_text_length": 181
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm5",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 5",
+      "overall_score": 4.75,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 0.0,
+        "special_power": 0.0,
+        "dice_recognition": 25.0,
+        "mechanics_recognition": 15.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": null,
+        "special_power_levels": 0
+      },
+      "front_text_length": 562,
+      "back_text_length": 977
+    },
+    {
+      "strategy_name": "tesseract_adaptive_psm3",
+      "strategy_description": "Adaptive preprocessing + Tesseract PSM 3",
+      "overall_score": 0.0,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 0.0,
+        "special_power": 0.0,
+        "dice_recognition": 0.0,
+        "mechanics_recognition": 0.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": null,
+        "special_power_levels": 0
+      },
+      "front_text_length": 0,
+      "back_text_length": 0
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm7",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 7",
+      "overall_score": 0.0,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 0.0,
+        "special_power": 0.0,
+        "dice_recognition": 0.0,
+        "mechanics_recognition": 0.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": null,
+        "special_power_levels": 0
+      },
+      "front_text_length": 0,
+      "back_text_length": 0
+    },
+    {
+      "strategy_name": "tesseract_enhanced_psm8",
+      "strategy_description": "Enhanced preprocessing + Tesseract PSM 8",
+      "overall_score": 0.0,
+      "scores": {
+        "name": 0.0,
+        "location": 0.0,
+        "motto": 0.0,
+        "story": 0.0,
+        "special_power": 0.0,
+        "dice_recognition": 0.0,
+        "mechanics_recognition": 0.0
+      },
+      "level_scores": {},
+      "extracted": {
+        "name": null,
+        "location": null,
+        "motto": null,
+        "story": null,
+        "special_power_levels": 0
+      },
+      "front_text_length": 3,
+      "back_text_length": 4
+    }
+  ]
+}
