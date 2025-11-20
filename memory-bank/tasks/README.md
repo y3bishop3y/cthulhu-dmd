@@ -81,6 +81,23 @@ Bridges individual power statistics with full character analysis:
 
 ---
 
+### `07-ocr-iteration-strategy.md`
+**OCR Iteration Strategy Plan**
+
+Systematic approach to testing and comparing OCR preprocessing + engine combinations:
+- Multi-strategy testing framework (11+ combinations)
+- Comparison against ground truth (character.json)
+- Scoring by similarity and key phrase detection
+- Plans for additional OCR engines (PaddleOCR, cloud APIs)
+- Advanced preprocessing techniques
+- Result combination strategies
+
+**Status:** In Progress  
+**Current Best**: Deskew preprocessing + Tesseract PSM 3 (35% similarity on Ahmed)  
+**Last Updated:** 2024-12-19
+
+---
+
 ## How to Use
 
 1. **Review plans** - Read through the planning documents to understand the scope

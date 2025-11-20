@@ -8,11 +8,20 @@ within the models themselves for better organization and reusability.
 """
 
 import re
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 from pydantic import BaseModel, Field, computed_field
 
-from scripts.models.constants import CommonPower
+from scripts.models.constants import CommonPower as CommonPowerEnum
+
+if TYPE_CHECKING:
+    from scripts.analyze_power_statistics import PowerLevelAnalysis
+    from scripts.cleanup_and_improve_common_powers import (
+        ConditionalEffects,
+        DefensiveEffects,
+        HealingEffects,
+        RerollEffects,
+    )
 
 
 class PowerLevelStatistics(BaseModel):
@@ -20,35 +29,52 @@ class PowerLevelStatistics(BaseModel):
 
     green_dice_added: int = Field(default=0, ge=0, description="Number of green dice added")
     black_dice_added: int = Field(default=0, ge=0, description="Number of black dice added")
-    base_expected_successes: float = Field(default=0.0, ge=0.0, description="Expected successes with base dice")
-    enhanced_expected_successes: float = Field(default=0.0, ge=0.0, description="Expected successes with enhancement")
-    expected_successes_increase: float = Field(default=0.0, description="Absolute increase in expected successes")
-    expected_successes_percent_increase: float = Field(default=0.0, description="Percentage increase in expected successes")
-    max_successes_increase: int = Field(default=0, ge=0, description="Increase in maximum possible successes")
-    tentacle_risk: float = Field(default=0.0, ge=0.0, description="Expected tentacles with enhancement")
-    base_tentacle_risk: float = Field(default=0.0, ge=0.0, description="Expected tentacles with base dice")
-    is_conditional: bool = Field(default=False, description="Whether this power has conditional effects")
+    base_expected_successes: float = Field(
+        default=0.0, ge=0.0, description="Expected successes with base dice"
+    )
+    enhanced_expected_successes: float = Field(
+        default=0.0, ge=0.0, description="Expected successes with enhancement"
+    )
+    expected_successes_increase: float = Field(
+        default=0.0, description="Absolute increase in expected successes"
+    )
+    expected_successes_percent_increase: float = Field(
+        default=0.0, description="Percentage increase in expected successes"
+    )
+    max_successes_increase: int = Field(
+        default=0, ge=0, description="Increase in maximum possible successes"
+    )
+    tentacle_risk: float = Field(
+        default=0.0, ge=0.0, description="Expected tentacles with enhancement"
+    )
+    base_tentacle_risk: float = Field(
+        default=0.0, ge=0.0, description="Expected tentacles with base dice"
+    )
+    is_conditional: bool = Field(
+        default=False, description="Whether this power has conditional effects"
+    )
     conditions: List[str] = Field(default_factory=list, description="List of condition strings")
     rerolls_added: int = Field(default=0, ge=0, description="Number of rerolls added")
-    reroll_type: Optional[str] = Field(default=None, description="Type of reroll: 'free' or 'standard'")
+    reroll_type: Optional[str] = Field(
+        default=None, description="Type of reroll: 'free' or 'standard'"
+    )
     has_reroll: bool = Field(default=False, description="Whether this power adds any rerolls")
     wounds_healed: int = Field(default=0, ge=0, description="Number of wounds healed")
     stress_healed: int = Field(default=0, ge=0, description="Number of stress healed")
-    has_healing: bool = Field(default=False, description="Whether this power has any healing effects")
+    has_healing: bool = Field(
+        default=False, description="Whether this power has any healing effects"
+    )
     wound_reduction: int = Field(default=0, ge=0, description="Wound damage reduction")
     sanity_reduction: int = Field(default=0, ge=0, description="Sanity loss reduction")
-    has_defensive: bool = Field(default=False, description="Whether this power has any defensive effects")
+    has_defensive: bool = Field(
+        default=False, description="Whether this power has any defensive effects"
+    )
 
     @computed_field
     @property
     def has_any_improvements(self) -> bool:
         """Check if this power level has any improvements (conditional, reroll, healing, or defensive)."""
-        return (
-            self.is_conditional
-            or self.has_reroll
-            or self.has_healing
-            or self.has_defensive
-        )
+        return self.is_conditional or self.has_reroll or self.has_healing or self.has_defensive
 
     def get_improvements_list(self) -> List[str]:
         """Get a list of human-readable improvement descriptions.
@@ -62,9 +88,13 @@ class PowerLevelStatistics(BaseModel):
         if self.has_reroll:
             improvements.append(f"Rerolls: {self.rerolls_added} ({self.reroll_type})")
         if self.has_healing:
-            improvements.append(f"Healing: {self.wounds_healed} wounds, {self.stress_healed} stress")
+            improvements.append(
+                f"Healing: {self.wounds_healed} wounds, {self.stress_healed} stress"
+            )
         if self.has_defensive:
-            improvements.append(f"Defensive: {self.wound_reduction} wounds, {self.sanity_reduction} sanity")
+            improvements.append(
+                f"Defensive: {self.wound_reduction} wounds, {self.sanity_reduction} sanity"
+            )
         return improvements
 
     @classmethod
@@ -94,7 +124,9 @@ class PowerLevelStatistics(BaseModel):
             base_expected_successes=round(analysis.base_expected_successes, 3),
             enhanced_expected_successes=round(analysis.enhanced_expected_successes, 3),
             expected_successes_increase=round(analysis.expected_successes_increase, 3),
-            expected_successes_percent_increase=round(analysis.expected_successes_percent_increase, 2),
+            expected_successes_percent_increase=round(
+                analysis.expected_successes_percent_increase, 2
+            ),
             max_successes_increase=analysis.max_successes_increase,
             tentacle_risk=round(analysis.tentacle_risk, 3),
             base_tentacle_risk=round(analysis.base_tentacle_risk, 3),
@@ -144,7 +176,7 @@ class Power(BaseModel):
     def is_complete(self) -> bool:
         """Whether this power has all expected levels."""
         if self.is_special:
-            return len(self.levels) >= 1
+            return len(self.levels) >= 4  # Special powers have 4 levels
         return len(self.levels) >= 4
 
     def add_level(self, level: PowerLevel) -> None:
@@ -311,7 +343,14 @@ class BackCardData(BaseModel):
             is_special_power = False
             special_power_name = None
 
-            # Check for "Fueled by Madness" pattern
+            # Strategy: Special powers appear BEFORE common powers and have unique patterns
+            # They typically:
+            # 1. Have a unique name (not a common power name)
+            # 2. Have level indicators (1, 2, 3, 4) or "When you..." patterns
+            # 3. Appear before any common power names
+            # 4. Have descriptions that don't match common power patterns
+
+            # Check for explicit special power names
             if "fueled" in line_lower and "madness" in line_lower:
                 # Extract the power name
                 words = line.split()
@@ -324,8 +363,38 @@ class BackCardData(BaseModel):
                 if power_words:
                     special_power_name = " ".join(power_words)
                     is_special_power = True
+            
+            # Check for "HEALING PRAYER" or "At the end of your turn" pattern (Ahmed's power)
+            if ("healing" in line_lower and "prayer" in line_lower) or (
+                ("at the end" in line_lower or "atthe end" in line_lower) 
+                and "turn" in line_lower 
+                and ("heal" in line_lower or "wound" in line_lower)
+            ):
+                # Look backwards for power name, or use "Healing Prayer"
+                power_name_candidates = []
+                for j in range(max(0, i - 5), i):
+                    prev_line = lines[j].strip()
+                    prev_lower = prev_line.lower()
+                    if "healing" in prev_lower and "prayer" in prev_lower:
+                        # Extract "Healing Prayer" from the line
+                        words = prev_line.split()
+                        healing_idx = None
+                        prayer_idx = None
+                        for idx, word in enumerate(words):
+                            if "healing" in word.lower():
+                                healing_idx = idx
+                            if "prayer" in word.lower():
+                                prayer_idx = idx
+                        if healing_idx is not None and prayer_idx is not None:
+                            power_name_candidates.append(" ".join(words[min(healing_idx, prayer_idx):max(healing_idx, prayer_idx)+1]))
+                
+                if power_name_candidates:
+                    special_power_name = power_name_candidates[-1]
+                else:
+                    special_power_name = "Healing Prayer"
+                is_special_power = True
 
-            # Check for special power description pattern (Gain X while your sanity...)
+            # Check for special power description patterns
             # Load simple keywords from TOML config
             from scripts.models.parsing_config import get_parsing_patterns
 
@@ -359,17 +428,162 @@ class BackCardData(BaseModel):
                         has_gain = True
                         break
 
-            # Only detect special power if we haven't found any common powers yet
-            # and the pattern appears before any common power names
+            # Pattern 1: "Gain X while your sanity..." (Fueled by Madness)
             if not is_special_power and not found_common_power and (has_gain and has_sanity):
                 special_power_name = "Fueled by Madness"
                 is_special_power = True
+
+            # Pattern 2: Look for power-like descriptions BEFORE common powers
+            # These are typically action-based powers (When you Run, When attacking, etc.)
+            if not is_special_power and not found_common_power:
+                # Check for action-based patterns
+                action_patterns = [
+                    "when you run",
+                    "when attacking",
+                    "when you attack",
+                    "when attacked",
+                    "during a run",
+                    "you may",
+                    "deal",
+                    "wound",
+                    "heal",
+                    "stress",
+                    "move",
+                    "additional",
+                    "sneak",
+                    "free",
+                    "reroll",
+                ]
+
+                has_action_pattern = any(pattern in line_lower for pattern in action_patterns)
+
+                # Check if this line has a level indicator or looks like a power level
+                has_level_indicator = bool(re.search(r"^(?:level\s*)?[1234][:\-]?\s*", line_lower))
+
+                # Check if next few lines also look like power descriptions
+                looks_like_power_sequence = False
+                if has_action_pattern or has_level_indicator:
+                    # Check next 2-3 lines for continuation patterns
+                    continuation_count = 0
+                    for j in range(i + 1, min(i + 4, len(lines))):
+                        next_line = lines[j].lower() if j < len(lines) else ""
+                        if any(pattern in next_line for pattern in action_patterns):
+                            continuation_count += 1
+                        # Check for level indicators
+                        if re.search(r"^(?:level\s*)?[1234][:\-]?\s*", next_line):
+                            continuation_count += 1
+                        # Check for "Instead" which indicates level progression
+                        if next_line.startswith("instead"):
+                            continuation_count += 1
+
+                    looks_like_power_sequence = continuation_count >= 1
+
+                # If it looks like a power description and we haven't found common powers yet
+                if (has_action_pattern or has_level_indicator) and looks_like_power_sequence:
+                    # Try to extract a power name - look backwards more carefully
+                    power_name_candidates = []
+
+                    # Look backwards up to 5 lines for a potential power name
+                    for j in range(max(0, i - 5), i):
+                        prev_line = lines[j].strip()
+                        prev_lower = prev_line.lower()
+
+                        # Skip game rules and common patterns
+                        if any(
+                            skip in prev_lower
+                            for skip in [
+                                "your turn",
+                                "take",
+                                "draw",
+                                "investigate",
+                                "fight",
+                                "resolve",
+                                "mythos",
+                                "card",
+                                "actions",
+                                "safe space",
+                            ]
+                        ):
+                            continue
+
+                        # Skip quotes/mottos (lines starting with quotes or common quote patterns)
+                        is_quote = (
+                            prev_line.startswith('"')
+                            or prev_line.startswith("'")
+                            or prev_line.endswith('"')
+                            or prev_line.endswith("'")
+                            or "certain" in prev_lower
+                            or "life" in prev_lower
+                            or "things" in prev_lower
+                        )
+
+                        if is_quote:
+                            continue
+
+                        # Check if previous line looks like a title/name
+                        # Power names are typically:
+                        # - Short (1-4 words)
+                        # - Start with capital letter
+                        # - Not a common power name
+                        # - Not a quote/motto
+                        word_count = len(prev_line.split())
+
+                        if (
+                            word_count >= 1
+                            and word_count <= 4
+                            and prev_line[0].isupper()
+                            and not any(
+                                cp.value.upper() in prev_line.upper() for cp in CommonPowerEnum
+                            )
+                            and not prev_line.endswith(".")
+                            and not prev_line.endswith(",")
+                            and not prev_line.endswith(":")
+                        ):
+                            power_name_candidates.append(prev_line)
+
+                    if power_name_candidates:
+                        # Use the last candidate (closest to the description)
+                        special_power_name = power_name_candidates[-1]
+                    else:
+                        # Generate a name based on the first action in the description
+                        # Extract key words from the first action line
+                        first_words = line_lower.split()[:5]  # First 5 words
+
+                        if "run" in first_words or "move" in first_words:
+                            special_power_name = "Movement Power"
+                        elif (
+                            "attack" in first_words
+                            or "wound" in first_words
+                            or "deal" in first_words
+                        ):
+                            special_power_name = "Combat Power"
+                        elif "heal" in first_words or "stress" in first_words:
+                            special_power_name = "Healing Power"
+                        elif "sneak" in first_words:
+                            special_power_name = "Stealth Power"
+                        elif "reroll" in first_words:
+                            special_power_name = "Reroll Power"
+                        else:
+                            # Use first capitalized words from the line as name
+                            words = line.split()
+                            name_words = []
+                            for word in words[:3]:  # Max 3 words
+                                if word[0].isupper() and len(word) > 2:
+                                    name_words.append(word)
+                                elif name_words:
+                                    break
+                            if name_words:
+                                special_power_name = " ".join(name_words)
+                            else:
+                                special_power_name = "Special Power"
+
+                    is_special_power = True
 
             # Check if it's a common power name (all caps, matches known powers)
             is_common_power = False
             common_power_name = None
 
-            for common_power in CommonPower:
+            for common_power in CommonPowerEnum:
                 power_name = common_power.value
                 if power_name.upper() in line_upper or line_upper == power_name.upper():
                     common_power_name = power_name
@@ -409,7 +623,10 @@ class BackCardData(BaseModel):
             # If we're tracking a power, collect content lines
             if current_power:
                 # Check for level indicators (Level 1, Level 2, etc. or just numbers at start)
+                # Also check for "Instead" which indicates a new level
                 level_match = re.search(r"^(?:level\s*)?(\d+)[:\-]?\s*", line_lower)
+                is_instead = line_lower.strip().startswith("instead")
+
                 if level_match:
                     # Save previous level if we have accumulated content
                     if power_content_lines:
@@ -426,7 +643,53 @@ class BackCardData(BaseModel):
                     ).strip()
                     if description:
                         power_content_lines = [description]
+                elif is_instead and current_power.levels:
+                    # "Instead" indicates a new level (usually level 2, 3, or 4)
+                    # Save previous level if we have accumulated content
+                    if power_content_lines:
+                        prev_level_num = len(current_power.levels)
+                        description = " ".join(power_content_lines).strip()
+                        if description and len(description.split()) > 2:
+                            current_power.add_level_from_text(prev_level_num, description)
+                        power_content_lines = []
+
+                    # Start new level (increment from previous)
+                    level_num = len(current_power.levels) + 1
+                    description = re.sub(r"^instead[,\s]*", "", line, flags=re.I).strip()
+                    if description:
+                        power_content_lines = [description]
+                elif is_instead and not current_power.levels:
+                    # First level starting with "Instead" - this is unusual but possible
+                    description = re.sub(r"^instead[,\s]*", "", line, flags=re.I).strip()
+                    if description:
+                        power_content_lines = [description]
                 else:
+                    # For special powers, check if this line starts with "Instead" - indicates new level
+                    is_new_instead_level = False
+                    if current_power.is_special:
+                        # Check if line starts with "Instead" (may have punctuation before it)
+                        instead_match = re.search(r"^[^a-z]*instead[,\s]+", line_lower)
+                        if instead_match and current_power.levels:
+                            # Save previous level if we have accumulated content
+                            if power_content_lines:
+                                prev_level_num = len(current_power.levels)
+                                description = " ".join(power_content_lines).strip()
+                                if description and len(description.split()) > 2:
+                                    current_power.add_level_from_text(prev_level_num, description)
+                                power_content_lines = []
+
+                            # Start new level
+                            level_num = len(current_power.levels) + 1
+                            description = re.sub(r"^[^a-z]*instead[,\s]+", "", line, flags=re.I).strip()
+                            if description:
+                                power_content_lines = [description]
+                            is_new_instead_level = True
+
+                    if is_new_instead_level:
+                        # Already handled above, continue to next iteration
+                        i += 1
+                        continue
+
                     # Check if this looks like a level description continuation
                     is_description = any(
                         line_lower.startswith(prefix)
@@ -442,7 +705,7 @@ class BackCardData(BaseModel):
                     ) or (
                         re.match(r"^[A-Z]", line)
                         and len(line.split()) > 2
-                        and line_upper not in [cp.value.upper() for cp in CommonPower]
+                        and line_upper not in [cp.value.upper() for cp in CommonPowerEnum]
                     )
 
                     # Check if this is a continuation of the current description
@@ -450,7 +713,7 @@ class BackCardData(BaseModel):
                         len(line.split()) <= 8
                         and not line[0].isupper()
                         and power_content_lines
-                        and not any(cp.value.upper() in line_upper for cp in CommonPower)
+                        and not any(cp.value.upper() in line_upper for cp in CommonPowerEnum)
                     )
 
                     if is_description or is_continuation:
@@ -465,12 +728,14 @@ class BackCardData(BaseModel):
                             # Check if next line is a common power name
                             if any(
                                 cp.value.upper() in next_upper or next_upper == cp.value.upper()
-                                for cp in CommonPower
+                                for cp in CommonPowerEnum
                             ):
                                 next_is_power = True
 
                         # Save accumulated level if we have enough content and haven't hit max levels
-                        if len(current_power.levels) < 4 and not next_is_power:
+                        # Special powers have 4 levels, common powers have 4 levels
+                        max_levels = 4
+                        if len(current_power.levels) < max_levels and not next_is_power:
                             level_num = len(current_power.levels) + 1
                             description = " ".join(power_content_lines).strip()
                             if description and len(description.split()) > 2:
@@ -482,11 +747,33 @@ class BackCardData(BaseModel):
         # Don't forget the last power
         if current_power:
             # Save any remaining accumulated level content
-            if power_content_lines and len(current_power.levels) < 4:
+            # Special powers have 4 levels, common powers have 4 levels
+            max_levels = 4
+            if power_content_lines and len(current_power.levels) < max_levels:
                 level_num = len(current_power.levels) + 1
                 description = " ".join(power_content_lines).strip()
                 if description and len(description.split()) > 2:
                     current_power.add_level_from_text(level_num, description)
+
+            # For special powers, ensure we have 4 levels by checking if descriptions contain "Instead"
+            # This handles cases where multiple levels are in one description
+            if current_power.is_special and len(current_power.levels) < 4:
+                # Check if any level description contains multiple "Instead" markers
+                for level in current_power.levels:
+                    desc = level.description
+                    # Count "Instead" occurrences (case-insensitive)
+                    instead_count = len(re.findall(r'\binstead\b', desc, re.I))
+                    if instead_count > 1 and len(current_power.levels) < 4:
+                        # Try to split on "Instead" to create additional levels
+                        parts = re.split(r'\s+instead[,\s]+', desc, flags=re.I)
+                        if len(parts) > 1:
+                            # Update current level with first part
+                            level.description = parts[0].strip()
+                            # Add remaining parts as new levels
+                            for part in parts[1:]:
+                                if len(current_power.levels) < 4:
+                                    new_level_num = len(current_power.levels) + 1
+                                    current_power.add_level_from_text(new_level_num, part.strip())
 
             if current_power.is_special:
                 data.special_power = current_power
@@ -531,7 +818,7 @@ class BackCardData(BaseModel):
                         next_line = lines[j].strip()
                         # Skip empty lines and common power names
                         if not next_line or any(
-                            cp.value.upper() in next_line.upper() for cp in CommonPower
+                            cp.value.upper() in next_line.upper() for cp in CommonPowerEnum
                         ):
                             break
                         # Include short lines that might be continuation
@@ -649,7 +936,7 @@ class CharacterData(BaseModel):
 
         return issues
 
-    def has_common_power(self, power: CommonPower) -> bool:
+    def has_common_power(self, power: CommonPowerEnum) -> bool:
         """Check if character has a specific common power."""
         return power.value in self.common_powers
 
@@ -663,7 +950,9 @@ class CommonPowerLevelData(BaseModel):
 
     level: int = Field(..., ge=1, le=4, description="Power level (1-4)")
     description: str = Field(..., description="Power level description")
-    statistics: PowerLevelStatistics = Field(..., description="Statistical analysis of this power level")
+    statistics: PowerLevelStatistics = Field(
+        ..., description="Statistical analysis of this power level"
+    )
     effect: str = Field(..., description="Summary of what this power level does")
 
 
@@ -671,8 +960,12 @@ class CommonPower(BaseModel):
     """Represents a common power with all its levels."""
 
     name: str = Field(..., description="Name of the common power")
-    is_special: bool = Field(default=False, description="Whether this is a special power (vs common)")
-    levels: List[CommonPowerLevelData] = Field(default_factory=list, description="Power levels (1-4)")
+    is_special: bool = Field(
+        default=False, description="Whether this is a special power (vs common)"
+    )
+    levels: List[CommonPowerLevelData] = Field(
+        default_factory=list, description="Power levels (1-4)"
+    )
 
     @classmethod
     def from_dict(cls, data: dict) -> "CommonPower":

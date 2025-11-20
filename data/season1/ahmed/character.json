@@ -1,7 +1,128 @@
 {
-  "name": "Ahmed",
-  "location": null,
+  "name": "Ahmed Yasin",
+  "location": "Mersin, Turkey",
   "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "story": "While Ahmeds medical qualifications might not earn him any formal degrees, investigators can rely on his unshakable calm, steady hands, and vast arcane knowledge to stitch cuts, soothe burns, and reattach severed limbs. Ahmeds fascination with ancient occult",
+  "special_power": {
+    "name": "Healing Prayer",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "At the end of your turn, you may heal 1 stress OR wound on an investigator in your space (it may be yourself)",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      },
+      {
+        "level": 2,
+        "description": "Instead, heal 2 in any combination of stress and wounds",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      },
+      {
+        "level": 3,
+        "description": "Instead, heal 2 stress AND 2 wounds",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      },
+      {
+        "level": 4,
+        "description": "Heal 2 stress AND 2 wounds on EACH investigator in your space",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      }
+    ]
+  },
+  "common_powers": [
+    "Arcane Mastery",
+    "Stealth"
+  ]
 }

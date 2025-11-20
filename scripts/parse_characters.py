@@ -13,26 +13,13 @@ from typing import Final, List, Optional, Tuple
 try:
     import click
     import yaml
-    from pydantic import BaseModel, Field
     from rich.console import Console
     from rich.panel import Panel
     from rich.progress import BarColumn, Progress, SpinnerColumn, TaskProgressColumn, TextColumn
 
-    from scripts.models.character import (
-        BackCardData,
-        CharacterData,
-        FrontCardData,
-        Power,
-        PowerLevel,
-    )
-    from scripts.models.constants import CommonPower, Filename, ImageType
-    from scripts.models.game_mechanics import DiceType, GameMechanics
-    from scripts.utils.ocr import extract_text_from_image, preprocess_image_for_ocr
-    from scripts.utils.parsing import (
-        clean_ocr_text,
-        normalize_dice_symbols,
-        normalize_red_swirl_symbols,
-    )
+    from scripts.models.character import CharacterData
+    from scripts.models.constants import CommonPower, Filename
+    from scripts.utils.ocr import extract_text_from_image
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -90,7 +77,9 @@ def load_existing_character_json(char_dir: Path) -> Optional[CharacterData]:
         # Convert dict to CharacterData model
         return CharacterData(**data)
     except (json.JSONDecodeError, Exception) as e:
-        console.print(f"[yellow]Warning: Could not load existing {Filename.CHARACTER_JSON}: {e}[/yellow]")
+        console.print(
+            f"[yellow]Warning: Could not load existing {Filename.CHARACTER_JSON}: {e}[/yellow]"
+        )
         return None
 
 
@@ -234,10 +223,22 @@ def main(
         for char_dir in characters_to_process:
             task = progress.add_task(f"Processing {char_dir.name}", total=1)
 
-            front_path = char_dir / Filename.FRONT
-            back_path = char_dir / Filename.BACK
+            # Prefer WebP for color, then JPG
+            front_path = None
+            for ext in [".webp", ".jpg", ".jpeg"]:
+                candidate = char_dir / f"front{ext}"
+                if candidate.exists():
+                    front_path = candidate
+                    break
 
-            if not front_path.exists() or not back_path.exists():
+            back_path = None
+            for ext in [".webp", ".jpg", ".jpeg"]:
+                candidate = char_dir / f"back{ext}"
+                if candidate.exists():
+                    back_path = candidate
+                    break
+
+            if not front_path or not back_path:
                 console.print(f"[yellow]Skipping {char_dir.name}: missing images[/yellow]")
                 progress.update(task, advance=1)
                 continue
@@ -269,7 +270,8 @@ def main(
                 output_file = char_dir / Filename.CHARACTER_JSON
                 if output_format == OUTPUT_FORMAT_JSON:
                     output_file.write_text(
-                        json.dumps(character_data.model_dump(), indent=2, ensure_ascii=False) + "\n",
+                        json.dumps(character_data.model_dump(), indent=2, ensure_ascii=False)
+                        + "\n",
                         encoding="utf-8",
                     )
                 else:

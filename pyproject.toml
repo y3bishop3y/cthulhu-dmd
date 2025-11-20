@@ -20,6 +20,9 @@ dependencies = [
     "coqui-tts>=0.24.0",
     "pydantic-settings>=2.12.0",
     "tomli>=2.3.0",
+    "spacy>=3.8.11",
+    "en-core-web-sm",
+    "easyocr>=1.7.2",
 ]
 
 # Build system removed - no package to build yet
@@ -40,6 +43,7 @@ dev-dependencies = [
 ]
 
 [tool.uv.sources]
+en-core-web-sm = { url = "https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl" }
 # Add source-specific configurations here if needed
 
 [tool.mypy]

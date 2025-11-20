@@ -57,12 +57,16 @@ class DiceAddition(BaseModel):
     # Constants for regex patterns (class variables, not instance fields)
     # More comprehensive patterns to handle OCR variations and different phrasings
     GREEN_PATTERNS: ClassVar[List[str]] = [
+        r"gain\s+a\s+green\s+dice",  # "gain a green dice" (singular, = 1)
+        r"gain\s+a\s+Green\s+Dice",  # "gain a Green Dice" (capitalized, singular)
         r"gain\s+(\d+)\s+green\s+dice",  # "gain 2 green dice"
         r"(\d+)\s+green\s+dice",  # "2 green dice"
         r"gain\s+(\d+)\s+green",  # "gain 2 green"
         r"add\s+(\d+)\s+green\s+dice",  # "add 2 green dice"
         r"gain\s+(\d+)\s+Green\s+dice",  # Capitalized
         r"(\d+)\s+Green\s+dice",  # Capitalized
+        r"gain\s+a\s+green\s+dice\s+when",  # Conditional: "gain a green dice when" (= 1)
+        r"gain\s+a\s+green\s+dice\s+while",  # Conditional: "gain a green dice while" (= 1)
         r"gain\s+(\d+)\s+green\s+dice\s+when",  # Conditional: "gain 2 green dice when"
         r"(\d+)\s+green\s+dice\s+when",  # Conditional: "2 green dice when"
         r"gain\s+(\d+)\s+green\s+dice\s+while",  # Conditional: "gain 2 green dice while"
@@ -100,7 +104,12 @@ class DiceAddition(BaseModel):
         for pattern in cls.GREEN_PATTERNS:
             match = re.search(pattern, description, re.IGNORECASE)
             if match:
-                green_dice = int(match.group(1))
+                # Handle "gain a green dice" pattern (no capture group, means 1)
+                if r"gain\s+a\s+green" in pattern:
+                    green_dice = 1
+                else:
+                    # Extract number from capture group
+                    green_dice = int(match.group(1))
                 break
 
         for pattern in cls.BLACK_PATTERNS:

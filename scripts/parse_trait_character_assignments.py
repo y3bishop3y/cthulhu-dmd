@@ -56,7 +56,7 @@ def main(data_dir: Path, output_json: Optional[Path]):
     """Parse pages 3-5 of traits booklet to extract character-trait assignments."""
     console.print("[bold cyan]Parsing Trait Character Assignments[/bold cyan]\n")
 
-    pdf_path = data_dir / Filename.TRAITS_BOOKLET_PDF
+    pdf_path = data_dir / Filename.TRAITS_BOOKLET
     if not pdf_path.exists():
         console.print(f"[red]Error: {pdf_path} not found![/red]")
         sys.exit(1)

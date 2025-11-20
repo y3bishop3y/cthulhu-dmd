@@ -1,19 +1,100 @@
 {
-  "name": "Adam",
+  "name": "Lord Adam Benchley",
   "location": "Manchester, England",
   "motto": "“Shoot first. Never ask.”",
-  "story": "Lord Benchley’s signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare. Lord Benchley is quite mad of course, having battled the cults for decades and always maintaining the upper hand, if only bar rd-Benchley himself relies on a stiff upper lip, stoic resolve, and indulging his psychotic tendencies",
+  "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare. Lord",
   "special_power": {
-    "name": "Fueled by Madness",
+    "name": "Instead,",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "Goin @ while your sanity isone 5"
+        "description": "Instead, you may",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      },
+      {
+        "level": 2,
+        "description": "ANY SOURCE. ANY SOURCE.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+      },
+      {
+        "level": 3,
+        "description": "you may reduce woundndnds reduce woundndnds",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5,
+          "is_conditional": false,
+          "conditions": [],
+          "rerolls_added": 0,
+          "reroll_type": null,
+          "has_reroll": false,
+          "wounds_healed": 0,
+          "stress_healed": 0,
+          "has_healing": false,
+          "wound_reduction": 0,
+          "sanity_reduction": 0,
+          "has_defensive": false,
+          "has_any_improvements": false
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       }
     ]
   },
   "common_powers": [
+    "Marksman",
     "Toughness"
   ]
 }

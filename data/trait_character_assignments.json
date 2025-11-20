@@ -1,6 +1,63 @@
 {
   "trait_characters": {
-    "Arcane Mastery": [],
+    "Arcane Mastery": [
+      {
+        "name": "Adilah Vidal",
+        "number": 13
+      },
+      {
+        "name": "Ahmed Yasin",
+        "number": 8
+      },
+      {
+        "name": "Annabelle Laveau",
+        "number": 31
+      },
+      {
+        "name": "Einstein",
+        "number": 21
+      },
+      {
+        "name": "Fatima Safar",
+        "number": 9
+      },
+      {
+        "name": "Father Luke",
+        "number": 15
+      },
+      {
+        "name": "Lysa",
+        "number": 32
+      },
+      {
+        "name": "Westmoreland",
+        "number": 24
+      },
+      {
+        "name": "Maxim Grey",
+        "number": 25
+      },
+      {
+        "name": "Meryl Starling",
+        "number": 25
+      },
+      {
+        "name": "Duperon",
+        "number": 26
+      },
+      {
+        "name": "The Kid",
+        "number": 12
+      },
+      {
+        "name": "Professor Vincent Haas",
+        "number": 28
+      },
+      {
+        "name": "Walter Bagget",
+        "number": 29
+      }
+    ],
     "Brawling": [
       {
         "name": "Adilah Vidal",
@@ -350,8 +407,69 @@
   },
   "character_traits": {
     "Adilah Vidal (13)": [
-      "Brawling",
+      "Stealth",
+      "Arcane Mastery",
+      "Brawling"
+    ],
+    "Ahmed Yasin (8)": [
+      "Arcane Mastery",
       "Stealth"
+    ],
+    "Annabelle Laveau (31)": [
+      "Arcane Mastery",
+      "Toughness",
+      "Stealth"
+    ],
+    "Einstein (21)": [
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Fatima Safar (9)": [
+      "Swiftness",
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Father Luke (15)": [
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Lysa (32)": [
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Westmoreland (24)": [
+      "Swiftness",
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Maxim Grey (25)": [
+      "Stealth",
+      "Arcane Mastery",
+      "Brawling"
+    ],
+    "Meryl Starling (25)": [
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Duperon (26)": [
+      "Arcane Mastery",
+      "Toughness",
+      "Stealth"
+    ],
+    "The Kid (12)": [
+      "Stealth",
+      "Arcane Mastery",
+      "Marksman"
+    ],
+    "Professor Vincent Haas (28)": [
+      "Swiftness",
+      "Arcane Mastery",
+      "Stealth"
+    ],
+    "Walter Bagget (29)": [
+      "Stealth",
+      "Arcane Mastery",
+      "Marksman"
     ],
     "Eddie the Head (19)": [
       "Brawling"
@@ -364,14 +482,10 @@
       "Brawling"
     ],
     "Goncalves (22)": [
-      "Toughness",
-      "Brawling"
+      "Brawling",
+      "Toughness"
     ],
     "Margarethe Richter (16)": [
-      "Brawling",
-      "Stealth"
-    ],
-    "Maxim Grey (25)": [
       "Brawling",
       "Stealth"
     ],
@@ -379,20 +493,20 @@
       "Brawling"
     ],
     "Rocco (32)": [
-      "Marksman",
-      "Brawling"
+      "Brawling",
+      "Marksman"
     ],
     "Roxie Mitchell Williams (27)": [
-      "Toughness",
-      "Brawling"
+      "Brawling",
+      "Toughness"
     ],
     "Scarlett Hayes (19)": [
       "Swiftness",
       "Brawling"
     ],
     "Sister Beth (11)": [
-      "Toughness",
-      "Brawling"
+      "Brawling",
+      "Toughness"
     ],
     "Tina Macshane (28)": [
       "Brawling",
@@ -403,26 +517,26 @@
       "Marksman"
     ],
     "Allan Jenkins (30)": [
-      "Marksman",
-      "Toughness"
+      "Toughness",
+      "Marksman"
     ],
     "Ariele Venturi (14)": [
-      "Marksman",
-      "Stealth"
+      "Stealth",
+      "Marksman"
     ],
     "Ernest Hemingway (21)": [
       "Marksman"
     ],
     "Fleur Debois (22)": [
-      "Marksman",
-      "Stealth"
+      "Stealth",
+      "Marksman"
     ],
     "Josephine Leclerc (23)": [
       "Marksman"
     ],
     "Lord Adam Benchley (7)": [
-      "Marksman",
-      "Toughness"
+      "Toughness",
+      "Marksman"
     ],
     "Maki Smith (24)": [
       "Marksman"
@@ -431,19 +545,8 @@
       "Marksman"
     ],
     "Sergeant Mario Braghieri (16)": [
-      "Marksman",
-      "Toughness"
-    ],
-    "The Kid (12)": [
-      "Marksman",
-      "Stealth"
-    ],
-    "Walter Bagget (29)": [
-      "Marksman",
-      "Stealth"
-    ],
-    "Ahmed Yasin (8)": [
-      "Stealth"
+      "Toughness",
+      "Marksman"
     ],
     "Alex Parker (14)": [
       "Swiftness",
@@ -459,45 +562,13 @@
     "Hailia Hovath (15)": [
       "Stealth"
     ],
-    "Lysa (32)": [
-      "Stealth"
-    ],
     "Smith (24)": [
-      "Stealth"
-    ],
-    "Meryl Starling (25)": [
       "Stealth"
     ],
     "Duchamp (26)": [
       "Stealth"
     ],
     "Tamara (33)": [
-      "Swiftness",
-      "Stealth"
-    ],
-    "Annabelle Laveau (31)": [
-      "Toughness",
-      "Stealth"
-    ],
-    "Einstein (21)": [
-      "Stealth"
-    ],
-    "Fatima Safar (9)": [
-      "Swiftness",
-      "Stealth"
-    ],
-    "Father Luke (15)": [
-      "Stealth"
-    ],
-    "Westmoreland (24)": [
-      "Swiftness",
-      "Stealth"
-    ],
-    "Duperon (26)": [
-      "Toughness",
-      "Stealth"
-    ],
-    "Professor Vincent Haas (28)": [
       "Swiftness",
       "Stealth"
     ],
