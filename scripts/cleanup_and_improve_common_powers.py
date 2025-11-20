@@ -404,18 +404,18 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
 
             # Recalculate statistics if requested
             if recalculate_stats:
-                # Calculate statistics using Pydantic model's encapsulated logic
-                level_data.statistics = PowerLevelStatistics.calculate_from_description(
-                    cleaned_desc,
+                # Generate analysis and effect description
+                analysis = analyze_power_level(power_name, level, cleaned_desc)
+                level_data.effect = analysis.effect
+
+                # Create statistics from analysis using Pydantic model's encapsulated logic
+                level_data.statistics = PowerLevelStatistics.from_analysis(
+                    analysis,
                     conditional_effects=conditional_effects,
                     reroll_effects=reroll_effects,
                     healing_effects=healing_effects,
                     defensive_effects=defensive_effects,
                 )
-
-                # Generate effect description
-                analysis = analyze_power_level(power_name, level, cleaned_desc)
-                level_data.effect = analysis.effect
 
                 # Show improvements using Pydantic model method
                 if level_data.statistics.has_any_improvements:

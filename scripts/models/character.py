@@ -67,6 +67,50 @@ class PowerLevelStatistics(BaseModel):
             improvements.append(f"Defensive: {self.wound_reduction} wounds, {self.sanity_reduction} sanity")
         return improvements
 
+    @classmethod
+    def from_analysis(
+        cls,
+        analysis: "PowerLevelAnalysis",
+        conditional_effects: "ConditionalEffects",
+        reroll_effects: "RerollEffects",
+        healing_effects: "HealingEffects",
+        defensive_effects: "DefensiveEffects",
+    ) -> "PowerLevelStatistics":
+        """Create PowerLevelStatistics from analysis and extracted effects.
+
+        Args:
+            analysis: PowerLevelAnalysis from analyze_power_level()
+            conditional_effects: Extracted conditional effects
+            reroll_effects: Extracted reroll effects
+            healing_effects: Extracted healing effects
+            defensive_effects: Extracted defensive effects
+
+        Returns:
+            PowerLevelStatistics instance with all calculated statistics
+        """
+        return cls(
+            green_dice_added=analysis.green_dice_added,
+            black_dice_added=analysis.black_dice_added,
+            base_expected_successes=round(analysis.base_expected_successes, 3),
+            enhanced_expected_successes=round(analysis.enhanced_expected_successes, 3),
+            expected_successes_increase=round(analysis.expected_successes_increase, 3),
+            expected_successes_percent_increase=round(analysis.expected_successes_percent_increase, 2),
+            max_successes_increase=analysis.max_successes_increase,
+            tentacle_risk=round(analysis.tentacle_risk, 3),
+            base_tentacle_risk=round(analysis.base_tentacle_risk, 3),
+            is_conditional=conditional_effects.is_conditional,
+            conditions=conditional_effects.conditions,
+            rerolls_added=reroll_effects.rerolls_added,
+            reroll_type=reroll_effects.reroll_type,
+            has_reroll=reroll_effects.has_reroll,
+            wounds_healed=healing_effects.wounds_healed,
+            stress_healed=healing_effects.stress_healed,
+            has_healing=healing_effects.has_healing,
+            wound_reduction=defensive_effects.wound_reduction,
+            sanity_reduction=defensive_effects.sanity_reduction,
+            has_defensive=defensive_effects.has_defensive,
+        )
+
 
 class PowerLevel(BaseModel):
     """Represents a single level of a power."""
