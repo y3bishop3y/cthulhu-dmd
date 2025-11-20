@@ -20,7 +20,7 @@ except ImportError as e:
     raise
 
 from scripts.utils.ocr import extract_text_from_image as extract_basic
-from scripts.utils.advanced_ocr import extract_text_advanced
+from scripts.parsing.advanced_ocr import extract_text_advanced
 from scripts.models.character import CharacterData
 
 console = Console()
