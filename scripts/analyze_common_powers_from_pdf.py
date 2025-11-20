@@ -31,7 +31,7 @@ except ImportError as e:
     )
     sys.exit(1)
 
-from scripts.utils.parsing import OCR_CORRECTIONS
+from scripts.parsing.text_parsing import OCR_CORRECTIONS
 from scripts.utils.pdf import extract_text_from_pdf_pages
 
 console = Console()

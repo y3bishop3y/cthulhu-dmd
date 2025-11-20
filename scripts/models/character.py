@@ -199,7 +199,7 @@ class FrontCardData(BaseModel):
     @classmethod
     def parse_from_text(cls, text: str) -> "FrontCardData":
         """Parse front card text to extract name, location, motto, and story."""
-        from scripts.utils.parsing import clean_ocr_text
+        from scripts.parsing.text_parsing import clean_ocr_text
 
         # Clean the text first, preserving newlines for line-by-line parsing
         cleaned_text = clean_ocr_text(text, preserve_newlines=True)
@@ -303,7 +303,7 @@ class BackCardData(BaseModel):
     @classmethod
     def parse_from_text(cls, text: str) -> "BackCardData":
         """Parse back card text to extract powers and their levels."""
-        from scripts.utils.parsing import clean_ocr_text
+        from scripts.parsing.text_parsing import clean_ocr_text
 
         # Clean the text first, preserving newlines for line-by-line parsing
         cleaned_text = clean_ocr_text(text, preserve_newlines=True)

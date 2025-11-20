@@ -32,7 +32,7 @@ except ImportError as e:
 from scripts.models.character import BackCardData, Power
 from scripts.models.constants import Filename
 from scripts.utils.ocr import extract_text_from_image
-from scripts.utils.parsing import clean_ocr_text
+from scripts.parsing.text_parsing import clean_ocr_text
 
 console = Console()
 

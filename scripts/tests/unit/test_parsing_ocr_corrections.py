@@ -6,7 +6,7 @@ Tests that OCR corrections are properly loaded and applied.
 """
 
 
-from scripts.utils.parsing import OCR_CORRECTIONS, apply_ocr_corrections
+from scripts.parsing.text_parsing import OCR_CORRECTIONS, apply_ocr_corrections
 
 
 class TestOCRCorrections:

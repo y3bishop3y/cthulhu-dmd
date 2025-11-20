@@ -24,7 +24,7 @@ try:
 
     from scripts.models.ocr_config import get_ocr_corrections
     from scripts.utils.ocr import extract_text_from_image, preprocess_image_for_ocr
-    from scripts.utils.parsing import OCR_CORRECTIONS, clean_ocr_text
+    from scripts.parsing.text_parsing import OCR_CORRECTIONS, clean_ocr_text
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"

@@ -18,7 +18,7 @@ try:
         ElderSignConversion,
         analyze_power_level,
     )
-    from scripts.utils.parsing import (
+    from scripts.parsing.text_parsing import (
         clean_ocr_text,
         extract_power_level_number,
         is_likely_power_description,

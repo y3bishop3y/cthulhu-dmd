@@ -31,7 +31,7 @@ except ImportError as e:
 
 from scripts.models.character import CommonPowerLevelData, PowerLevelStatistics
 from scripts.models.parsing_config import get_parsing_patterns
-from scripts.utils.parsing import OCR_CORRECTIONS
+from scripts.parsing.text_parsing import OCR_CORRECTIONS
 
 console = Console()
 

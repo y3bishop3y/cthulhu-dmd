@@ -37,7 +37,7 @@ from scripts.analyze_power_statistics import analyze_power_level
 from scripts.models.character import CommonPower as CommonPowerModel
 from scripts.models.character import PowerLevelStatistics
 from scripts.models.constants import CommonPower
-from scripts.utils.parsing import OCR_CORRECTIONS, fix_number_ocr_errors
+from scripts.parsing.text_parsing import OCR_CORRECTIONS, fix_number_ocr_errors
 
 console = Console()
 
