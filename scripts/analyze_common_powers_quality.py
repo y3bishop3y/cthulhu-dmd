@@ -12,7 +12,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
     import click
@@ -29,40 +29,17 @@ except ImportError as e:
     )
     sys.exit(1)
 
+from scripts.models.character import CommonPowerLevelData, PowerLevelStatistics
+from scripts.models.parsing_config import get_parsing_patterns
+from scripts.utils.parsing import OCR_CORRECTIONS
+
 console = Console()
 
-# Common OCR errors and corrections
-OCR_CORRECTIONS: Dict[str, str] = {
-    "freee": "free",
-    "goin": "gain",
-    "ison": "is on",
-    "figuresures": "figures",
-    "detectitve": "detective",
-    "santiy": "sanity",
-    "railing": "rolling",
-    "aff": "and",
-    "BINS": "When",
-    "I enemy": "1 enemy",
-    "wou": "wound",
-    "o!": "of",
-    "re bce": "reduce",
-    "rero": "reroll",
-}
+# Load parsing patterns from TOML config (Pydantic Settings model)
+parsing_config = get_parsing_patterns()
 
-# Key phrases loaded from TOML config
-_parsing_config = get_parsing_patterns()
-KEY_PHRASES = {
-    "dice": _parsing_config.key_phrases_dice,
-    "elder sign": _parsing_config.key_phrases_elder_sign,
-    "success": _parsing_config.key_phrases_success,
-    "attack": _parsing_config.key_phrases_attack,
-    "action": _parsing_config.key_phrases_action,
-    "reroll": _parsing_config.key_phrases_reroll,
-    "sneak": _parsing_config.key_phrases_sneak,
-    "heal": _parsing_config.key_phrases_heal,
-    "wound": _parsing_config.key_phrases_wound,
-    "stress": _parsing_config.key_phrases_stress,
-}
+# Common OCR errors and corrections
+# Note: OCR_CORRECTIONS is imported from utils.parsing
 
 
 def check_ocr_errors(description: str) -> List[str]:
@@ -77,7 +54,7 @@ def check_ocr_errors(description: str) -> List[str]:
     return errors
 
 
-def check_description_quality(description: str) -> Dict[str, any]:
+def check_description_quality(description: str) -> Dict[str, Any]:
     """Check description quality and completeness."""
     issues = []
     suggestions = []
@@ -107,7 +84,7 @@ def check_description_quality(description: str) -> Dict[str, any]:
     # Check for repeated words (OCR artifact)
     words = description.split()
     if len(words) > 0:
-        word_counts = {}
+        word_counts: Dict[str, int] = {}
         for word in words:
             word_counts[word] = word_counts.get(word, 0) + 1
         repeated = [word for word, count in word_counts.items() if count > 3 and len(word) > 3]
