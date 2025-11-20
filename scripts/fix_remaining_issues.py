@@ -14,6 +14,8 @@ try:
     import click
     from rich.console import Console
     from rich.panel import Panel
+
+    from scripts.models.character import CommonPower as CommonPowerModel
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -78,10 +80,13 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
         console.print(f"[red]Error: {common_powers_path} not found![/red]")
         sys.exit(1)
 
-    # Load existing data
+    # Load existing data and parse into Pydantic models
     console.print(f"[cyan]Loading {common_powers_path}...[/cyan]")
     with open(common_powers_path, encoding="utf-8") as f:
-        powers_data = json.load(f)
+        powers_data_dict = json.load(f)
+
+    # Parse all powers into Pydantic models
+    powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]
 
     console.print(f"[green]✓ Loaded {len(powers_data)} powers[/green]\n")
 
@@ -90,19 +95,19 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
 
     # Apply manual corrections
     for power in powers_data:
-        power_name = power["name"]
+        power_name = power.name
         if power_name not in MANUAL_CORRECTIONS:
             continue
 
         console.print(f"[bold cyan]{power_name}[/bold cyan]")
         corrections = MANUAL_CORRECTIONS[power_name]
 
-        for level_data in power["levels"]:
-            level = level_data["level"]
+        for level_data in power.levels:
+            level = level_data.level
             if level not in corrections:
                 continue
 
-            original_desc = level_data["description"]
+            original_desc = level_data.description
             corrected_desc = corrections[level]
 
             if original_desc != corrected_desc:
@@ -110,7 +115,7 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
                 console.print(f"    Before: {original_desc[:100]}{'...' if len(original_desc) > 100 else ''}")
                 console.print(f"    After:  {corrected_desc[:100]}{'...' if len(corrected_desc) > 100 else ''}")
 
-                level_data["description"] = corrected_desc
+                level_data.description = corrected_desc
                 total_fixed += 1
 
         console.print()
@@ -127,13 +132,16 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
         # Create backup
         if backup:
             backup_path = common_powers_path.with_suffix(common_powers_path.suffix + ".backup")
+            # Convert Pydantic models to dicts for JSON serialization
+            backup_data = [power.to_dict() for power in powers_data]
             with open(backup_path, "w", encoding="utf-8") as f:
-                json.dump(powers_data, f, indent=2, ensure_ascii=False)
+                json.dump(backup_data, f, indent=2, ensure_ascii=False)
             console.print(f"\n[green]✓ Backup created: {backup_path}[/green]")
 
-        # Write updated data
+        # Write updated data - convert Pydantic models to dicts for JSON serialization
+        output_data = [power.to_dict() for power in powers_data]
         with open(common_powers_path, "w", encoding="utf-8") as f:
-            json.dump(powers_data, f, indent=2, ensure_ascii=False)
+            json.dump(output_data, f, indent=2, ensure_ascii=False)
 
         console.print(f"[green]✓ Updated {common_powers_path}[/green]")
         console.print(f"[green]✓ Fixed {total_fixed} descriptions[/green]")
