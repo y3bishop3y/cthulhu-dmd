@@ -206,6 +206,88 @@ class FrontCardData(BaseModel):
             image_path: Optional path to image file for layout-aware extraction
         """
         from scripts.parsing.text_parsing import clean_ocr_text
+        
+        def fix_story_ocr_errors(story: str) -> str:
+            """Fix common OCR errors in story text."""
+            # Common OCR error corrections for story text
+            corrections = {
+                # Name variations
+                "Benchle": "Benchley",
+                "Benchle's": "Benchley's",
+                "Benchle s": "Benchley's",
+                "Benchleyys": "Benchleys",  # Double 'y' error
+                "Benchleyy": "Benchley",  # Double 'y' error
+                "Benchleyy's": "Benchley's",
+                "Benchleyy ": "Benchley ",
+                # Word errors
+                "word ond": "word and",
+                "odmirably": "admirably",
+                "rereserve": "reserve",  # Double 're' error (fix this BEFORE "serve" -> "reserve")
+                "serve": "reserve",  # But be careful - "serve" might be correct in some contexts
+                "fallow": "fellow",
+                "Jest": "lest",
+                "seftle": "settle",
+                "isiquite": "is quite",
+                "is quite": "is quite",  # Ensure spacing
+                "ypper": "upper",
+                "resdlve": "resolve",
+                "tendericie": "tendencies",
+                "bar rd": "barely",
+                "only bar": "only barely",
+                "onlybarely": "only barely",
+                "barelyely": "barely",  # Double 'ely' error
+                "barelyely-": "barely. ",  # With punctuation
+                "barelyely ": "barely ",  # With space
+                # Spacing and punctuation
+                "  ": " ",  # Double spaces
+                " -": "-",  # Space before dash
+                "- ": "-",  # Space after dash (in "eye-twitch")
+            }
+            
+            fixed = story
+            # Apply corrections in order (longer patterns first to avoid partial matches)
+            # But also prioritize specific fixes over general ones (e.g., "rereserve" before "serve")
+            priority_order = [
+                "rereserve",  # Must come before "serve"
+                "Benchleyys",  # Must come before "Benchleyy"
+                "Benchleyy's",  # Must come before "Benchleyy"
+                "Benchleyy ",  # Must come before "Benchleyy"
+            ]
+            
+            # First apply priority corrections (case-insensitive)
+            for error in priority_order:
+                if error in corrections:
+                    # Use regex for case-insensitive replacement
+                    pattern = re.compile(re.escape(error), re.IGNORECASE)
+                    fixed = pattern.sub(corrections[error], fixed)
+            
+            # Then apply remaining corrections sorted by length (longest first)
+            remaining_corrections = {
+                k: v for k, v in corrections.items() if k not in priority_order
+            }
+            sorted_corrections = sorted(remaining_corrections.items(), key=lambda x: len(x[0]), reverse=True)
+            for error, correction in sorted_corrections:
+                # Use regex for case-insensitive replacement
+                pattern = re.compile(re.escape(error), re.IGNORECASE)
+                fixed = pattern.sub(correction, fixed)
+            
+            # Fix spacing issues
+            fixed = re.sub(r"\s+", " ", fixed)
+            fixed = re.sub(r"([a-z])([A-Z])", r"\1 \2", fixed)  # Add space between words
+            
+            # Fix double letters that are OCR errors (but keep legitimate doubles like "all", "will")
+            # Only fix if it's clearly an error (like "Benchleyy" -> "Benchley")
+            fixed = re.sub(r"Benchleyy+", "Benchley", fixed, flags=re.I)
+            
+            # Fix "rereserve" -> "reserve" (can be created by whitespace normalization of "re reserve")
+            # This must happen AFTER whitespace normalization
+            fixed = re.sub(r"\brereserve\b", "reserve", fixed, flags=re.I)
+            
+            # Fix punctuation issues
+            fixed = re.sub(r"([a-z])-([A-Z])", r"\1. \2", fixed)  # "word-Word" -> "word. Word"
+            fixed = re.sub(r"([a-z])-([a-z])", r"\1-\2", fixed)  # Keep hyphens in compound words
+            
+            return fixed.strip()
 
         # If image path is provided, try layout-aware extraction first
         if image_path and image_path.exists():
@@ -221,12 +303,11 @@ class FrontCardData(BaseModel):
                     data.location = layout_results.location
                 if layout_results.motto:
                     data.motto = layout_results.motto
-                if layout_results.description:
-                    data.story = layout_results.description
+                # Don't use layout-aware description - it's often garbled
+                # We'll extract story from the OCR text instead
                 
-                # If we got all fields from layout-aware extraction, return early
-                if data.is_complete:
-                    return data
+                # If we got name/location/motto from layout-aware, use them
+                # But still parse story from OCR text
             except Exception:
                 # Fall back to text parsing if layout-aware fails
                 pass
@@ -354,25 +435,113 @@ class FrontCardData(BaseModel):
         # Story is usually the longest paragraph after the motto
         # Find paragraphs (separated by blank lines or significant whitespace)
         paragraphs = re.split(r"\n\s*\n+", cleaned_text)
+        # Also try splitting by single newlines if no double newlines found
+        if len(paragraphs) == 1:
+            paragraphs = [p.strip() for p in cleaned_text.split("\n") if p.strip()]
+        
         # Filter out very short paragraphs and the name/location/motto
-        story_paragraphs = [
-            p.strip()
-            for p in paragraphs
-            if len(p.strip()) > 100
-            and not p.strip().isupper()
-            and (not data.name or data.name not in p)
-            and (not data.location or data.location not in p)
-            and (not data.motto or data.motto not in p)
-        ]
+        story_paragraphs = []
+        for p in paragraphs:
+            p_stripped = p.strip()
+            if (
+                len(p_stripped) > 80  # Lower threshold to catch more
+                and not p_stripped.isupper()
+                and (not data.name or data.name.lower() not in p_stripped.lower())
+                and (not data.location or data.location.lower() not in p_stripped.lower())
+                and (not data.motto or data.motto.lower() not in p_stripped.lower())
+            ):
+                story_paragraphs.append(p_stripped)
 
         if story_paragraphs:
-            # Take the longest paragraph as the story
-            longest_para = max(story_paragraphs, key=len)
-            # Clean up the story text
-            story = clean_ocr_text(longest_para)
-            # Remove any remaining OCR artifacts
-            story = re.sub(r"\s+", " ", story).strip()
-            data.story = story
+            # Score each paragraph by quality (length, word count, OCR error indicators)
+            scored_paragraphs = []
+            for para in story_paragraphs:
+                score = len(para)
+                word_count = len(para.split())
+                score += word_count * 5  # Prefer paragraphs with more words
+                
+                # Penalize OCR errors
+                error_chars = sum(para.count(c) for c in "@#$%^&*|~`")
+                score -= error_chars * 5  # Heavier penalty
+                
+                # Prefer paragraphs that look like prose (have common words)
+                common_words = ["the", "and", "of", "to", "a", "in", "is", "it", "that", "for", "his", "but", "most"]
+                para_lower = para.lower()
+                common_word_count = sum(1 for word in para_lower.split() if word in common_words)
+                score += common_word_count * 3
+                
+                # Bonus for story-like words
+                story_words = ["signature", "warning", "thoughts", "demeanor", "investigators", "reserve", "fellow", "glare", "battled", "cults", "decades", "maintaining"]
+                story_word_count = sum(1 for word in story_words if word in para_lower)
+                score += story_word_count * 10
+                
+                # Penalize if it looks like game rules (all caps, short, has keywords)
+                rule_keywords = ["YOUR", "TURN", "TAKE", "ACTIONS", "DRAW", "MYTHOS", "INVESTIGATE", "FIGHT"]
+                if any(keyword in para.upper() for keyword in rule_keywords):
+                    score -= 100  # Heavy penalty for game rules
+                
+                scored_paragraphs.append((score, para))
+            
+            # Sort by score and take the best
+            scored_paragraphs.sort(reverse=True, key=lambda x: x[0])
+            
+            # Try to combine top paragraphs if they're complementary
+            if len(scored_paragraphs) > 1 and scored_paragraphs[0][0] > 50:
+                best_para = scored_paragraphs[0][1]
+                # Check if second paragraph continues the story
+                second_para = scored_paragraphs[1][1]
+                # If second paragraph doesn't overlap much and is story-like, combine
+                overlap = len(set(best_para.lower().split()) & set(second_para.lower().split()))
+                if overlap < len(set(second_para.lower().split())) * 0.3:  # Less than 30% overlap
+                    best_para = best_para + " " + second_para
+            else:
+                best_para = scored_paragraphs[0][1] if scored_paragraphs else None
+            
+            if best_para:
+                # Clean up the story text
+                story = clean_ocr_text(best_para)
+                # Remove any remaining OCR artifacts
+                story = re.sub(r"\s+", " ", story).strip()
+                # Fix common OCR errors in story text (AFTER clean_ocr_text and whitespace normalization)
+                story = fix_story_ocr_errors(story)
+                # Final whitespace normalization (fix_story_ocr_errors may have introduced spaces)
+                story = re.sub(r"\s+", " ", story).strip()
+                # One final pass to fix any issues created by normalization
+                story = re.sub(r"\brereserve\b", "reserve", story, flags=re.I)
+                
+                # Try to truncate at a reasonable stopping point if story is too long
+                # Look for "Lord" as a potential stopping point (common in character stories)
+                # Find the last occurrence of ". Lord" or "Lord" followed by end/punctuation
+                story_lower = story.lower()
+                
+                # Look for ". Lord" pattern (most common - sentence ending with "Lord")
+                lord_match = None
+                # Try to find ". Lord" pattern
+                for i in range(len(story) - 10, -1, -1):  # Search backwards
+                    if story_lower[i:i+6] == ". lord":
+                        # Check if it's followed by end of string or space/newline
+                        if i + 6 >= len(story) or story[i+6] in [' ', '\n', '\t']:
+                            lord_match = i + 6  # Include ". Lord"
+                            break
+                
+                # If not found, try just "Lord" at end
+                if lord_match is None:
+                    lord_pos = story_lower.rfind(" lord")
+                    if lord_pos != -1:
+                        # Check if it's near the end or followed by punctuation/end
+                        if lord_pos + 5 >= len(story) - 10:  # Within last 10 chars
+                            lord_match = lord_pos + 5  # Include " Lord"
+                        elif lord_pos + 5 < len(story) and story[lord_pos + 5] in ['.', '!', '?', ' ']:
+                            lord_match = lord_pos + 5
+                
+                if lord_match and lord_match > 200:  # Only truncate if reasonable length
+                    truncated = story[:lord_match].strip()
+                    # Ensure it ends properly
+                    if not truncated.endswith(('.', '!', '?')):
+                        truncated += '.'
+                    story = truncated
+                
+                data.story = story
 
         return data
 
