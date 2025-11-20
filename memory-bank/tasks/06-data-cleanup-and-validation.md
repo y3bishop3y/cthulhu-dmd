@@ -59,7 +59,7 @@ Before we can fully utilize the character build and team composition analysis, w
 - [ ] Ensure all seasons have complete character sets
 
 **Scripts Available:**
-- `scripts/parse_characters.py` - Parse character images
+- `scripts/parsing/parse_characters.py` - Parse character images
 - `scripts/download_characters.py` - Download and extract data
 
 **Files to Review:**
@@ -174,7 +174,7 @@ uv run python scripts/cleanup_and_improve_common_powers.py --cleanup --recalcula
 ### Step 2: Validate Characters
 ```bash
 # Parse all characters
-uv run python scripts/parse_characters.py --data-dir data
+uv run python scripts/parsing/parse_characters.py --data-dir data
 
 # Check for issues
 # Review character.json files manually

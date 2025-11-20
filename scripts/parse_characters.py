@@ -24,8 +24,8 @@ except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
         "To run this script, use one of:\n"
-        "  1. uv run python scripts/parsing/parse_characters.py [options]\n"
-        "  2. source .venv/bin/activate && python scripts/parsing/parse_characters.py [options]\n\n"
+        "  1. uv run ./scripts/parse_characters.py [options]\n"
+        "  2. source .venv/bin/activate && ./scripts/parse_characters.py [options]\n\n"
         "Note: You may also need to install Tesseract OCR:\n"
         "  macOS: brew install tesseract\n"
         "  Linux: sudo apt-get install tesseract-ocr\n"

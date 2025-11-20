@@ -21,8 +21,8 @@ except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
         "To run this script, use one of:\n"
-        "  1. uv run ./scripts/parse_rulebook.py [options]\n"
-        "  2. source .venv/bin/activate && ./scripts/parse_rulebook.py [options]\n",
+        "  1. uv run python scripts/parsing/parse_rulebook.py [options]\n"
+        "  2. source .venv/bin/activate && python scripts/parsing/parse_rulebook.py [options]\n",
         file=sys.stderr,
     )
     sys.exit(1)
