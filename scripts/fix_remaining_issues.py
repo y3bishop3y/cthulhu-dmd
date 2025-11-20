@@ -84,7 +84,8 @@ def main(data_dir: Path, dry_run: bool, backup: bool):
         powers_data_dict = json.load(f)
 
     # Import here to avoid circular dependencies and mypy confusion with CommonPower enum
-    from scripts.models.character import CommonPower as CommonPowerModel
+    # Import the Pydantic model directly from character module (not the enum from constants)
+    from scripts.models.character import CommonPower as CommonPowerModel  # type: ignore[attr-defined]
 
     # Parse all powers into Pydantic models
     powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]
