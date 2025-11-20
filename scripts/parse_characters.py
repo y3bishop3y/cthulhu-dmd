@@ -50,7 +50,7 @@ COMMON_POWERS: Final[List[str]] = [power.value for power in CommonPower]
 # - extract_text_from_image(image_path)
 
 
-# Normalization and cleaning functions now imported from utils/parsing.py
+# Normalization and cleaning functions now imported from parsing/text_parsing.py
 # Use:
 # - normalize_dice_symbols(text)
 # - normalize_red_swirl_symbols(text)
