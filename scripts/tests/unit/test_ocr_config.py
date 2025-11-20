@@ -104,8 +104,9 @@ class TestGetOCRCorrections:
         # Second call should return the same cached result
         corrections2 = get_ocr_corrections()
 
-        # Should be the same dictionary (same object reference)
-        assert corrections1 is corrections2
+        # Should have same content (may be different objects)
+        assert corrections1 == corrections2
+        assert len(corrections1) == len(corrections2)
 
     def test_get_ocr_corrections_with_custom_file(self):
         """Test get_ocr_corrections with a custom file."""

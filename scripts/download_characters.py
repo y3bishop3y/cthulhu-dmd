@@ -27,6 +27,7 @@ try:
     from rich.table import Table
 
     from scripts.models.constants import Filename
+    from scripts.models.web_config import get_web_scraping_config
     from scripts.utils.web import download_file, fetch_html, find_links
 except ImportError as e:
     print(
@@ -156,8 +157,12 @@ EXT_JPG: Final[str] = ".jpg"
 EXT_PDF: Final[str] = ".pdf"
 
 # Season/Box mappings loaded from TOML config
-_web_scraping_config = get_web_scraping_config()
-SEASON_MAPPINGS: Final[Dict[str, str]] = _web_scraping_config.season_mappings
+try:
+    _web_scraping_config = get_web_scraping_config()
+    SEASON_MAPPINGS: Final[Dict[str, str]] = _web_scraping_config.season_mappings
+except NameError:
+    # Fallback if web_config not available
+    SEASON_MAPPINGS: Final[Dict[str, str]] = {}
 
 # Path to season URLs data file
 SEASON_URLS_FILE: Final[Path] = Path(__file__).parent / "data" / "season_urls.json"
