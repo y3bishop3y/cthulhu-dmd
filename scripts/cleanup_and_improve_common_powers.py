@@ -376,9 +376,16 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
         power_name = power["name"]
         console.print(f"[bold cyan]{power_name}[/bold cyan]")
 
-        for level_data in power["levels"]:
-            level = level_data["level"]
-            original_desc = level_data["description"]
+        for level_dict in power["levels"]:
+            # Parse level data into Pydantic model
+            level_data = CommonPowerLevelData(
+                level=level_dict["level"],
+                description=level_dict["description"],
+                statistics=PowerLevelStatistics(**level_dict.get("statistics", {})),
+                effect=level_dict.get("effect", ""),
+            )
+            level = level_data.level
+            original_desc = level_data.description
 
             # Clean up OCR errors
             cleaned_desc = cleanup_ocr_errors(original_desc)
@@ -391,7 +398,7 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
 
             # Update description if changed
             if cleaned_desc != original_desc:
-                level_data["description"] = cleaned_desc
+                level_data.description = cleaned_desc
                 total_fixed += 1
                 console.print(f"  Level {level}: [yellow]Fixed OCR errors[/yellow]")
                 console.print(f"    Before: {original_desc[:80]}{'...' if len(original_desc) > 80 else ''}")
@@ -401,36 +408,31 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
             if recalculate_stats:
                 analysis = analyze_power_level(power_name, level, cleaned_desc)
 
-                # Update statistics with enhanced fields
-                stats = level_data.get("statistics", {})
-                stats.update({
-                    "green_dice_added": analysis.green_dice_added,
-                    "black_dice_added": analysis.black_dice_added,
-                    "base_expected_successes": round(analysis.base_expected_successes, 3),
-                    "enhanced_expected_successes": round(analysis.enhanced_expected_successes, 3),
-                    "expected_successes_increase": round(analysis.expected_successes_increase, 3),
-                    "expected_successes_percent_increase": round(
-                        analysis.expected_successes_percent_increase, 2
-                    ),
-                    "max_successes_increase": analysis.max_successes_increase,
-                    "tentacle_risk": round(analysis.tentacle_risk, 3),
-                    "base_tentacle_risk": round(analysis.base_tentacle_risk, 3),
+                # Update statistics using Pydantic model instead of dict.update()
+                level_data.statistics = PowerLevelStatistics(
+                    green_dice_added=analysis.green_dice_added,
+                    black_dice_added=analysis.black_dice_added,
+                    base_expected_successes=round(analysis.base_expected_successes, 3),
+                    enhanced_expected_successes=round(analysis.enhanced_expected_successes, 3),
+                    expected_successes_increase=round(analysis.expected_successes_increase, 3),
+                    expected_successes_percent_increase=round(analysis.expected_successes_percent_increase, 2),
+                    max_successes_increase=analysis.max_successes_increase,
+                    tentacle_risk=round(analysis.tentacle_risk, 3),
+                    base_tentacle_risk=round(analysis.base_tentacle_risk, 3),
                     # Enhanced fields from Pydantic models
-                    "is_conditional": conditional_effects.is_conditional,
-                    "conditions": conditional_effects.conditions,
-                    "rerolls_added": reroll_effects.rerolls_added,
-                    "reroll_type": reroll_effects.reroll_type,
-                    "has_reroll": reroll_effects.has_reroll,
-                    "wounds_healed": healing_effects.wounds_healed,
-                    "stress_healed": healing_effects.stress_healed,
-                    "has_healing": healing_effects.has_healing,
-                    "wound_reduction": defensive_effects.wound_reduction,
-                    "sanity_reduction": defensive_effects.sanity_reduction,
-                    "has_defensive": defensive_effects.has_defensive,
-                })
-
-                level_data["statistics"] = stats
-                level_data["effect"] = analysis.effect
+                    is_conditional=conditional_effects.is_conditional,
+                    conditions=conditional_effects.conditions,
+                    rerolls_added=reroll_effects.rerolls_added,
+                    reroll_type=reroll_effects.reroll_type,
+                    has_reroll=reroll_effects.has_reroll,
+                    wounds_healed=healing_effects.wounds_healed,
+                    stress_healed=healing_effects.stress_healed,
+                    has_healing=healing_effects.has_healing,
+                    wound_reduction=defensive_effects.wound_reduction,
+                    sanity_reduction=defensive_effects.sanity_reduction,
+                    has_defensive=defensive_effects.has_defensive,
+                )
+                level_data.effect = analysis.effect
 
                 # Show improvements
                 if conditional_effects.is_conditional or reroll_effects.has_reroll or healing_effects.has_healing or defensive_effects.has_defensive:
@@ -448,6 +450,12 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
                     console.print(f"  Level {level}: [green]Enhanced statistics[/green]")
                     for imp in improvements:
                         console.print(f"    • {imp}")
+
+            # Update the dict in powers_data with the Pydantic model data
+            level_dict["level"] = level_data.level
+            level_dict["description"] = level_data.description
+            level_dict["statistics"] = level_data.statistics.model_dump()
+            level_dict["effect"] = level_data.effect
 
         console.print()
 
