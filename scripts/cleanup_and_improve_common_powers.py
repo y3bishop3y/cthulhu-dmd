@@ -34,6 +34,7 @@ except ImportError as e:
     sys.exit(1)
 
 from scripts.analyze_power_statistics import analyze_power_level
+from scripts.models.constants import CommonPower
 from scripts.utils.parsing import OCR_CORRECTIONS, fix_number_ocr_errors
 
 console = Console()
@@ -111,10 +112,11 @@ def cleanup_ocr_errors(text: str) -> str:
 
     # Remove garbled uppercase text patterns (like "BRAWLING" at start of description)
     # But preserve power names that are legitimately all caps
-    power_names = ["BRAWLING", "STEALTH", "TOUGHNESS", "MARKSMAN", "SWIFTNESS", "ARCANE MASTERY"]
-    for power_name in power_names:
-        if cleaned.startswith(power_name + " "):
-            cleaned = cleaned[len(power_name) + 1:]
+    # Use CommonPower enum values converted to uppercase for comparison
+    power_names_upper = [power.value.upper() for power in CommonPower]
+    for power_name_upper in power_names_upper:
+        if cleaned.startswith(power_name_upper + " "):
+            cleaned = cleaned[len(power_name_upper) + 1:]
             break
 
     # Remove repeated phrases (common OCR error)
