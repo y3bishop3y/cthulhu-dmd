@@ -3,6 +3,8 @@
 
 include make/*.mk
 
+.DEFAULT_GOAL := help
+
 # Default target
 .DEFAULT_GOAL := help
 
