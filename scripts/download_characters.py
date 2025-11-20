@@ -155,9 +155,7 @@ CLASS_CONTENT: Final[str] = "content"
 EXT_JPG: Final[str] = ".jpg"
 EXT_PDF: Final[str] = ".pdf"
 
-# Season/Box mappings loaded from TOML config (imported after other imports)
-from scripts.models.web_config import get_web_scraping_config
-
+# Season/Box mappings loaded from TOML config
 _web_scraping_config = get_web_scraping_config()
 SEASON_MAPPINGS: Final[Dict[str, str]] = _web_scraping_config.season_mappings
 

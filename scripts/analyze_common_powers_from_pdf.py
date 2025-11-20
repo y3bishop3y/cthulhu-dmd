@@ -176,7 +176,6 @@ def main(data_dir: Path, power: Optional[str]):
     # Extract appendix pages (34-37) where power descriptions are located
     pages_data = extract_text_from_pdf_pages(pdf_path, start_page=34, end_page=38)
     pdf_text = "\n\n".join([page["text"] for page in pages_data])
-    page_count = get_pdf_page_count(pdf_path)
     console.print(
         f"[green]✓ Extracted {len(pdf_text)} characters from appendix pages (34-37)[/green]\n"
     )
