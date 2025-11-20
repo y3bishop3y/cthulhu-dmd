@@ -15,6 +15,11 @@ import sys
 from pathlib import Path
 from typing import Final, Optional
 
+# Add project root to path (go up 2 levels from scripts/parsing/)
+project_root = Path(__file__).parent.parent.parent
+if str(project_root) not in sys.path:
+    sys.path.insert(0, str(project_root))
+
 try:
     import click
     from rich.console import Console
