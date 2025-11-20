@@ -19,6 +19,18 @@ class DiceType(str, Enum):
     GREEN = "green"
 
 
+class ActionType(str, Enum):
+    """Type of action that can be added by powers."""
+
+    ATTACK = "attack"
+    MOVE = "move"
+    RUN = "run"
+    REST = "rest"
+    INVESTIGATE = "investigate"
+    TRADE = "trade"
+    ACTION = "action"  # Generic action
+
+
 class DiceFaceSymbol(str, Enum):
     """Symbols that can appear on dice faces."""
 

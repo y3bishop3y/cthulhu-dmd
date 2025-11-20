@@ -1,0 +1,540 @@
+{
+  "trait_characters": {
+    "Arcane Mastery": [],
+    "Brawling": [
+      {
+        "name": "Adilah Vidal",
+        "number": 13
+      },
+      {
+        "name": "Eddie the Head",
+        "number": 19
+      },
+      {
+        "name": "Jack Munoz",
+        "number": 31
+      },
+      {
+        "name": "Mate Tony Boyle",
+        "number": 18
+      },
+      {
+        "name": "Goncalves",
+        "number": 22
+      },
+      {
+        "name": "Margarethe Richter",
+        "number": 16
+      },
+      {
+        "name": "Maxim Grey",
+        "number": 25
+      },
+      {
+        "name": "Rasputin",
+        "number": 11
+      },
+      {
+        "name": "Rocco",
+        "number": 32
+      },
+      {
+        "name": "Roxie Mitchell Williams",
+        "number": 27
+      },
+      {
+        "name": "Scarlett Hayes",
+        "number": 19
+      },
+      {
+        "name": "Sister Beth",
+        "number": 11
+      },
+      {
+        "name": "Tina Macshane",
+        "number": 28
+      }
+    ],
+    "Marksman": [
+      {
+        "name": "Al Capone",
+        "number": 20
+      },
+      {
+        "name": "Allan Jenkins",
+        "number": 30
+      },
+      {
+        "name": "Ariele Venturi",
+        "number": 14
+      },
+      {
+        "name": "Ernest Hemingway",
+        "number": 21
+      },
+      {
+        "name": "Fleur Debois",
+        "number": 22
+      },
+      {
+        "name": "Josephine Leclerc",
+        "number": 23
+      },
+      {
+        "name": "Lord Adam Benchley",
+        "number": 7
+      },
+      {
+        "name": "Maki Smith",
+        "number": 24
+      },
+      {
+        "name": "Mary Diaz",
+        "number": 17
+      },
+      {
+        "name": "Rocco",
+        "number": 32
+      },
+      {
+        "name": "Sergeant Mario Braghieri",
+        "number": 16
+      },
+      {
+        "name": "The Kid",
+        "number": 12
+      },
+      {
+        "name": "Walter Bagget",
+        "number": 29
+      }
+    ],
+    "Stealth": [
+      {
+        "name": "Ahmed Yasin",
+        "number": 8
+      },
+      {
+        "name": "Alex Parker",
+        "number": 14
+      },
+      {
+        "name": "Ariele Venturi",
+        "number": 14
+      },
+      {
+        "name": "Borden",
+        "number": 8
+      },
+      {
+        "name": "Elizabeth Ives",
+        "number": 9
+      },
+      {
+        "name": "Fleur Debois",
+        "number": 22
+      },
+      {
+        "name": "Hailia Hovath",
+        "number": 15
+      },
+      {
+        "name": "Lysa",
+        "number": 32
+      },
+      {
+        "name": "Smith",
+        "number": 24
+      },
+      {
+        "name": "Margarethe Richter",
+        "number": 16
+      },
+      {
+        "name": "Meryl Starling",
+        "number": 25
+      },
+      {
+        "name": "Duchamp",
+        "number": 26
+      },
+      {
+        "name": "Tamara",
+        "number": 33
+      },
+      {
+        "name": "Tina Macshane",
+        "number": 28
+      },
+      {
+        "name": "Adilah Vidal",
+        "number": 13
+      },
+      {
+        "name": "Ahmed Yasin",
+        "number": 8
+      },
+      {
+        "name": "Annabelle Laveau",
+        "number": 31
+      },
+      {
+        "name": "Einstein",
+        "number": 21
+      },
+      {
+        "name": "Fatima Safar",
+        "number": 9
+      },
+      {
+        "name": "Father Luke",
+        "number": 15
+      },
+      {
+        "name": "Lysa",
+        "number": 32
+      },
+      {
+        "name": "Westmoreland",
+        "number": 24
+      },
+      {
+        "name": "Maxim Grey",
+        "number": 25
+      },
+      {
+        "name": "Meryl Starling",
+        "number": 25
+      },
+      {
+        "name": "Duperon",
+        "number": 26
+      },
+      {
+        "name": "The Kid",
+        "number": 12
+      },
+      {
+        "name": "Professor Vincent Haas",
+        "number": 28
+      },
+      {
+        "name": "Walter Bagget",
+        "number": 29
+      }
+    ],
+    "Swiftness": [
+      {
+        "name": "Al Capone",
+        "number": 20
+      },
+      {
+        "name": "Alex Parker",
+        "number": 14
+      },
+      {
+        "name": "Borden",
+        "number": 8
+      },
+      {
+        "name": "Eddie The Head",
+        "number": 19
+      },
+      {
+        "name": "Fatima Safar",
+        "number": 9
+      },
+      {
+        "name": "Jack Munoz",
+        "number": 31
+      },
+      {
+        "name": "John Morgan",
+        "number": 10
+      },
+      {
+        "name": "Julia Hollister",
+        "number": 23
+      },
+      {
+        "name": "Westmoreland",
+        "number": 24
+      },
+      {
+        "name": "Diaz",
+        "number": 17
+      },
+      {
+        "name": "Olivia Duchamp",
+        "number": 26
+      },
+      {
+        "name": "Professor Vincent Haas",
+        "number": 28
+      },
+      {
+        "name": "Irons",
+        "number": 27
+      },
+      {
+        "name": "Sam Wood",
+        "number": 17
+      },
+      {
+        "name": "Scarlett Hayes",
+        "number": 19
+      },
+      {
+        "name": "Tamara",
+        "number": 33
+      }
+    ],
+    "Toughness": [
+      {
+        "name": "Albert Einstein",
+        "number": 21
+      },
+      {
+        "name": "Allan Jenkins",
+        "number": 30
+      },
+      {
+        "name": "Annabelle Laveau",
+        "number": 31
+      },
+      {
+        "name": "Luke",
+        "number": 15
+      },
+      {
+        "name": "John Morgan",
+        "number": 10
+      },
+      {
+        "name": "Lord Adam Benchley",
+        "number": 7
+      },
+      {
+        "name": "Tony Boyle",
+        "number": 18
+      },
+      {
+        "name": "Goncalves",
+        "number": 22
+      },
+      {
+        "name": "Duperon",
+        "number": 26
+      },
+      {
+        "name": "Richard Irons",
+        "number": 27
+      },
+      {
+        "name": "Roxie Mitchell Williams",
+        "number": 27
+      },
+      {
+        "name": "Sam Wood",
+        "number": 17
+      },
+      {
+        "name": "Sergeant Mario Braghieri",
+        "number": 16
+      },
+      {
+        "name": "Sister Beth",
+        "number": 11
+      }
+    ]
+  },
+  "character_traits": {
+    "Adilah Vidal (13)": [
+      "Brawling",
+      "Stealth"
+    ],
+    "Eddie the Head (19)": [
+      "Brawling"
+    ],
+    "Jack Munoz (31)": [
+      "Swiftness",
+      "Brawling"
+    ],
+    "Mate Tony Boyle (18)": [
+      "Brawling"
+    ],
+    "Goncalves (22)": [
+      "Toughness",
+      "Brawling"
+    ],
+    "Margarethe Richter (16)": [
+      "Brawling",
+      "Stealth"
+    ],
+    "Maxim Grey (25)": [
+      "Brawling",
+      "Stealth"
+    ],
+    "Rasputin (11)": [
+      "Brawling"
+    ],
+    "Rocco (32)": [
+      "Marksman",
+      "Brawling"
+    ],
+    "Roxie Mitchell Williams (27)": [
+      "Toughness",
+      "Brawling"
+    ],
+    "Scarlett Hayes (19)": [
+      "Swiftness",
+      "Brawling"
+    ],
+    "Sister Beth (11)": [
+      "Toughness",
+      "Brawling"
+    ],
+    "Tina Macshane (28)": [
+      "Brawling",
+      "Stealth"
+    ],
+    "Al Capone (20)": [
+      "Swiftness",
+      "Marksman"
+    ],
+    "Allan Jenkins (30)": [
+      "Marksman",
+      "Toughness"
+    ],
+    "Ariele Venturi (14)": [
+      "Marksman",
+      "Stealth"
+    ],
+    "Ernest Hemingway (21)": [
+      "Marksman"
+    ],
+    "Fleur Debois (22)": [
+      "Marksman",
+      "Stealth"
+    ],
+    "Josephine Leclerc (23)": [
+      "Marksman"
+    ],
+    "Lord Adam Benchley (7)": [
+      "Marksman",
+      "Toughness"
+    ],
+    "Maki Smith (24)": [
+      "Marksman"
+    ],
+    "Mary Diaz (17)": [
+      "Marksman"
+    ],
+    "Sergeant Mario Braghieri (16)": [
+      "Marksman",
+      "Toughness"
+    ],
+    "The Kid (12)": [
+      "Marksman",
+      "Stealth"
+    ],
+    "Walter Bagget (29)": [
+      "Marksman",
+      "Stealth"
+    ],
+    "Ahmed Yasin (8)": [
+      "Stealth"
+    ],
+    "Alex Parker (14)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Borden (8)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Elizabeth Ives (9)": [
+      "Stealth"
+    ],
+    "Hailia Hovath (15)": [
+      "Stealth"
+    ],
+    "Lysa (32)": [
+      "Stealth"
+    ],
+    "Smith (24)": [
+      "Stealth"
+    ],
+    "Meryl Starling (25)": [
+      "Stealth"
+    ],
+    "Duchamp (26)": [
+      "Stealth"
+    ],
+    "Tamara (33)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Annabelle Laveau (31)": [
+      "Toughness",
+      "Stealth"
+    ],
+    "Einstein (21)": [
+      "Stealth"
+    ],
+    "Fatima Safar (9)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Father Luke (15)": [
+      "Stealth"
+    ],
+    "Westmoreland (24)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Duperon (26)": [
+      "Toughness",
+      "Stealth"
+    ],
+    "Professor Vincent Haas (28)": [
+      "Swiftness",
+      "Stealth"
+    ],
+    "Eddie The Head (19)": [
+      "Swiftness"
+    ],
+    "John Morgan (10)": [
+      "Swiftness",
+      "Toughness"
+    ],
+    "Julia Hollister (23)": [
+      "Swiftness"
+    ],
+    "Diaz (17)": [
+      "Swiftness"
+    ],
+    "Olivia Duchamp (26)": [
+      "Swiftness"
+    ],
+    "Irons (27)": [
+      "Swiftness"
+    ],
+    "Sam Wood (17)": [
+      "Swiftness",
+      "Toughness"
+    ],
+    "Albert Einstein (21)": [
+      "Toughness"
+    ],
+    "Luke (15)": [
+      "Toughness"
+    ],
+    "Tony Boyle (18)": [
+      "Toughness"
+    ],
+    "Richard Irons (27)": [
+      "Toughness"
+    ]
+  }
+}

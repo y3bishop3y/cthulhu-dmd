@@ -5,19 +5,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "space of a Gate, you are always considered safe to Rest. You may attack a target 1 additional space away (2 total). Heal stress for each you count as a success, If you are within 1 space of a Gate, you"
+        "description": "When making any roll, you may count 1 Arcane (elder sign) as a success.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Counts 1 elder sign(s) as success(es)"
       },
       {
         "level": 2,
-        "description": "Instead, you may count any number of Yi as successes,"
+        "description": "Instead, you may count any number of elder signs as successes,",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Counts any elder signs as successes"
       },
       {
         "level": 3,
-        "description": "Instead, when you Run, you may Sneak 3 times. You may choose to not lose sanity for a when using this skill, Heal stress for each you count"
+        "description": "Instead, when you Run, you may Sneak 3 times. You may choose to not lose sanity for a when using this skill. Heal 1 stress for each elder sign you count as a success.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Counts any elder signs as successes"
       },
       {
         "level": 4,
-        "description": "Level 4 description - Not found in character cards"
+        "description": "You may perform 1 free attack per turn against a target in your space",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 free attack per turn"
       }
     ]
   },
@@ -27,19 +75,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "BRAWLING When you attack, you may target You have 2 freee When you attack gain 1 green dice while attacking ANY NUMBER of rerolls when figuresures in your space, a target in your space. figuresures in your space attacking a target deal the full wounds WOISCOVERY CARDS you like). i i, (split the wounds as in your space. to EACH target."
+        "description": "BRAWLING When you attack, you may target You have 2 freee When you attack gain 1 green dice while attacking ANY NUMBER of rerolls when figuresures in your space, a target in your space. figuresures in your space attacking a target deal the full wounds WOISCOVERY CARDS you like). i i, (split the wounds as in your space. to EACH target.",
+        "statistics": {
+          "green_dice_added": 1,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 1,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 green dice"
       },
       {
         "level": 2,
-        "description": "Instead, you may reduce wounds taken and loss of attacked or railing for Fire. sanity by 1 when attacked or rolling for Fire,"
+        "description": "Instead, you may reduce wounds taken and loss of attacked or railing for Fire. sanity by 1 when attacked or rolling for Fire,",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Instead, the other heals 3 wounds/ stress as if they were Resting. When you attack, you may target You have 2 freee When you attack ANY NUMBER of rerolls when figuresures in your space, figuresures in your space attacking a target deal the full wounds split the wounds as in your space. to EACH target. you like)."
+        "description": "Instead, the other heals 3 wounds/ stress as if they were Resting. When you attack, you may target You have 2 freee When you attack ANY NUMBER of rerolls when figuresures in your space, figuresures in your space attacking a target deal the full wounds split the wounds as in your space. to EACH target. you like).",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": ". Also, all other investigators in your _, Also you may i Your double the number space may heal 1 of successes. wound AND 1 stress"
+        "description": ". Also, all other investigators in your _, Also you may i Your double the number space may heal 1 of successes. wound AND 1 stress",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       }
     ]
   },
@@ -49,19 +145,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "Marksman also works in your space. While you are at full stress, gain 7 level in Marksman and Brawling"
+        "description": "You may attack a target 1 space away",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 2,
-        "description": "stress/health (total 5, Gain 1 when attacking a target not in your space. Instead, when you Run, you may Sneak 3 times."
+        "description": "Gain 2 Green dice when attacking a target not in your space",
+        "statistics": {
+          "green_dice_added": 2,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.5,
+          "expected_successes_increase": 1.0,
+          "expected_successes_percent_increase": 66.67,
+          "max_successes_increase": 2,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 2 green dice"
       },
       {
         "level": 3,
-        "description": ". You have 2 freee When you attack rerolls when figuresures in your space, attacking a target deal the full wounds in your space. to EACH target."
+        "description": "You may attack a target 1 additional space away (2 total)",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "Level 4 description - Not found in character cards"
+        "description": "You may perform 1 free attack per turn against a target in your space",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 free attack per turn"
       }
     ]
   },
@@ -71,19 +215,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "STEALTH When you Run, you may Sneak once (1 enemy doesnt follow you). BINS gain 1 green dice while attacking a target in your space."
+        "description": "STEALTH When you Run, you may Sneak once (1 enemy doesnt follow you). BINS gain 1 green dice while attacking a target in your space.",
+        "statistics": {
+          "green_dice_added": 1,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 1,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 green dice"
       },
       {
         "level": 2,
-        "description": "Instead, Sneak once (I enemy when you Run, you doesnt follow you). may Sneak 3 times. MASTERY When making any roll,"
+        "description": "Instead, Sneak once (I enemy when you Run, you doesnt follow you). may Sneak 3 times. MASTERY When making any roll,",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Instead, you may you may count 1 Yx- count any number as a success. of as successes. Also, deal 1 wound to all enemies in your space. Deal 1 wound to each enemy you Sneak past. Heal 1 stress for each you count as a success."
+        "description": "Instead, you may count any number of elder signs as successes. Also, deal 1 wound to all enemies in your space. Deal 1 wound to each enemy you Sneak past. Heal 1 stress for each you count as a success.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Counts any elder signs as successes"
       },
       {
         "level": 4,
-        "description": "Level 4 description - Not found in character cards"
+        "description": "You may perform 1 free attack per turn against a target in your space",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 free attack per turn"
       }
     ]
   },
@@ -93,19 +285,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "additional wound (2 total). You have 1 freee Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no"
+        "description": "additional wound (2 total). You have 1 freee Run action each turn. instead, when you Run, you may Sneak 3 times. if you kill the target and there are no",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 2,
-        "description": "successes each. You have 1 extra action each turn."
+        "description": "successes each. You have 1 extra action each turn.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Level 3 description - Not found in character cards"
+        "description": "Level 3 description - Not found in character cards",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "Level 4 description - Not found in character cards"
+        "description": "You may perform 1 free attack per turn against a target in your space",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 free attack per turn"
       }
     ]
   },
@@ -115,19 +355,67 @@
     "levels": [
       {
         "level": 1,
-        "description": "TOUGHNESS You have 1 freee reroll when attacked or rolling for Fire. You may also discard a Detectitve token to reroll 1 die. gain 1 black dice when attacking a target not in your space."
+        "description": "TOUGHNESS You have 1 freee reroll when attacked or rolling for Fire. You may also discard a Detectitve token to reroll 1 die. gain 1 black dice when attacking a target not in your space.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 1,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 2.0,
+          "expected_successes_increase": 0.5,
+          "expected_successes_percent_increase": 33.33,
+          "max_successes_increase": 1,
+          "tentacle_risk": 2.0,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Adds 1 black dice"
       },
       {
         "level": 2,
-        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when. attacked or rolling for Fire. You may also add aff AND your Gift to rolls of investigators in your space. Heal I stress for each  you count as a success."
+        "description": "Instead, you may reduce wounds taken and loss of sanity by 1 when. attacked or rolling for Fire. You may also add aff AND your Gift to rolls of investigators in your space. Heal I stress for each  you count as a success.",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 3,
-        "description": "Instead, you may"
+        "description": "Instead, you may",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       },
       {
         "level": 4,
-        "description": "Instead, you may re bce wou 5 reduce wounds reduce wounds taken and loss o! taken and loss of taken by 2 and loss You have 1 freee reroll when attacked or ity by tw rolling for Fire, stocks Y wll sanity by T from of sanity by from ee orrolling ANY SOURCE. ANY SOURCE, for Fire. , ,"
+        "description": "Instead, you may re bce wou 5 reduce wounds reduce wounds taken and loss o! taken and loss of taken by 2 and loss You have 1 freee reroll when attacked or ity by tw rolling for Fire, stocks Y wll sanity by T from of sanity by from ee orrolling ANY SOURCE. ANY SOURCE, for Fire. , ,",
+        "statistics": {
+          "green_dice_added": 0,
+          "black_dice_added": 0,
+          "base_expected_successes": 1.5,
+          "enhanced_expected_successes": 1.5,
+          "expected_successes_increase": 0.0,
+          "expected_successes_percent_increase": 0.0,
+          "max_successes_increase": 0,
+          "tentacle_risk": 1.5,
+          "base_tentacle_risk": 1.5
+        },
+        "effect": "Other effect (no dice, elder sign conversion, or actions)"
       }
     ]
   }
