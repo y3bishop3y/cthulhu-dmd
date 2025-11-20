@@ -57,7 +57,9 @@ class CharacterRegion(BaseModel):
         """Calculate area of bounding box."""
         return self.width * self.height
 
-    def add_padding(self, padding_percent: float, image_width: int, image_height: int) -> "CharacterRegion":
+    def add_padding(
+        self, padding_percent: float, image_width: int, image_height: int
+    ) -> "CharacterRegion":
         """Add padding around the bounding box.
 
         Args:
@@ -127,10 +129,12 @@ class CharacterExtractor:
         kernel = np.ones((9, 9), np.float32) / 81
         mean = cv2.filter2D(gray.astype(np.float32), -1, kernel)
         sqr_mean = cv2.filter2D((gray.astype(np.float32)) ** 2, -1, kernel)
-        variance = sqr_mean - mean ** 2
+        variance = sqr_mean - mean**2
 
         # Threshold to find high-detail regions
-        _, detail_mask = cv2.threshold(variance.astype(np.uint8), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        _, detail_mask = cv2.threshold(
+            variance.astype(np.uint8), 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
+        )
 
         # Find contours in high-detail regions
         contours, _ = cv2.findContours(detail_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -154,11 +158,15 @@ class CharacterExtractor:
                 # Prefer regions closer to center
                 center_x = x + w // 2
                 center_y = y + h // 2
-                dist_from_center = np.sqrt((center_x - width // 2) ** 2 + (center_y - height // 2) ** 2)
+                dist_from_center = np.sqrt(
+                    (center_x - width // 2) ** 2 + (center_y - height // 2) ** 2
+                )
                 max_dist = np.sqrt((width // 2) ** 2 + (height // 2) ** 2)
                 centrality_score = 1.0 - (dist_from_center / max_dist)
 
-                valid_regions.append((CharacterRegion(x=x, y=y, width=w, height=h), centrality_score))
+                valid_regions.append(
+                    (CharacterRegion(x=x, y=y, width=w, height=h), centrality_score)
+                )
 
         # Strategy 2: If no valid regions found, use center crop heuristic
         if not valid_regions:
@@ -364,7 +372,9 @@ def main(
                 cropped, region = extractor.extract_from_card(image_path)
 
                 # Preprocess
-                preprocessed = extractor.preprocess_for_animation(cropped, remove_background=remove_bg)
+                preprocessed = extractor.preprocess_for_animation(
+                    cropped, remove_background=remove_bg
+                )
 
                 # Save outputs
                 output_cropped = output_dir / f"{image_name}_cropped.jpg"
@@ -390,10 +400,9 @@ def main(
 
             progress.update(task, advance=1)
 
-    console.print(f"\n[green]✓ Extraction complete![/green]")
+    console.print("\n[green]✓ Extraction complete![/green]")
     console.print(f"Output directory: {output_dir}")
 
 
 if __name__ == "__main__":
     main()
-

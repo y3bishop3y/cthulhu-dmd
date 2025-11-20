@@ -16,8 +16,8 @@ from pydantic import BaseModel, Field, computed_field
 from scripts.models.constants import CommonPower as CommonPowerEnum
 
 if TYPE_CHECKING:
-    from scripts.analyze_power_statistics import PowerLevelAnalysis
-    from scripts.cleanup_and_improve_common_powers import (
+    from scripts.cli.analyze.powers import PowerLevelAnalysis
+    from scripts.cli.update.cleanup import (
         ConditionalEffects,
         DefensiveEffects,
         HealingEffects,
@@ -200,13 +200,13 @@ class FrontCardData(BaseModel):
     @classmethod
     def parse_from_text(cls, text: str, image_path: Optional[Path] = None) -> "FrontCardData":
         """Parse front card text to extract name, location, motto, and story.
-        
+
         Args:
             text: OCR-extracted text
             image_path: Optional path to image file for layout-aware extraction
         """
-        from scripts.parsing.text_parsing import clean_ocr_text
-        
+        from scripts.core.parsing.text import clean_ocr_text
+
         def fix_story_ocr_errors(story: str) -> str:
             """Fix common OCR errors in story text."""
             # Common OCR error corrections for story text
@@ -243,7 +243,7 @@ class FrontCardData(BaseModel):
                 " -": "-",  # Space before dash
                 "- ": "-",  # Space after dash (in "eye-twitch")
             }
-            
+
             fixed = story
             # Apply corrections in order (longer patterns first to avoid partial matches)
             # But also prioritize specific fixes over general ones (e.g., "rereserve" before "serve")
@@ -253,48 +253,51 @@ class FrontCardData(BaseModel):
                 "Benchleyy's",  # Must come before "Benchleyy"
                 "Benchleyy ",  # Must come before "Benchleyy"
             ]
-            
+
             # First apply priority corrections (case-insensitive)
             for error in priority_order:
                 if error in corrections:
                     # Use regex for case-insensitive replacement
                     pattern = re.compile(re.escape(error), re.IGNORECASE)
                     fixed = pattern.sub(corrections[error], fixed)
-            
+
             # Then apply remaining corrections sorted by length (longest first)
             remaining_corrections = {
                 k: v for k, v in corrections.items() if k not in priority_order
             }
-            sorted_corrections = sorted(remaining_corrections.items(), key=lambda x: len(x[0]), reverse=True)
+            sorted_corrections = sorted(
+                remaining_corrections.items(), key=lambda x: len(x[0]), reverse=True
+            )
             for error, correction in sorted_corrections:
                 # Use regex for case-insensitive replacement
                 pattern = re.compile(re.escape(error), re.IGNORECASE)
                 fixed = pattern.sub(correction, fixed)
-            
+
             # Fix spacing issues
             fixed = re.sub(r"\s+", " ", fixed)
             fixed = re.sub(r"([a-z])([A-Z])", r"\1 \2", fixed)  # Add space between words
-            
+
             # Fix double letters that are OCR errors (but keep legitimate doubles like "all", "will")
             # Only fix if it's clearly an error (like "Benchleyy" -> "Benchley")
             fixed = re.sub(r"Benchleyy+", "Benchley", fixed, flags=re.I)
-            
+
             # Fix "rereserve" -> "reserve" (can be created by whitespace normalization of "re reserve")
             # This must happen AFTER whitespace normalization
             fixed = re.sub(r"\brereserve\b", "reserve", fixed, flags=re.I)
-            
+
             # Fix punctuation issues
             fixed = re.sub(r"([a-z])-([A-Z])", r"\1. \2", fixed)  # "word-Word" -> "word. Word"
             fixed = re.sub(r"([a-z])-([a-z])", r"\1-\2", fixed)  # Keep hyphens in compound words
-            
+
             return fixed.strip()
 
         # If image path is provided, try layout-aware extraction first
         if image_path and image_path.exists():
             try:
-                from scripts.parsing.layout_aware_ocr import extract_text_layout_aware
+                from scripts.core.parsing.layout import extract_text_layout_aware
+
                 layout_results = extract_text_layout_aware(image_path)
-                
+
                 # Use layout-aware results if they look good
                 data = cls()
                 if layout_results.name:
@@ -305,7 +308,7 @@ class FrontCardData(BaseModel):
                     data.motto = layout_results.motto
                 # Don't use layout-aware description - it's often garbled
                 # We'll extract story from the OCR text instead
-                
+
                 # If we got name/location/motto from layout-aware, use them
                 # But still parse story from OCR text
             except Exception:
@@ -346,14 +349,14 @@ class FrontCardData(BaseModel):
         # 2. Near the top (after name/location, before story)
         # 3. May be in quotes or not
         # 4. Often split across 2 lines (e.g., "Shoot first.\nNever ask.")
-        
+
         # Strategy 1: Look for quoted text first
         quote_patterns = [
             r'"([^"]+)"',  # Standard quotes
             r"'([^']+)'",  # Single quotes
             r'["\']([^"\']+)["\']',  # Any quote type
         ]
-        
+
         for pattern in quote_patterns:
             quotes = re.findall(pattern, cleaned_text)
             if quotes:
@@ -361,25 +364,31 @@ class FrontCardData(BaseModel):
                 for quote in quotes:
                     quote_clean = quote.strip()
                     # Check if it looks like a motto (short, has keywords, not too long)
-                    if (
-                        5 < len(quote_clean) < 150
-                        and any(
-                            word in quote_clean.lower()
-                            for word in ["first", "never", "always", "shoot", "ask", "trust", "certain", "life"]
-                        )
+                    if 5 < len(quote_clean) < 150 and any(
+                        word in quote_clean.lower()
+                        for word in [
+                            "first",
+                            "never",
+                            "always",
+                            "shoot",
+                            "ask",
+                            "trust",
+                            "certain",
+                            "life",
+                        ]
                     ):
                         data.motto = quote_clean
                         break
                 if data.motto:
                     break
-        
+
         # Strategy 2: Look for multi-line mottos (common pattern: "Shoot first.\nNever ask.")
         if not data.motto:
             # Look in first 15 lines (motto is usually near the top)
             for i in range(min(15, len(lines))):
                 line = lines[i]
                 line_lower = line.lower().strip()
-                
+
                 # Check if this line starts a motto (has motto keywords, short)
                 motto_start_keywords = ["shoot", "never", "always", "first", "trust", "certain"]
                 if (
@@ -392,9 +401,17 @@ class FrontCardData(BaseModel):
                     if i + 1 < len(lines):
                         next_line = lines[i + 1].strip()
                         next_lower = next_line.lower()
-                        
+
                         # Check if next line completes the motto
-                        motto_end_keywords = ["ask", "never", "always", "trust", "certain", "life", "things"]
+                        motto_end_keywords = [
+                            "ask",
+                            "never",
+                            "always",
+                            "trust",
+                            "certain",
+                            "life",
+                            "things",
+                        ]
                         if (
                             any(keyword in next_lower for keyword in motto_end_keywords)
                             and len(next_line.split()) <= 5
@@ -402,25 +419,32 @@ class FrontCardData(BaseModel):
                         ):
                             combined = f"{line} {next_line}".strip()
                             # Clean up punctuation
-                            combined = re.sub(r'\s+', ' ', combined)
+                            combined = re.sub(r"\s+", " ", combined)
                             if 10 < len(combined) < 100:  # Reasonable motto length
                                 data.motto = combined
                                 break
-        
+
         # Strategy 3: Look for single-line mottos without quotes
         if not data.motto:
             for i, line in enumerate(lines[:20]):  # Check first 20 lines
                 line_lower = line.lower().strip()
                 # Skip if it's the name or location
-                if (
-                    data.name and data.name.lower() in line_lower
-                ) or (
+                if (data.name and data.name.lower() in line_lower) or (
                     data.location and data.location.lower() in line_lower
                 ):
                     continue
-                
+
                 # Check if it looks like a motto (short, has keywords, not all caps)
-                motto_keywords = ["first", "never", "always", "shoot", "ask", "trust", "certain", "life"]
+                motto_keywords = [
+                    "first",
+                    "never",
+                    "always",
+                    "shoot",
+                    "ask",
+                    "trust",
+                    "certain",
+                    "life",
+                ]
                 if (
                     len(line.split()) >= 2
                     and len(line.split()) <= 8  # Short phrase
@@ -438,7 +462,7 @@ class FrontCardData(BaseModel):
         # Also try splitting by single newlines if no double newlines found
         if len(paragraphs) == 1:
             paragraphs = [p.strip() for p in cleaned_text.split("\n") if p.strip()]
-        
+
         # Filter out very short paragraphs and the name/location/motto
         story_paragraphs = []
         for p in paragraphs:
@@ -459,32 +483,68 @@ class FrontCardData(BaseModel):
                 score = len(para)
                 word_count = len(para.split())
                 score += word_count * 5  # Prefer paragraphs with more words
-                
+
                 # Penalize OCR errors
                 error_chars = sum(para.count(c) for c in "@#$%^&*|~`")
                 score -= error_chars * 5  # Heavier penalty
-                
+
                 # Prefer paragraphs that look like prose (have common words)
-                common_words = ["the", "and", "of", "to", "a", "in", "is", "it", "that", "for", "his", "but", "most"]
+                common_words = [
+                    "the",
+                    "and",
+                    "of",
+                    "to",
+                    "a",
+                    "in",
+                    "is",
+                    "it",
+                    "that",
+                    "for",
+                    "his",
+                    "but",
+                    "most",
+                ]
                 para_lower = para.lower()
                 common_word_count = sum(1 for word in para_lower.split() if word in common_words)
                 score += common_word_count * 3
-                
+
                 # Bonus for story-like words
-                story_words = ["signature", "warning", "thoughts", "demeanor", "investigators", "reserve", "fellow", "glare", "battled", "cults", "decades", "maintaining"]
+                story_words = [
+                    "signature",
+                    "warning",
+                    "thoughts",
+                    "demeanor",
+                    "investigators",
+                    "reserve",
+                    "fellow",
+                    "glare",
+                    "battled",
+                    "cults",
+                    "decades",
+                    "maintaining",
+                ]
                 story_word_count = sum(1 for word in story_words if word in para_lower)
                 score += story_word_count * 10
-                
+
                 # Penalize if it looks like game rules (all caps, short, has keywords)
-                rule_keywords = ["YOUR", "TURN", "TAKE", "ACTIONS", "DRAW", "MYTHOS", "INVESTIGATE", "FIGHT"]
+                rule_keywords = [
+                    "YOUR",
+                    "TURN",
+                    "TAKE",
+                    "ACTIONS",
+                    "DRAW",
+                    "MYTHOS",
+                    "INVESTIGATE",
+                    "FIGHT",
+                ]
                 if any(keyword in para.upper() for keyword in rule_keywords):
                     score -= 100  # Heavy penalty for game rules
-                
+
                 scored_paragraphs.append((score, para))
-            
+
             # Sort by score and take the best
             scored_paragraphs.sort(reverse=True, key=lambda x: x[0])
-            
+
             # Try to combine top paragraphs if they're complementary
             if len(scored_paragraphs) > 1 and scored_paragraphs[0][0] > 50:
                 best_para = scored_paragraphs[0][1]
@@ -496,7 +556,7 @@ class FrontCardData(BaseModel):
                     best_para = best_para + " " + second_para
             else:
                 best_para = scored_paragraphs[0][1] if scored_paragraphs else None
-            
+
             if best_para:
                 # Clean up the story text
                 story = clean_ocr_text(best_para)
@@ -508,22 +568,22 @@ class FrontCardData(BaseModel):
                 story = re.sub(r"\s+", " ", story).strip()
                 # One final pass to fix any issues created by normalization
                 story = re.sub(r"\brereserve\b", "reserve", story, flags=re.I)
-                
+
                 # Try to truncate at a reasonable stopping point if story is too long
                 # Look for "Lord" as a potential stopping point (common in character stories)
                 # Find the last occurrence of ". Lord" or "Lord" followed by end/punctuation
                 story_lower = story.lower()
-                
+
                 # Look for ". Lord" pattern (most common - sentence ending with "Lord")
                 lord_match = None
                 # Try to find ". Lord" pattern
                 for i in range(len(story) - 10, -1, -1):  # Search backwards
-                    if story_lower[i:i+6] == ". lord":
+                    if story_lower[i : i + 6] == ". lord":
                         # Check if it's followed by end of string or space/newline
-                        if i + 6 >= len(story) or story[i+6] in [' ', '\n', '\t']:
+                        if i + 6 >= len(story) or story[i + 6] in [" ", "\n", "\t"]:
                             lord_match = i + 6  # Include ". Lord"
                             break
-                
+
                 # If not found, try just "Lord" at end
                 if lord_match is None:
                     lord_pos = story_lower.rfind(" lord")
@@ -531,16 +591,21 @@ class FrontCardData(BaseModel):
                         # Check if it's near the end or followed by punctuation/end
                         if lord_pos + 5 >= len(story) - 10:  # Within last 10 chars
                             lord_match = lord_pos + 5  # Include " Lord"
-                        elif lord_pos + 5 < len(story) and story[lord_pos + 5] in ['.', '!', '?', ' ']:
+                        elif lord_pos + 5 < len(story) and story[lord_pos + 5] in [
+                            ".",
+                            "!",
+                            "?",
+                            " ",
+                        ]:
                             lord_match = lord_pos + 5
-                
+
                 if lord_match and lord_match > 200:  # Only truncate if reasonable length
                     truncated = story[:lord_match].strip()
                     # Ensure it ends properly
-                    if not truncated.endswith(('.', '!', '?')):
-                        truncated += '.'
+                    if not truncated.endswith((".", "!", "?")):
+                        truncated += "."
                     story = truncated
-                
+
                 data.story = story
 
         return data
@@ -561,7 +626,7 @@ class BackCardData(BaseModel):
     @classmethod
     def parse_from_text(cls, text: str) -> "BackCardData":
         """Parse back card text to extract powers and their levels."""
-        from scripts.parsing.text_parsing import clean_ocr_text
+        from scripts.core.parsing.text import clean_ocr_text
 
         # Clean the text first, preserving newlines for line-by-line parsing
         cleaned_text = clean_ocr_text(text, preserve_newlines=True)
@@ -621,11 +686,11 @@ class BackCardData(BaseModel):
                 if power_words:
                     special_power_name = " ".join(power_words)
                     is_special_power = True
-            
+
             # Check for "HEALING PRAYER" or "At the end of your turn" pattern (Ahmed's power)
             if ("healing" in line_lower and "prayer" in line_lower) or (
-                ("at the end" in line_lower or "atthe end" in line_lower) 
-                and "turn" in line_lower 
+                ("at the end" in line_lower or "atthe end" in line_lower)
+                and "turn" in line_lower
                 and ("heal" in line_lower or "wound" in line_lower)
             ):
                 # Look backwards for power name, or use "Healing Prayer"
@@ -644,8 +709,15 @@ class BackCardData(BaseModel):
                             if "prayer" in word.lower():
                                 prayer_idx = idx
                         if healing_idx is not None and prayer_idx is not None:
-                            power_name_candidates.append(" ".join(words[min(healing_idx, prayer_idx):max(healing_idx, prayer_idx)+1]))
-                
+                            power_name_candidates.append(
+                                " ".join(
+                                    words[
+                                        min(healing_idx, prayer_idx) : max(healing_idx, prayer_idx)
+                                        + 1
+                                    ]
+                                )
+                            )
+
                 if power_name_candidates:
                     special_power_name = power_name_candidates[-1]
                 else:
@@ -938,7 +1010,9 @@ class BackCardData(BaseModel):
 
                             # Start new level
                             level_num = len(current_power.levels) + 1
-                            description = re.sub(r"^[^a-z]*instead[,\s]+", "", line, flags=re.I).strip()
+                            description = re.sub(
+                                r"^[^a-z]*instead[,\s]+", "", line, flags=re.I
+                            ).strip()
                             if description:
                                 power_content_lines = [description]
                             is_new_instead_level = True
@@ -1021,78 +1095,92 @@ class BackCardData(BaseModel):
                     desc = level.description
                     # Count "Instead" occurrences (case-insensitive, handle OCR errors)
                     instead_patterns = [
-                        r'\binstead\b',
-                        r'\binstea\b',  # OCR error
-                        r'\binste\b',   # OCR error
-                        r'\binstea\s+', # OCR error with space
+                        r"\binstead\b",
+                        r"\binstea\b",  # OCR error
+                        r"\binste\b",  # OCR error
+                        r"\binstea\s+",  # OCR error with space
                     ]
                     instead_count = 0
                     for pattern in instead_patterns:
                         instead_count += len(re.findall(pattern, desc, re.I))
-                    
+
                     if instead_count > 1 and len(current_power.levels) < 4:
                         # Try to split on "Instead" (and variants) to create additional levels
                         split_patterns = [
-                            r'\s+instead[,\s]+',
-                            r'\s+instea[,\s]+',
-                            r'\s+inste[,\s]+',
-                            r'[,\s]+instead[,\s]+',
+                            r"\s+instead[,\s]+",
+                            r"\s+instea[,\s]+",
+                            r"\s+inste[,\s]+",
+                            r"[,\s]+instead[,\s]+",
                         ]
                         parts = None
                         for split_pattern in split_patterns:
                             parts = re.split(split_pattern, desc, flags=re.I)
                             if len(parts) > 1:
                                 break
-                        
+
                         if parts and len(parts) > 1:
                             # Update current level with first part
                             level.description = parts[0].strip()
                             # Add remaining parts as new levels
                             for part in parts[1:]:
                                 part_clean = part.strip()
-                                if part_clean and len(part_clean.split()) > 2 and len(current_power.levels) < 4:
+                                if (
+                                    part_clean
+                                    and len(part_clean.split()) > 2
+                                    and len(current_power.levels) < 4
+                                ):
                                     new_level_num = len(current_power.levels) + 1
                                     current_power.add_level_from_text(new_level_num, part_clean)
-                
+
                 # Strategy 2: If still missing levels, try to extract from the full text
                 # Look for patterns like "Level 1:", "Level 2:", etc. in the original text
                 if len(current_power.levels) < 4:
                     # Re-scan the cleaned text for explicit level markers
                     level_markers = re.finditer(
-                        r'(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)',
+                        r"(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)",
                         cleaned_text,
-                        re.IGNORECASE | re.DOTALL
+                        re.IGNORECASE | re.DOTALL,
                     )
-                    
+
                     found_levels = {}
                     for match in level_markers:
                         level_num = int(match.group(1))
                         level_desc = match.group(2).strip()
                         # Clean up the description
-                        level_desc = re.sub(r'^\s*instead[,\s]+', '', level_desc, flags=re.I).strip()
+                        level_desc = re.sub(
+                            r"^\s*instead[,\s]+", "", level_desc, flags=re.I
+                        ).strip()
                         if level_desc and len(level_desc.split()) > 2:
                             found_levels[level_num] = level_desc
-                    
+
                     # Add missing levels if we found them
                     for level_num in range(1, 5):
-                        if level_num not in [l.level for l in current_power.levels] and level_num in found_levels:
+                        if (
+                            level_num not in [l.level for l in current_power.levels]
+                            and level_num in found_levels
+                        ):
                             current_power.add_level_from_text(level_num, found_levels[level_num])
-                
+
                 # Strategy 3: If still missing, try to infer from "Instead" patterns in full text
                 if len(current_power.levels) < 4:
                     # Find all "Instead" occurrences in the text after the power name
-                    instead_matches = list(re.finditer(
-                        r'\b(?:instead|instea|inste)[,\s]+([^\.]+?)(?=\b(?:instead|instea|inste)[,\s]|\b(?:level\s*)?[1234][:\-]|\Z)',
-                        cleaned_text,
-                        re.IGNORECASE | re.DOTALL
-                    ))
-                    
+                    instead_matches = list(
+                        re.finditer(
+                            r"\b(?:instead|instea|inste)[,\s]+([^\.]+?)(?=\b(?:instead|instea|inste)[,\s]|\b(?:level\s*)?[1234][:\-]|\Z)",
+                            cleaned_text,
+                            re.IGNORECASE | re.DOTALL,
+                        )
+                    )
+
                     # If we found multiple "Instead" patterns, they might be separate levels
                     if len(instead_matches) >= len(current_power.levels):
                         # Try to map them to levels
                         for idx, match in enumerate(instead_matches):
                             level_num = idx + 1
-                            if level_num not in [l.level for l in current_power.levels] and level_num <= 4:
+                            if (
+                                level_num not in [l.level for l in current_power.levels]
+                                and level_num <= 4
+                            ):
                                 desc = match.group(1).strip()
                                 if desc and len(desc.split()) > 2:
                                     current_power.add_level_from_text(level_num, desc)

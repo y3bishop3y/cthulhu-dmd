@@ -24,10 +24,10 @@ class CharacterReference(BaseModel):
     @classmethod
     def from_text(cls, text: str) -> Optional["CharacterReference"]:
         """Extract character name and number from text like 'Al Capone (20)' or 'Lord Adam Benchley (7)'.
-        
+
         Args:
             text: Text containing character name and number in format "Name (Number)"
-            
+
         Returns:
             CharacterReference if found, None otherwise
         """
@@ -50,16 +50,18 @@ class TraitSection(BaseModel):
     """A trait section with its assigned characters."""
 
     trait_name: str = Field(..., description="Name of the trait")
-    characters: List[CharacterReference] = Field(default_factory=list, description="Characters with this trait")
+    characters: List[CharacterReference] = Field(
+        default_factory=list, description="Characters with this trait"
+    )
 
     @classmethod
     def parse_from_text(cls, text: str, trait_name: str) -> "TraitSection":
         """Parse a trait section from PDF text to extract character assignments.
-        
+
         Args:
             text: Full text from the PDF pages
             trait_name: Name of the trait (e.g., "Swiftness", "Toughness")
-            
+
         Returns:
             TraitSection with parsed character assignments
         """
@@ -77,14 +79,20 @@ class TraitSection(BaseModel):
             # Handle both "Trait Appendix" and "Trait Common Trait Quick" patterns
             trait_upper = trait_name.upper()
             line_upper = line.upper()
-            if trait_upper in line_upper and ("Appendix" in line or "Common Trait" in line or "trait" in line.lower()):
+            if trait_upper in line_upper and (
+                "Appendix" in line or "Common Trait" in line or "trait" in line.lower()
+            ):
                 in_section = True
                 continue
 
             # Stop if we hit another trait section
             if in_section:
                 for other_trait in all_trait_names:
-                    if other_trait != trait_name and other_trait.upper() in line.upper() and "Appendix" in line:
+                    if (
+                        other_trait != trait_name
+                        and other_trait.upper() in line.upper()
+                        and "Appendix" in line
+                    ):
                         return cls(trait_name=trait_name, characters=characters)
 
                 # Extract character names from this line
@@ -126,10 +134,10 @@ class TraitCharacterAssignments(BaseModel):
     @classmethod
     def parse_from_text(cls, text: str) -> "TraitCharacterAssignments":
         """Parse trait-character assignments from PDF text.
-        
+
         Args:
             text: Full text from PDF pages containing trait sections
-            
+
         Returns:
             TraitCharacterAssignments with all parsed sections
         """
@@ -161,11 +169,7 @@ class TraitCharacterAssignments(BaseModel):
     def characters_with_multiple_traits(self) -> Dict[str, Set[str]]:
         """Characters that have more than one trait."""
         char_to_traits = self.character_to_traits
-        return {
-            char: traits
-            for char, traits in char_to_traits.items()
-            if len(traits) > 1
-        }
+        return {char: traits for char, traits in char_to_traits.items() if len(traits) > 1}
 
     def get_trait_section(self, trait_name: str) -> Optional[TraitSection]:
         """Get trait section by name."""
@@ -188,4 +192,3 @@ class TraitCharacterAssignments(BaseModel):
             "total_characters": len(self.character_to_traits),
             "characters_with_multiple_traits": len(self.characters_with_multiple_traits),
         }
-

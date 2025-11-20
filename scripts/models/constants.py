@@ -95,4 +95,3 @@ def get_common_power_names() -> List[str]:
 def get_season_names() -> List[str]:
     """Get list of all season names as strings."""
     return [season.value for season in Season]
-

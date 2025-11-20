@@ -14,8 +14,7 @@ try:
     from pydantic_settings import BaseSettings, SettingsConfigDict
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: uv add pydantic-settings\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: uv add pydantic-settings\n",
         file=sys.stderr,
     )
     raise
@@ -60,17 +59,20 @@ class OCRCorrectionsConfig(BaseSettings):
             # Try using tomllib (Python 3.11+)
             try:
                 import tomllib
+
                 with open(file_path, "rb") as f:
                     data = tomllib.load(f)
             except ImportError:
                 # Fallback to tomli for older Python versions
                 try:
                     import tomli
+
                     with open(file_path, "rb") as f:
                         data = tomli.load(f)
                 except ImportError:
                     # Fallback to toml (pypi package)
                     import toml
+
                     with open(file_path, encoding="utf-8") as f:
                         data = toml.load(f)
 
@@ -109,4 +111,3 @@ def get_ocr_corrections() -> Dict[str, str]:
     if _ocr_config is None:
         _ocr_config = OCRCorrectionsConfig.load_from_file()
     return _ocr_config.get_corrections_dict()
-

@@ -34,7 +34,6 @@ from .game_mechanics import (
     SanityCost,
     StandardDice,
 )
-from .character_build import CharacterBuild, CharacterStatistics
 from .power_combination import (
     PowerCombination,
     PowerCombinationCalculator,

@@ -13,8 +13,7 @@ try:
     import pdfplumber
 except ImportError as e:
     print(
-        f"Error: Missing required dependency: {e.name}\n\n"
-        "Install with: pip install pdfplumber\n",
+        f"Error: Missing required dependency: {e.name}\n\nInstall with: pip install pdfplumber\n",
         file=sys.stderr,
     )
     raise
@@ -27,16 +26,16 @@ def extract_text_from_pdf(
     end_page: Optional[int] = None,
 ) -> str:
     """Extract text from PDF file.
-    
+
     Args:
         pdf_path: Path to PDF file
         page_numbers: Specific page numbers to extract (0-indexed)
         start_page: Start page number (0-indexed, inclusive)
         end_page: End page number (0-indexed, exclusive)
-        
+
     Returns:
         Extracted text as string
-        
+
     Raises:
         FileNotFoundError: If PDF file doesn't exist
         ValueError: If page numbers are invalid
@@ -53,9 +52,7 @@ def extract_text_from_pdf(
             # Extract specific pages
             for page_num in page_numbers:
                 if page_num < 0 or page_num >= total_pages:
-                    raise ValueError(
-                        f"Page number {page_num} out of range (0-{total_pages - 1})"
-                    )
+                    raise ValueError(f"Page number {page_num} out of range (0-{total_pages - 1})")
                 text = pdf.pages[page_num].extract_text() or ""
                 text_parts.append(text)
         elif start_page is not None or end_page is not None:
@@ -64,9 +61,7 @@ def extract_text_from_pdf(
             end = end_page if end_page is not None else total_pages
 
             if start < 0 or end > total_pages or start >= end:
-                raise ValueError(
-                    f"Invalid page range: {start}-{end} (total pages: {total_pages})"
-                )
+                raise ValueError(f"Invalid page range: {start}-{end} (total pages: {total_pages})")
 
             for page_num in range(start, end):
                 text = pdf.pages[page_num].extract_text() or ""
@@ -85,11 +80,11 @@ def extract_tables_from_pdf(
     page_numbers: Optional[List[int]] = None,
 ) -> List[List[List[str]]]:
     """Extract tables from PDF file.
-    
+
     Args:
         pdf_path: Path to PDF file
         page_numbers: Specific page numbers to extract (0-indexed)
-        
+
     Returns:
         List of tables, where each table is a list of rows,
         and each row is a list of cell strings
@@ -125,13 +120,13 @@ def extract_text_from_pdf_pages(
     console: Optional[Any] = None,
 ) -> List[Dict[str, Any]]:
     """Extract text from PDF pages with page information.
-    
+
     Args:
         pdf_path: Path to PDF file
         start_page: Optional starting page number (1-indexed)
         end_page: Optional ending page number (1-indexed, inclusive)
         console: Optional Rich console for progress display
-        
+
     Returns:
         List of dicts with 'page' and 'text' keys
     """
@@ -155,6 +150,7 @@ def extract_text_from_pdf_pages(
                     TaskProgressColumn,
                     TextColumn,
                 )
+
                 with Progress(
                     SpinnerColumn(),
                     TextColumn("[progress.description]{task.description}"),
@@ -189,10 +185,10 @@ def extract_text_from_pdf_pages(
 
 def get_pdf_page_count(pdf_path: Path) -> int:
     """Get the number of pages in a PDF file.
-    
+
     Args:
         pdf_path: Path to PDF file
-        
+
     Returns:
         Number of pages
     """
@@ -201,4 +197,3 @@ def get_pdf_page_count(pdf_path: Path) -> int:
 
     with pdfplumber.open(pdf_path) as pdf:
         return len(pdf.pages)
-

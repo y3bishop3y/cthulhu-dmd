@@ -71,7 +71,9 @@ def denoise_image(image: np.ndarray, strength: int = 10) -> np.ndarray:
 
 
 def resize_image(
-    image: Image.Image, target_size: Optional[tuple[int, int]] = None, scale_factor: Optional[float] = None
+    image: Image.Image,
+    target_size: Optional[tuple[int, int]] = None,
+    scale_factor: Optional[float] = None,
 ) -> Image.Image:
     """Resize image maintaining aspect ratio.
 
@@ -172,4 +174,3 @@ def save_image(image: Image.Image, output_path: Path, quality: int = DEFAULT_QUA
     else:
         # Default to PNG
         image.save(output_path, "PNG", optimize=True)
-
