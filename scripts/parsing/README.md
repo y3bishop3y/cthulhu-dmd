@@ -19,8 +19,12 @@ scripts/parsing/
 ├── multi_ocr.py                 # Multi-engine OCR strategies
 ├── advanced_ocr.py              # Advanced preprocessing pipeline
 ├── nlp_parser.py                # NLP-based semantic extraction
-├── analyze_ocr_with_nlp.py      # NLP analysis CLI tool
-└── text_parsing.py              # Text cleaning and normalization utilities
+├── text_parsing.py              # Text cleaning and normalization utilities
+├── parse_characters.py          # CLI: Parse character card images
+├── parse_special_powers.py      # CLI: Parse special powers from back cards
+├── parse_trait_character_assignments.py  # CLI: Parse trait assignments from PDF
+├── parse_rulebook.py            # CLI: Parse rulebook PDF
+└── analyze_ocr_with_nlp.py      # CLI: NLP analysis of OCR output
 ```
 
 ## Modules
@@ -150,7 +154,65 @@ Run unit tests:
 uv run pytest scripts/tests/unit/test_nlp_ocr_analysis.py -v
 ```
 
-## Related Scripts
+## CLI Scripts
+
+### `parse_characters.py`
+
+Parse character card images to extract character data.
+
+**Usage**:
+```bash
+# Parse single character
+uv run python scripts/parsing/parse_characters.py --character adam
+
+# Parse all characters
+uv run python scripts/parsing/parse_characters.py --data-dir data
+```
+
+**Extracts**:
+- Name, location, motto, story from front card
+- Special power and common powers from back card
+- Merges with existing character.json data
+
+### `parse_special_powers.py`
+
+Parse and update special powers for characters.
+
+**Usage**:
+```bash
+# Parse special powers for all characters
+uv run python scripts/parsing/parse_special_powers.py
+
+# Parse specific character
+uv run python scripts/parsing/parse_special_powers.py --character ahmed --season season1
+```
+
+**Features**:
+- Extracts special power descriptions from back cards
+- Updates character.json files
+- Validates and cleans OCR text
+
+### `parse_trait_character_assignments.py`
+
+Parse PDF to extract which characters have which common traits.
+
+**Usage**:
+```bash
+uv run python scripts/parsing/parse_trait_character_assignments.py
+```
+
+**Output**: Character-trait assignments JSON
+
+### `parse_rulebook.py`
+
+Parse rulebook PDF into structured markdown/text.
+
+**Usage**:
+```bash
+uv run python scripts/parsing/parse_rulebook.py --output-format markdown
+```
+
+## Related Scripts (in scripts/ root)
 
 - `scripts/compare_ocr_results.py`: Compare OCR results side-by-side with ground truth
 - `scripts/iterate_ocr_strategies.py`: Test all OCR strategies and find best ones
