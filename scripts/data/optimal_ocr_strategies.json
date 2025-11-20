@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-11-20",
+  "description": "Optimal OCR strategies per category, determined from benchmark results",
+  "strategies": {
+    "name": {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "score": 100.0
+    },
+    "location": {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "score": 100.0
+    },
+    "motto": {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "score": 95.8
+    },
+    "story": {
+      "strategy_name": "tesseract_enhanced_psm3",
+      "description": "Enhanced preprocessing + Tesseract PSM 3",
+      "score": 99.8
+    },
+    "special_power": {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "score": 85.2
+    },
+    "dice_recognition": {
+      "strategy_name": "tesseract_basic_psm3",
+      "description": "Basic preprocessing + Tesseract PSM 3",
+      "score": 100.0
+    },
+    "mechanics_recognition": {
+      "strategy_name": "tesseract_bilateral_psm3",
+      "description": "Bilateral filter preprocessing + Tesseract PSM 3",
+      "score": 90.0
+    }
+  },
+  "front_card_strategy": {
+    "strategy_name": "tesseract_enhanced_psm3",
+    "description": "Best for story extraction (99.8%)",
+    "reason": "Story is the most important and hardest to extract from front card"
+  },
+  "back_card_strategy": {
+    "strategy_name": "tesseract_bilateral_psm3",
+    "description": "Best overall for back card (power extraction)",
+    "reason": "Best balance for special power extraction (85.2%)"
+  }
+}
+

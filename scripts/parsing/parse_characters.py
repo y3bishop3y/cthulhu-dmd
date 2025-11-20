@@ -25,6 +25,10 @@ try:
     from scripts.models.character import CharacterData
     from scripts.models.constants import CommonPower, Filename
     from scripts.utils.ocr import extract_text_from_image
+    from scripts.utils.optimal_ocr import (
+        extract_back_card_with_optimal_strategy,
+        extract_front_card_with_optimal_strategy,
+    )
 except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
@@ -96,18 +100,42 @@ def parse_character_images(
     back_path: Path,
     story_file: Optional[Path] = None,
     existing_data: Optional[CharacterData] = None,
+    use_optimal_strategies: bool = True,
 ) -> Tuple[CharacterData, List[str]]:
-    """Parse both front and back images for a character, returning data and issues."""
+    """Parse both front and back images for a character, returning data and issues.
+    
+    Args:
+        front_path: Path to front card image
+        back_path: Path to back card image
+        story_file: Optional path to HTML-extracted story file
+        existing_data: Optional existing character data to merge with
+        use_optimal_strategies: If True, use optimal OCR strategies from benchmark results
+    """
     console.print("[cyan]Parsing images for character...[/cyan]")
 
     # Extract text from images
-    console.print("  Extracting text from front image...")
-    front_text = extract_text_from_image(front_path)
+    if use_optimal_strategies:
+        console.print("  Extracting text from front image (using optimal strategy)...")
+        try:
+            front_text = extract_front_card_with_optimal_strategy(front_path)
+        except Exception as e:
+            console.print(f"[yellow]Warning: Optimal strategy failed ({e}), falling back to default[/yellow]")
+            front_text = extract_text_from_image(front_path)
+        
+        console.print("  Extracting text from back image (using optimal strategy)...")
+        try:
+            back_text = extract_back_card_with_optimal_strategy(back_path)
+        except Exception as e:
+            console.print(f"[yellow]Warning: Optimal strategy failed ({e}), falling back to default[/yellow]")
+            back_text = extract_text_from_image(back_path)
+    else:
+        console.print("  Extracting text from front image...")
+        front_text = extract_text_from_image(front_path)
+        console.print("  Extracting text from back image...")
+        back_text = extract_text_from_image(back_path)
+    
     if not front_text:
         console.print("[yellow]Warning: No text extracted from front image[/yellow]")
-
-    console.print("  Extracting text from back image...")
-    back_text = extract_text_from_image(back_path)
     if not back_text:
         console.print("[yellow]Warning: No text extracted from back image[/yellow]")
 
@@ -160,11 +188,17 @@ def parse_character_images(
     "--character",
     help="Specific character name to parse (e.g., 'adam')",
 )
+@click.option(
+    "--use-optimal-strategies/--no-optimal-strategies",
+    default=True,
+    help="Use optimal OCR strategies from benchmark results (default: --use-optimal-strategies)",
+)
 def main(
     character_dir: Optional[Path],
     data_dir: Path,
     output_format: str,
     character: Optional[str],
+    use_optimal_strategies: bool,
 ):
     """Parse character card images to extract character data."""
 
@@ -260,7 +294,7 @@ def main(
 
                 # Parse character data
                 character_data, issues = parse_character_images(
-                    front_path, back_path, story_path, existing_data
+                    front_path, back_path, story_path, existing_data, use_optimal_strategies
                 )
 
                 # Report issues

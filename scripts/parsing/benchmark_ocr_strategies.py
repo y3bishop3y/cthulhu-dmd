@@ -18,7 +18,7 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 # Add project root to path (go up 2 levels from scripts/parsing/)
 project_root = Path(__file__).parent.parent.parent
@@ -597,8 +597,21 @@ def main(character: str, season: str, top: int, save_results: bool):
     results.sort(key=lambda x: x["overall_score"], reverse=True)
     
     # Save results if requested
+    benchmark_file_path = None
     if save_results:
-        save_benchmark_results(results, character, season, project_root)
+        benchmark_file_path = save_benchmark_results(results, character, season, project_root)
+        
+        # Automatically update optimal strategies config
+        try:
+            from scripts.utils.optimal_ocr import update_optimal_strategies_from_benchmark
+            
+            console.print("\n[cyan]Updating optimal strategies config...[/cyan]")
+            config = update_optimal_strategies_from_benchmark(benchmark_file_path)
+            console.print(f"[green]✓[/green] Updated optimal strategies config")
+            console.print(f"  Front card: {config['front_card_strategy']['strategy_name']}")
+            console.print(f"  Back card: {config['back_card_strategy']['strategy_name']}")
+        except Exception as e:
+            console.print(f"[yellow]Warning: Could not update optimal strategies: {e}[/yellow]")
     
     # Display results
     console.print(f"\n[bold green]Top {top} Strategies (Ranked by Overall Score)[/bold green]\n")
@@ -715,7 +728,7 @@ def save_benchmark_results(
     character: str,
     season: str,
     project_root: Path,
-) -> None:
+) -> Path:
     """Save benchmark results to JSON file.
     
     Args:
@@ -748,6 +761,484 @@ def save_benchmark_results(
         json.dump(output_data, f, indent=2, ensure_ascii=False)
     
     console.print(f"[green]✓[/green] Results saved to: {output_path.relative_to(project_root)}")
+    return output_path
+
+
+def find_best_strategies_per_category(
+    results: List[Dict],
+) -> Dict[str, Dict[str, Any]]:
+    """Find the best strategy for each category from benchmark results.
+    
+    Args:
+        results: List of benchmark result dictionaries
+        
+    Returns:
+        Dictionary mapping category to best strategy info:
+        {
+            "name": {"strategy_name": "...", "score": 100.0, ...},
+            "location": {...},
+            "motto": {...},
+            "story": {...},
+            "special_power": {...},
+            "dice_recognition": {...},
+            "mechanics_recognition": {...},
+        }
+    """
+    categories = [
+        "name",
+        "location",
+        "motto",
+        "story",
+        "special_power",
+        "dice_recognition",
+        "mechanics_recognition",
+    ]
+    
+    best_strategies = {}
+    
+    for category in categories:
+        best_score = -1.0
+        best_result = None
+        
+        for result in results:
+            if "error" in result:
+                continue
+            
+            score = result["scores"].get(category, 0.0)
+            if score > best_score:
+                best_score = score
+                best_result = result
+        
+        if best_result:
+            best_strategies[category] = {
+                "strategy_name": best_result["strategy_name"],
+                "strategy_description": best_result.get("strategy_description", ""),
+                "score": best_score,
+                "extracted": best_result["extracted"].get(category.replace("_recognition", "").replace("special_power", "special_power_levels")),
+            }
+    
+    return best_strategies
+
+
+def benchmark_hybrid_strategy(
+    best_strategies: Dict[str, Dict[str, Any]],
+    strategies_dict: Dict[str, OCRStrategy],
+    front_image: Path,
+    back_image: Path,
+    ground_truth: CharacterData,
+) -> Dict:
+    """Benchmark a hybrid strategy that uses best strategy for each category.
+    
+    Args:
+        best_strategies: Dictionary of best strategies per category
+        strategies_dict: Dictionary mapping strategy names to OCRStrategy objects
+        front_image: Path to front card image
+        back_image: Path to back card image
+        ground_truth: Ground truth character data
+        
+    Returns:
+        Dictionary with scores and extracted data for hybrid strategy
+    """
+    # Extract text using best strategy for story (front card)
+    story_strategy_name = best_strategies.get("story", {}).get("strategy_name")
+    if story_strategy_name and story_strategy_name in strategies_dict:
+        story_strategy = strategies_dict[story_strategy_name]
+        front_text = story_strategy.extract(front_image)
+    else:
+        # Fallback to first available strategy
+        front_text = list(strategies_dict.values())[0].extract(front_image)
+    
+    # Extract text using best strategy for special power (back card)
+    power_strategy_name = best_strategies.get("special_power", {}).get("strategy_name")
+    if power_strategy_name and power_strategy_name in strategies_dict:
+        power_strategy = strategies_dict[power_strategy_name]
+        back_text = power_strategy.extract(back_image)
+    else:
+        # Fallback to first available strategy
+        back_text = list(strategies_dict.values())[0].extract(back_image)
+    
+    # Parse front card (pass image path for layout-aware extraction)
+    front_data = FrontCardData.parse_from_text(front_text, image_path=front_image)
+    
+    # Parse back card
+    back_data = BackCardData.parse_from_text(back_text)
+    
+    # Score extractions
+    name_score = score_name_extraction(front_data.name, ground_truth.name)
+    location_score = score_location_extraction(front_data.location, ground_truth.location)
+    motto_score = score_motto_extraction(front_data.motto, ground_truth.motto)
+    story_score = score_story_extraction(front_data.story, ground_truth.story)
+    
+    # Score special power levels
+    extracted_levels = []
+    if back_data.special_power and back_data.special_power.levels:
+        extracted_levels = [
+            {"level": l.level, "description": l.description}
+            for l in back_data.special_power.levels
+        ]
+    
+    ground_truth_levels = []
+    if ground_truth.special_power and ground_truth.special_power.levels:
+        ground_truth_levels = [
+            {"level": l.level, "description": l.description}
+            for l in ground_truth.special_power.levels
+        ]
+    
+    power_score, level_scores = score_special_power_levels(
+        extracted_levels, ground_truth_levels
+    )
+    
+    # Score dice recognition
+    dice_score = score_dice_recognition(back_text, extracted_levels, back_image)
+    
+    # Score mechanics recognition
+    mechanics_score = score_power_mechanics_recognition(back_text, ground_truth_levels)
+    
+    # Calculate overall score (weighted average)
+    overall_score = (
+        name_score * 0.10 +
+        location_score * 0.10 +
+        motto_score * 0.10 +
+        story_score * 0.15 +
+        power_score * 0.30 +
+        dice_score * 0.10 +
+        mechanics_score * 0.15
+    )
+    
+    # Build strategy description
+    strategy_parts = []
+    if story_strategy_name:
+        strategy_parts.append(f"Story: {story_strategy_name}")
+    if power_strategy_name:
+        strategy_parts.append(f"Power: {power_strategy_name}")
+    
+    return {
+        "strategy_name": "hybrid_best_per_category",
+        "strategy_description": "Hybrid: " + " | ".join(strategy_parts),
+        "overall_score": round(overall_score, 2),
+        "scores": {
+            "name": round(name_score, 2),
+            "location": round(location_score, 2),
+            "motto": round(motto_score, 2),
+            "story": round(story_score, 2),
+            "special_power": round(power_score, 2),
+            "dice_recognition": round(dice_score, 2),
+            "mechanics_recognition": round(mechanics_score, 2),
+        },
+        "level_scores": level_scores,
+        "extracted": {
+            "name": front_data.name,
+            "location": front_data.location,
+            "motto": front_data.motto,
+            "story": front_data.story[:200] + "..." if front_data.story and len(front_data.story) > 200 else front_data.story,
+            "special_power_levels": len(extracted_levels),
+        },
+        "front_text_length": len(front_text),
+        "back_text_length": len(back_text),
+        "component_strategies": {
+            "story": story_strategy_name,
+            "special_power": power_strategy_name,
+        },
+    }
+
+
+@click.command()
+@click.option(
+    "--character",
+    type=str,
+    required=True,
+    help="Character name (e.g., 'adam', 'ahmed')",
+)
+@click.option(
+    "--season",
+    type=str,
+    default="season1",
+    help="Season directory (default: season1)",
+)
+@click.option(
+    "--top",
+    type=int,
+    default=10,
+    help="Show top N strategies (default: 10)",
+)
+@click.option(
+    "--save-results/--no-save-results",
+    default=True,
+    help="Save results to .generated/benchmark/ directory (default: --save-results)",
+)
+@click.option(
+    "--benchmark-file",
+    type=str,
+    default=None,
+    help="Path to existing benchmark JSON file to analyze for hybrid strategy",
+)
+@click.option(
+    "--hybrid/--no-hybrid",
+    default=False,
+    help="Test hybrid strategy using best strategies per category from existing benchmark",
+)
+def main(character: str, season: str, top: int, save_results: bool, benchmark_file: Optional[str], hybrid: bool):
+    """Benchmark OCR strategies for character data extraction."""
+    
+    # Find character directory
+    data_dir = project_root / "data" / season / character.lower()
+    if not data_dir.exists():
+        console.print(f"[red]Error: Character directory not found: {data_dir}[/red]")
+        sys.exit(1)
+    
+    # Load ground truth
+    char_json = data_dir / Filename.CHARACTER_JSON
+    if not char_json.exists():
+        console.print(f"[red]Error: character.json not found: {char_json}[/red]")
+        sys.exit(1)
+    
+    with open(char_json, "r", encoding="utf-8") as f:
+        char_data = json.load(f)
+    
+    ground_truth = CharacterData(**char_data)
+    
+    # Find images
+    front_image = data_dir / Filename.FRONT
+    back_image = data_dir / Filename.BACK
+    
+    # Try .webp first, then .jpg
+    if not front_image.exists():
+        front_image = data_dir / f"{Filename.FRONT.replace('.webp', '.jpg')}"
+    if not back_image.exists():
+        back_image = data_dir / f"{Filename.BACK.replace('.webp', '.jpg')}"
+    
+    if not front_image.exists():
+        console.print(f"[red]Error: Front image not found in {data_dir}[/red]")
+        sys.exit(1)
+    if not back_image.exists():
+        console.print(f"[red]Error: Back image not found in {data_dir}[/red]")
+        sys.exit(1)
+    
+    # Get all OCR strategies
+    strategies = get_all_strategies()
+    strategies_dict = {s.name: s for s in strategies}
+    
+    # If hybrid mode, load existing benchmark results
+    hybrid_result = None
+    if hybrid:
+        if benchmark_file:
+            benchmark_path = Path(benchmark_file)
+        else:
+            # Find most recent benchmark file
+            generated_dir = project_root / ".generated" / "benchmark"
+            if generated_dir.exists():
+                benchmark_files = sorted(
+                    generated_dir.glob(f"{season}_{character.lower()}_*.json"),
+                    key=lambda p: p.stat().st_mtime,
+                    reverse=True,
+                )
+                if benchmark_files:
+                    benchmark_path = benchmark_files[0]
+                else:
+                    console.print(f"[yellow]Warning: No existing benchmark found. Run regular benchmark first.[/yellow]")
+                    hybrid = False
+            else:
+                console.print(f"[yellow]Warning: No benchmark directory found. Run regular benchmark first.[/yellow]")
+                hybrid = False
+        
+        if hybrid and benchmark_path and benchmark_path.exists():
+            console.print(f"\n[bold]Loading benchmark results from: {benchmark_path.name}[/bold]")
+            with open(benchmark_path, "r", encoding="utf-8") as f:
+                benchmark_data = json.load(f)
+            
+            best_strategies = find_best_strategies_per_category(benchmark_data["results"])
+            
+            console.print("\n[bold]Best Strategies per Category:[/bold]")
+            for category, info in best_strategies.items():
+                console.print(f"  {category:20s}: {info['strategy_name']:30s} ({info['score']:.1f}%)")
+            
+            console.print("\n[bold]Testing Hybrid Strategy...[/bold]")
+            hybrid_result = benchmark_hybrid_strategy(
+                best_strategies, strategies_dict, front_image, back_image, ground_truth
+            )
+    
+    if not hybrid:
+        console.print(f"\n[bold]Benchmarking OCR Strategies for {ground_truth.name}[/bold]")
+        console.print(f"Testing {len(strategies)} strategies...\n")
+        
+        # Benchmark each strategy
+        results = []
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            BarColumn(),
+            TaskProgressColumn(),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Testing strategies...", total=len(strategies))
+            
+            for strategy in strategies:
+                progress.update(task, description=f"Testing: {strategy.name}")
+                result = benchmark_strategy(strategy, front_image, back_image, ground_truth)
+                results.append(result)
+                progress.advance(task)
+        
+        # Sort by overall score
+        results.sort(key=lambda x: x["overall_score"], reverse=True)
+        
+        # Save results if requested
+        if save_results:
+            save_benchmark_results(results, character, season, project_root)
+        
+        # Display results
+        console.print(f"\n[bold green]Top {top} Strategies (Ranked by Overall Score)[/bold green]\n")
+        
+        # Create summary table
+        summary_table = Table(title="Strategy Rankings", show_header=True, header_style="bold magenta")
+        summary_table.add_column("Rank", style="cyan", width=5)
+        summary_table.add_column("Strategy", style="yellow", width=30)
+        summary_table.add_column("Overall", style="green", justify="right", width=10)
+        summary_table.add_column("Name", justify="right", width=8)
+        summary_table.add_column("Location", justify="right", width=8)
+        summary_table.add_column("Motto", justify="right", width=8)
+        summary_table.add_column("Story", justify="right", width=8)
+        summary_table.add_column("Power", justify="right", width=8)
+        summary_table.add_column("Dice", justify="right", width=8)
+        summary_table.add_column("Mech", justify="right", width=8)
+        
+        for i, result in enumerate(results[:top], 1):
+            if "error" in result:
+                summary_table.add_row(
+                    str(i),
+                    result["strategy_name"],
+                    "[red]ERROR[/red]",
+                    "-",
+                    "-",
+                    "-",
+                    "-",
+                    "-",
+                    "-",
+                )
+            else:
+                scores = result["scores"]
+                # Color code overall score
+                overall = result["overall_score"]
+                if overall >= 80:
+                    overall_str = f"[green]{overall:.1f}[/green]"
+                elif overall >= 60:
+                    overall_str = f"[yellow]{overall:.1f}[/yellow]"
+                else:
+                    overall_str = f"[red]{overall:.1f}[/red]"
+                
+                summary_table.add_row(
+                    str(i),
+                    result["strategy_name"][:28],
+                    overall_str,
+                    f"{scores['name']:.1f}",
+                    f"{scores['location']:.1f}",
+                    f"{scores['motto']:.1f}",
+                    f"{scores['story']:.1f}",
+                    f"{scores['special_power']:.1f}",
+                    f"{scores['dice_recognition']:.1f}",
+                    f"{scores['mechanics_recognition']:.1f}",
+                )
+        
+        console.print(summary_table)
+        
+        # Show detailed results for top 3
+        console.print(f"\n[bold]Detailed Results for Top 3 Strategies:[/bold]\n")
+        
+        for i, result in enumerate(results[:3], 1):
+            if "error" in result:
+                console.print(Panel(f"[red]Error: {result['error']}[/red]", title=f"#{i} {result['strategy_name']}"))
+                continue
+            
+            extracted = result["extracted"]
+            scores = result["scores"]
+            level_scores = result.get("level_scores", {})
+            
+            details = f"""
+[bold]Overall Score: {result['overall_score']:.2f}/100[/bold]
+
+[bold]Extraction Scores:[/bold]
+  Name:        {scores['name']:.1f}/100
+  Location:    {scores['location']:.1f}/100
+  Motto:       {scores['motto']:.1f}/100
+  Story:       {scores['story']:.1f}/100
+  Special Power: {scores['special_power']:.1f}/100
+  Dice Recognition: {scores['dice_recognition']:.1f}/100
+  Mechanics:   {scores['mechanics_recognition']:.1f}/100
+
+[bold]Level-by-Level Scores:[/bold]
+"""
+            for level_num in range(1, 5):
+                level_key = f"level_{level_num}"
+                if level_key in level_scores:
+                    details += f"  Level {level_num}: {level_scores[level_key]:.1f}/100\n"
+                else:
+                    details += f"  Level {level_num}: [red]Not extracted[/red]\n"
+            
+            details += f"""
+[bold]Extracted Data:[/bold]
+  Name: {extracted['name'] or '[red]Not found[/red]'}
+  Location: {extracted['location'] or '[red]Not found[/red]'}
+  Motto: {extracted['motto'] or '[red]Not found[/red]'}
+  Story: {extracted['story'] or '[red]Not found[/red]'}
+  Special Power Levels Found: {extracted['special_power_levels']}/4
+
+[bold]Text Extraction:[/bold]
+  Front card: {result['front_text_length']} characters
+  Back card: {result['back_text_length']} characters
+"""
+            
+            console.print(Panel(details, title=f"#{i} {result['strategy_name']}", border_style="blue"))
+    
+    # Show hybrid result if available
+    if hybrid_result:
+        console.print(f"\n[bold green]Hybrid Strategy Results[/bold green]\n")
+        
+        scores = hybrid_result["scores"]
+        overall = hybrid_result["overall_score"]
+        
+        hybrid_table = Table(title="Hybrid Strategy: Best Per Category", show_header=True, header_style="bold cyan")
+        hybrid_table.add_column("Category", style="yellow", width=20)
+        hybrid_table.add_column("Score", justify="right", width=10)
+        hybrid_table.add_column("Strategy Used", style="green", width=30)
+        
+        hybrid_table.add_row("Overall", f"{overall:.1f}", hybrid_result["strategy_name"])
+        hybrid_table.add_row("Name", f"{scores['name']:.1f}", best_strategies.get("name", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Location", f"{scores['location']:.1f}", best_strategies.get("location", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Motto", f"{scores['motto']:.1f}", best_strategies.get("motto", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Story", f"{scores['story']:.1f}", best_strategies.get("story", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Special Power", f"{scores['special_power']:.1f}", best_strategies.get("special_power", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Dice Recognition", f"{scores['dice_recognition']:.1f}", best_strategies.get("dice_recognition", {}).get("strategy_name", "N/A"))
+        hybrid_table.add_row("Mechanics", f"{scores['mechanics_recognition']:.1f}", best_strategies.get("mechanics_recognition", {}).get("strategy_name", "N/A"))
+        
+        console.print(hybrid_table)
+        
+        # Compare to best single strategy
+        if not hybrid:
+            # Load most recent benchmark for comparison
+            generated_dir = project_root / ".generated" / "benchmark"
+            if generated_dir.exists():
+                benchmark_files = sorted(
+                    generated_dir.glob(f"{season}_{character.lower()}_*.json"),
+                    key=lambda p: p.stat().st_mtime,
+                    reverse=True,
+                )
+                if benchmark_files:
+                    with open(benchmark_files[0], "r", encoding="utf-8") as f:
+                        benchmark_data = json.load(f)
+                    if benchmark_data["results"]:
+                        best_single = benchmark_data["results"][0]
+                        console.print(f"\n[bold]Comparison:[/bold]")
+                        console.print(f"  Best Single Strategy: {best_single['overall_score']:.1f}% ({best_single['strategy_name']})")
+                        console.print(f"  Hybrid Strategy:      {overall:.1f}%")
+                        improvement = overall - best_single["overall_score"]
+                        if improvement > 0:
+                            console.print(f"  [green]Improvement: +{improvement:.1f}%[/green]")
+                        elif improvement < 0:
+                            console.print(f"  [yellow]Difference: {improvement:.1f}%[/yellow]")
+                        else:
+                            console.print(f"  [dim]No change[/dim]")
+    
+    if save_results and not hybrid:
+        console.print(f"\n[dim]Results saved to .generated/benchmark/[/dim]\n")
 
 
 if __name__ == "__main__":
