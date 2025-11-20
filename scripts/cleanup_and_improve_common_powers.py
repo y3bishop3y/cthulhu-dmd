@@ -34,7 +34,8 @@ except ImportError as e:
     sys.exit(1)
 
 from scripts.analyze_power_statistics import analyze_power_level
-from scripts.models.character import CommonPowerLevelData, PowerLevelStatistics
+from scripts.models.character import CommonPower as CommonPowerModel
+from scripts.models.character import PowerLevelStatistics
 from scripts.models.constants import CommonPower
 from scripts.utils.parsing import OCR_CORRECTIONS, fix_number_ocr_errors
 
@@ -361,10 +362,13 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
         console.print(f"[red]Error: {common_powers_path} not found![/red]")
         sys.exit(1)
 
-    # Load existing data
+    # Load existing data and parse into Pydantic models
     console.print(f"[cyan]Loading {common_powers_path}...[/cyan]")
     with open(common_powers_path, encoding="utf-8") as f:
-        powers_data = json.load(f)
+        powers_data_dict = json.load(f)
+
+    # Parse all powers into Pydantic models
+    powers_data = [CommonPowerModel.from_dict(power_dict) for power_dict in powers_data_dict]
 
     console.print(f"[green]✓ Loaded {len(powers_data)} powers[/green]\n")
 
@@ -372,19 +376,12 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
     total_fixed = 0
     total_improved = 0
 
-    # Process each power
+    # Process each power (now using Pydantic models)
     for power in powers_data:
-        power_name = power["name"]
+        power_name = power.name
         console.print(f"[bold cyan]{power_name}[/bold cyan]")
 
-        for level_dict in power["levels"]:
-            # Parse level data into Pydantic model
-            level_data = CommonPowerLevelData(
-                level=level_dict["level"],
-                description=level_dict["description"],
-                statistics=PowerLevelStatistics(**level_dict.get("statistics", {})),
-                effect=level_dict.get("effect", ""),
-            )
+        for level_data in power.levels:
             level = level_data.level
             original_desc = level_data.description
 
@@ -427,12 +424,6 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
                     console.print(f"  Level {level}: [green]Enhanced statistics[/green]")
                     for imp in improvements:
                         console.print(f"    • {imp}")
-
-            # Update the dict in powers_data with the Pydantic model data
-            level_dict["level"] = level_data.level
-            level_dict["description"] = level_data.description
-            level_dict["statistics"] = level_data.statistics.model_dump()
-            level_dict["effect"] = level_data.effect
 
         console.print()
 

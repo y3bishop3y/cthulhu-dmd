@@ -621,3 +621,37 @@ class CommonPowerLevelData(BaseModel):
     description: str = Field(..., description="Power level description")
     statistics: PowerLevelStatistics = Field(..., description="Statistical analysis of this power level")
     effect: str = Field(..., description="Summary of what this power level does")
+
+
+class CommonPower(BaseModel):
+    """Represents a common power with all its levels."""
+
+    name: str = Field(..., description="Name of the common power")
+    is_special: bool = Field(default=False, description="Whether this is a special power (vs common)")
+    levels: List[CommonPowerLevelData] = Field(default_factory=list, description="Power levels (1-4)")
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "CommonPower":
+        """Create CommonPower from dictionary (e.g., from JSON)."""
+        levels = [
+            CommonPowerLevelData(
+                level=level_dict["level"],
+                description=level_dict["description"],
+                statistics=PowerLevelStatistics(**level_dict.get("statistics", {})),
+                effect=level_dict.get("effect", ""),
+            )
+            for level_dict in data.get("levels", [])
+        ]
+        return cls(
+            name=data["name"],
+            is_special=data.get("is_special", False),
+            levels=levels,
+        )
+
+    def to_dict(self) -> dict:
+        """Convert to dictionary for JSON serialization."""
+        return {
+            "name": self.name,
+            "is_special": self.is_special,
+            "levels": [level.model_dump() for level in self.levels],
+        }
