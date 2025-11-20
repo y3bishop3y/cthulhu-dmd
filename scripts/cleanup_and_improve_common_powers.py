@@ -419,19 +419,10 @@ def main(data_dir: Path, dry_run: bool, backup: bool, recalculate_stats: bool):
                 analysis = analyze_power_level(power_name, level, cleaned_desc)
                 level_data.effect = analysis.effect
 
-                # Show improvements
-                if conditional_effects.is_conditional or reroll_effects.has_reroll or healing_effects.has_healing or defensive_effects.has_defensive:
+                # Show improvements using Pydantic model method
+                if level_data.statistics.has_any_improvements:
                     total_improved += 1
-                    improvements = []
-                    if conditional_effects.is_conditional:
-                        improvements.append(f"Conditional: {', '.join(conditional_effects.conditions)}")
-                    if reroll_effects.has_reroll:
-                        improvements.append(f"Rerolls: {reroll_effects.rerolls_added} ({reroll_effects.reroll_type})")
-                    if healing_effects.has_healing:
-                        improvements.append(f"Healing: {healing_effects.wounds_healed} wounds, {healing_effects.stress_healed} stress")
-                    if defensive_effects.has_defensive:
-                        improvements.append(f"Defensive: {defensive_effects.wound_reduction} wounds, {defensive_effects.sanity_reduction} sanity")
-
+                    improvements = level_data.statistics.get_improvements_list()
                     console.print(f"  Level {level}: [green]Enhanced statistics[/green]")
                     for imp in improvements:
                         console.print(f"    • {imp}")
