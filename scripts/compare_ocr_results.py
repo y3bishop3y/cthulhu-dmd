@@ -25,7 +25,7 @@ except ImportError as e:
     print(f"Error: Missing required dependency: {e.name}\n", file=sys.stderr)
     raise
 
-from scripts.utils.multi_ocr import get_all_strategies, test_all_strategies
+from scripts.parsing.multi_ocr import get_all_strategies, test_all_strategies
 from scripts.models.character import CharacterData
 
 console = Console()
