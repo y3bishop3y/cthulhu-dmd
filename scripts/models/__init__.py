@@ -1,5 +1,14 @@
 """Game mechanics models for Cthulhu: Death May Die."""
 
+from .character import (
+    BackCardData,
+    CharacterData,
+    CommonPowerLevelData,
+    FrontCardData,
+    Power,
+    PowerLevel,
+    PowerLevelStatistics,
+)
 from .constants import (
     CommonPower,
     Directory,
@@ -24,6 +33,7 @@ from .game_mechanics import (
     SanityCost,
     StandardDice,
 )
+from .trait_assignments import CharacterReference, TraitCharacterAssignments, TraitSection
 
 __all__ = [
     # Enums
@@ -36,14 +46,24 @@ __all__ = [
     "OutputFormat",
     "Season",
     # Models
+    "BackCardData",
     "BonusDice",
+    "CharacterData",
+    "CharacterReference",
+    "CommonPowerLevelData",
     "Dice",
     "DiceFace",
+    "FrontCardData",
     "GameMechanics",
     "InsanityThreshold",
     "InvestigatorRoll",
+    "Power",
+    "PowerLevel",
+    "PowerLevelStatistics",
     "SanityCost",
     "StandardDice",
+    "TraitCharacterAssignments",
+    "TraitSection",
     # Constants
     "Directory",
     "Filename",
