@@ -33,6 +33,12 @@ from .game_mechanics import (
     SanityCost,
     StandardDice,
 )
+from .power_combination import (
+    PowerCombination,
+    PowerCombinationCalculator,
+    PowerEffect,
+    create_power_effect_from_level,
+)
 from .trait_assignments import CharacterReference, TraitCharacterAssignments, TraitSection
 
 __all__ = [
@@ -58,12 +64,16 @@ __all__ = [
     "InsanityThreshold",
     "InvestigatorRoll",
     "Power",
+    "PowerCombination",
+    "PowerCombinationCalculator",
+    "PowerEffect",
     "PowerLevel",
     "PowerLevelStatistics",
     "SanityCost",
     "StandardDice",
     "TraitCharacterAssignments",
     "TraitSection",
+    "create_power_effect_from_level",
     # Constants
     "Directory",
     "Filename",
@@ -71,4 +81,3 @@ __all__ = [
     "get_common_power_names",
     "get_season_names",
 ]
-
