@@ -212,3 +212,6 @@ __marimo__/
 
 # Temporary OCR files (PNG grayscale converted on-the-fly from WebP)
 data/**/*.png
+
+# Generated files (benchmark results, etc.)
+.generated/

@@ -51,11 +51,12 @@ class CardLayoutExtractor:
         self.psm_mode = _ocr_settings.ocr_tesseract_default_psm_mode
         self.oem_mode = _ocr_settings.ocr_tesseract_default_oem_mode
 
-    def preprocess_image(self, image_path: Path) -> np.ndarray:
+    def preprocess_image(self, image_path: Path, invert_for_white_text: bool = False) -> np.ndarray:
         """Preprocess image for OCR.
         
         Args:
             image_path: Path to image file
+            invert_for_white_text: If True, invert image for white-on-black text extraction
             
         Returns:
             Preprocessed grayscale image
@@ -67,9 +68,17 @@ class CardLayoutExtractor:
         # Convert to grayscale
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         
-        # Enhance contrast
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        # Enhance contrast (more aggressive for white text)
+        if invert_for_white_text:
+            # For white text on black, we want higher contrast
+            clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+        else:
+            clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         gray = clahe.apply(gray)
+        
+        # Invert if needed for white text
+        if invert_for_white_text:
+            gray = cv2.bitwise_not(gray)
         
         return gray
 
@@ -221,49 +230,129 @@ class CardLayoutExtractor:
         return ""
 
     def extract_description_region(
-        self, image: np.ndarray, bottom_percent: float = 0.35
+        self, image_path: Path, bottom_percent: float = 0.40
     ) -> str:
         """Extract description/story from bottom region (white text on black background).
         
+        Uses specialized preprocessing for white-on-black text:
+        1. Multiple preprocessing strategies (invert, threshold, morphological)
+        2. Enhanced contrast and denoising
+        3. Multiple PSM modes for better extraction
+        4. Combines best results
+        
         Args:
-            image: Preprocessed image
-            bottom_percent: Percentage of image height to use for bottom region
+            image_path: Path to original image (needed for specialized preprocessing)
+            bottom_percent: Percentage of image height to use for bottom region (default 40%)
             
         Returns:
             Extracted description text
         """
-        img_height, img_width = image.shape[:2]
+        # Load original image for specialized white-text preprocessing
+        img = cv2.imread(str(image_path))
+        if img is None:
+            return ""
+        
+        img_height, img_width = img.shape[:2]
         bottom_y = int(img_height * (1 - bottom_percent))
         bottom_height = int(img_height * bottom_percent)
         
-        # Extract from bottom region (white text on black)
-        bottom_region = (0, bottom_y, img_width, bottom_height)
+        # Crop bottom region (with some padding to avoid cutting text)
+        padding = 10
+        bottom_y = max(0, bottom_y - padding)
+        bottom_height = min(img_height - bottom_y, bottom_height + padding)
+        bottom_roi = img[bottom_y : bottom_y + bottom_height, :]
         
-        # Try both white text detection and regular extraction
-        text1 = self.extract_text_from_region(image, bottom_region, psm_mode=6)  # Uniform block
+        # Strategy 1: Invert + CLAHE + Multiple PSM modes
+        gray = cv2.cvtColor(bottom_roi, cv2.COLOR_BGR2GRAY)
+        clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+        enhanced = clahe.apply(gray)
+        inverted = cv2.bitwise_not(enhanced)
         
-        # Also try detecting white text regions specifically
-        white_text_regions = self.detect_text_regions_by_color(
-            image[bottom_y : bottom_y + bottom_height, :], is_white_text=True
+        # Strategy 2: OTSU thresholding on inverted image
+        _, binary_otsu = cv2.threshold(inverted, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        # Strategy 3: Adaptive thresholding (better for varying lighting)
+        adaptive = cv2.adaptiveThreshold(
+            inverted, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
         )
         
+        # Strategy 4: Morphological operations to clean up text
+        kernel = np.ones((2, 2), np.uint8)
+        morph = cv2.morphologyEx(binary_otsu, cv2.MORPH_CLOSE, kernel)
+        morph = cv2.morphologyEx(morph, cv2.MORPH_OPEN, kernel)
+        
+        # Strategy 5: Denoise before thresholding
+        denoised = cv2.fastNlMeansDenoising(inverted, None, 10, 7, 21)
+        _, denoised_binary = cv2.threshold(denoised, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        # Try all preprocessing strategies with multiple PSM modes
+        preprocessed_images = [
+            ("inverted", inverted),
+            ("binary_otsu", binary_otsu),
+            ("adaptive", adaptive),
+            ("morphological", morph),
+            ("denoised", denoised_binary),
+        ]
+        
+        psm_modes = [6, 11, 3, 7]  # Uniform block, sparse text, auto, single line
+        
+        results = []
+        for prep_name, prep_img in preprocessed_images:
+            for psm_mode in psm_modes:
+                config = f"--oem {self.oem_mode} --psm {psm_mode}"
+                try:
+                    text = pytesseract.image_to_string(prep_img, config=config)
+                    if text.strip():
+                        # Score by length and quality (penalize very short or garbled text)
+                        score = len(text)
+                        # Penalize if too many special characters (likely OCR errors)
+                        special_chars = sum(1 for c in text if c in "@#$%^&*|~`")
+                        score -= special_chars * 2
+                        # Prefer results with more words
+                        word_count = len(text.split())
+                        score += word_count * 5
+                        results.append((score, text.strip(), prep_name, psm_mode))
+                except Exception:
+                    continue
+        
+        # Also try the original (non-inverted) with white text detection
+        # Sometimes OCR works better on original if contrast is good
+        white_text_regions = self.detect_text_regions_by_color(gray, is_white_text=True)
         if white_text_regions:
             # Extract from each white text region
-            all_text = []
-            for region in white_text_regions:
+            for region in white_text_regions[:5]:  # Limit to top 5 regions
                 x, y, w, h = region
-                # Adjust y to be relative to full image
-                full_region = (x, bottom_y + y, w, h)
-                region_text = self.extract_text_from_region(image, full_region, psm_mode=6)
-                if region_text:
-                    all_text.append(region_text)
-            
-            if all_text:
-                text2 = "\n".join(all_text)
-                # Prefer longer text (more complete extraction)
-                return text1 if len(text1) > len(text2) else text2
+                roi = gray[y : y + h, x : x + w]
+                for psm_mode in [6, 11]:
+                    config = f"--oem {self.oem_mode} --psm {psm_mode}"
+                    try:
+                        text = pytesseract.image_to_string(roi, config=config)
+                        if text.strip() and len(text.strip()) > 20:
+                            score = len(text) + len(text.split()) * 5
+                            results.append((score, text.strip(), "white_text_region", psm_mode))
+                    except Exception:
+                        continue
         
-        return text1
+        # Sort by score and return best result
+        if results:
+            results.sort(reverse=True, key=lambda x: x[0])
+            best_text = results[0][1]
+            
+            # If we have multiple good results, try to combine them
+            # (sometimes different preprocessing catches different parts)
+            if len(results) > 1 and results[0][0] > 100:
+                # Look for complementary results (different preprocessing, similar length)
+                for score, text, prep_name, psm_mode in results[1:]:
+                    if score > 50 and prep_name != results[0][2]:
+                        # Check if this text adds new information
+                        similarity = len(set(best_text.lower().split()) & set(text.lower().split()))
+                        if similarity < len(set(text.lower().split())) * 0.5:  # Less than 50% overlap
+                            best_text += " " + text
+                            break
+            
+            return best_text
+        
+        return ""
 
     def extract_from_card(self, image_path: Path) -> LayoutExtractionResults:
         """Extract all text fields from character card using layout awareness.
@@ -279,7 +368,8 @@ class CardLayoutExtractor:
         # Extract from known regions
         name, location = self.extract_name_location_region(image)
         motto = self.extract_motto_region(image)
-        description = self.extract_description_region(image)
+        # Description needs specialized white-on-black preprocessing
+        description = self.extract_description_region(image_path)
         
         return LayoutExtractionResults(
             name=name,
