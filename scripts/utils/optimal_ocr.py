@@ -267,9 +267,9 @@ def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
         location=(0, top_height // 2, img_width, top_height // 2),
         motto=(
             0,
-            int(img_height * 0.30),
+            int(img_height * 0.25),  # Start slightly higher to catch motto
             img_width,
-            int(img_height * 0.65) - int(img_height * 0.30),
+            int(img_height * 0.50) - int(img_height * 0.25),  # Narrower region focused on motto area
         ),
         story=(0, int(img_height * 0.60), img_width, int(img_height * 0.40)),
     )
@@ -322,17 +322,26 @@ def _filter_motto_lines(lines: List[str]) -> List[str]:
     """
     filtered = []
     for line in lines:
-        # Skip all-caps lines longer than threshold (likely name/location that leaked in)
-        if line.isupper() and len(line) > MOTTO_MAX_ALL_CAPS_LENGTH:
+        line_stripped = line.strip()
+        # Skip empty lines
+        if not line_stripped:
             continue
-        # Skip very short lines
-        if len(line) < MOTTO_MIN_LINE_LENGTH:
+        # Skip all-caps lines longer than threshold (likely name/location that leaked in)
+        # But allow short all-caps if they look like mottos (e.g., "NEVER")
+        if line_stripped.isupper() and len(line_stripped) > MOTTO_MAX_ALL_CAPS_LENGTH:
+            continue
+        # Skip very short lines (but allow 2-char lines if they're part of a phrase)
+        if len(line_stripped) < MOTTO_MIN_LINE_LENGTH:
             continue
         # Skip lines that are mostly symbols/numbers (less than threshold alphanumeric)
-        alnum_ratio = sum(c.isalnum() for c in line) / len(line) if line else 0
+        alnum_ratio = sum(c.isalnum() for c in line_stripped) / len(line_stripped) if line_stripped else 0
         if alnum_ratio < MOTTO_MIN_ALNUM_RATIO:
             continue
-        filtered.append(line)
+        # Skip lines that look like OCR garbage (too many special chars)
+        special_char_count = sum(1 for c in line_stripped if not c.isalnum() and c not in " .,!?\"'-")
+        if special_char_count > len(line_stripped) * 0.3:  # More than 30% special chars
+            continue
+        filtered.append(line_stripped)
     return filtered
 
 
@@ -413,9 +422,37 @@ def _extract_single_line_motto(filtered_lines: List[str]) -> str:
     Returns:
         Extracted motto or empty string
     """
+    # Prefer lines with quotes or punctuation
+    quoted_lines = [line for line in filtered_lines if '"' in line or "'" in line]
+    if quoted_lines:
+        for line in quoted_lines:
+            word_count = len(line.split())
+            if (
+                MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_SINGLE
+                and len(line) < MOTTO_MAX_CHARS_SINGLE
+            ):
+                return line
+
+    # Then try lines ending with punctuation
+    punctuated_lines = [
+        line for line in filtered_lines if line.endswith((".", "!", "?", ".", "!", "?"))
+    ]
+    if punctuated_lines:
+        for line in punctuated_lines:
+            # Skip all-caps (likely name/location)
+            if line.isupper() and len(line) > MOTTO_MAX_ALL_CAPS_LENGTH:
+                continue
+            word_count = len(line.split())
+            if (
+                MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_SINGLE
+                and len(line) < MOTTO_MAX_CHARS_SINGLE
+            ):
+                return line
+
+    # Last resort: any reasonable line
     for line in filtered_lines:
-        # Skip all-caps (likely name/location)
-        if line.isupper():
+        # Skip all-caps (likely name/location) unless very short
+        if line.isupper() and len(line) > MOTTO_MAX_ALL_CAPS_LENGTH:
             continue
         word_count = len(line.split())
         if (
@@ -565,6 +602,185 @@ def extract_text_from_region_with_strategy(
         # Clean up temp file
         if tmp_path.exists():
             tmp_path.unlink()
+
+
+def _extract_common_powers_from_region(
+    image_path: Path, region: Tuple[int, int, int, int], strategy_name: str
+) -> List[str]:
+    """Extract common power names from a specific region on the back card.
+
+    Args:
+        image_path: Path to back card image
+        region: (x, y, width, height) bounding box for common powers region
+        strategy_name: OCR strategy to use
+
+    Returns:
+        List of common power names found in the region
+    """
+    # Extract text from region
+    region_text = extract_text_from_region_with_strategy(image_path, region, strategy_name)
+    if not region_text:
+        return []
+
+    # Split into lines and match common power names
+    lines = [line.strip() for line in region_text.split("\n") if line.strip()]
+    found_powers: List[str] = []
+
+    # Import the detection function from character.py
+    from scripts.models.character import BackCardData
+
+    # Filter lines to only consider short lines that look like power headers
+    # Power names are typically standalone or very short lines
+    for line in lines:
+        line_len = len(line.strip())
+        line_upper = line.upper()
+
+        # Skip very long lines (likely descriptions)
+        if line_len > 60:
+            continue
+
+        # Skip lines that look like descriptions (contain common description words)
+        description_keywords = [
+            "LEVEL",
+            "DESCRIPTION",
+            "GAIN",
+            "ADD",
+            "WHEN",
+            "YOU",
+            "MAY",
+            "INSTEAD",
+            "DICE",
+            "SUCCESS",
+            "ATTACK",
+            "MOVE",
+            "HEAL",
+        ]
+        if any(keyword in line_upper for keyword in description_keywords):
+            continue
+
+        # Check if this line matches a common power name
+        power_name = BackCardData._detect_common_power(line)
+        if power_name and power_name not in found_powers:
+            found_powers.append(power_name)
+            # Limit to 2 common powers (typical for characters)
+            if len(found_powers) >= 2:
+                break
+
+    return found_powers
+
+
+def extract_common_powers_from_back_card(
+    image_path: Path, config: Optional[Dict[str, Dict]] = None
+) -> List[str]:
+    """Extract common powers from back card using region-specific extraction.
+
+    Common powers appear in a consistent region on the back card (typically
+    right side or middle-right section). This function extracts text from that
+    region and matches common power names.
+
+    Args:
+        image_path: Path to back card image
+        config: Optional pre-loaded optimal strategies config
+
+    Returns:
+        List of common power names found
+    """
+    if cv2 is None or np is None:
+        # Fallback: extract from whole card and parse
+        back_text = extract_back_card_with_optimal_strategy(image_path, config)
+        from scripts.models.character import BackCardData
+
+        back_data = BackCardData.parse_from_text(back_text)
+        return [cp.name for cp in back_data.common_powers]
+
+    try:
+        from scripts.core.parsing.layout import CardLayoutExtractor
+    except ImportError:
+        # Fallback
+        back_text = extract_back_card_with_optimal_strategy(image_path, config)
+        from scripts.models.character import BackCardData
+
+        back_data = BackCardData.parse_from_text(back_text)
+        return [cp.name for cp in back_data.common_powers]
+
+    # Load optimal strategies config
+    if config is None:
+        try:
+            config = load_optimal_strategies()
+        except FileNotFoundError:
+            # Fallback
+            back_text = extract_back_card_with_optimal_strategy(image_path, config)
+            from scripts.models.character import BackCardData
+
+            back_data = BackCardData.parse_from_text(back_text)
+            return [cp.name for cp in back_data.common_powers]
+
+    extractor = CardLayoutExtractor()
+
+    try:
+        # Preprocess image to get dimensions
+        image = extractor.preprocess_image(image_path, invert_for_white_text=False)
+        img_height, img_width = image.shape[:2]
+
+        # Common powers region: right side, middle section
+        # Based on card layout: common powers are typically in the right 30-40% of the card,
+        # starting around 15-25% from top, covering about 50-60% of the height
+        # Try multiple regions to catch different card layouts
+        regions_to_try = [
+            # Region 1: Right side, upper-middle (most common layout)
+            (
+                int(img_width * 0.55),  # Start 55% from left
+                int(img_height * 0.20),  # Start 20% from top
+                int(img_width * 0.40),  # Width: 40% of image
+                int(img_height * 0.55),  # Height: 55% of image
+            ),
+            # Region 2: Middle-right, slightly lower
+            (
+                int(img_width * 0.50),
+                int(img_height * 0.25),
+                int(img_width * 0.45),
+                int(img_height * 0.60),
+            ),
+            # Region 3: Right side, broader coverage
+            (
+                int(img_width * 0.60),
+                int(img_height * 0.15),
+                int(img_width * 0.35),
+                int(img_height * 0.65),
+            ),
+        ]
+
+        # Use special_power strategy (similar text characteristics)
+        power_strategy = get_optimal_strategy_for_category("special_power", config)
+        if not power_strategy:
+            power_strategy = "tesseract_bilateral_psm3"
+
+        # Try each region and collect unique powers
+        found_powers: List[str] = []
+        for region in regions_to_try:
+            region_powers = _extract_common_powers_from_region(
+                image_path, region, power_strategy
+            )
+            # Add unique powers
+            for power in region_powers:
+                if power not in found_powers:
+                    found_powers.append(power)
+                    # Stop if we found 2 powers (typical for characters)
+                    if len(found_powers) >= 2:
+                        break
+            if len(found_powers) >= 2:
+                break
+
+        return found_powers
+
+    except Exception as e:
+        # If region extraction fails, fall back to whole-card extraction
+        print(f"Warning: Region-specific common power extraction failed: {e}", file=sys.stderr)
+        back_text = extract_back_card_with_optimal_strategy(image_path, config)
+        from scripts.models.character import BackCardData
+
+        back_data = BackCardData.parse_from_text(back_text)
+        return [cp.name for cp in back_data.common_powers]
 
 
 def extract_front_card_fields_with_optimal_strategies(

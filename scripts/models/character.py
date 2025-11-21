@@ -9,7 +9,7 @@ within the models themselves for better organization and reusability.
 
 import re
 from pathlib import Path
-from typing import TYPE_CHECKING, List, Optional
+from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -426,7 +426,7 @@ class FrontCardData(BaseModel):
 
         # Strategy 3: Look for single-line mottos without quotes
         if not data.motto:
-            for i, line in enumerate(lines[:20]):  # Check first 20 lines
+            for _i, line in enumerate(lines[:20]):  # Check first 20 lines
                 line_lower = line.lower().strip()
                 # Skip if it's the name or location
                 if (data.name and data.name.lower() in line_lower) or (
@@ -623,6 +623,577 @@ class BackCardData(BaseModel):
     special_power: Optional[Power] = Field(default=None, description="Character's special power")
     common_powers: List[Power] = Field(default_factory=list, description="List of common powers")
 
+    @staticmethod
+    def _is_game_rules_line(line: str) -> bool:
+        """Check if a line is a game rules section that should be skipped.
+
+        Args:
+            line: Line to check
+
+        Returns:
+            True if line should be skipped
+        """
+        line_upper = line.upper()
+        game_rules_keywords = [
+            "YOUR TURN",
+            "TAKE",
+            "DRAW MYTHOS",
+            "INVESTIGATE",
+            "FIGHT",
+            "RESOLVE",
+            "OR FIGHT!",
+            "INVESTIGATE OR FIGHT!",
+        ]
+        return any(keyword in line_upper for keyword in game_rules_keywords)
+
+    @staticmethod
+    def _detect_fueled_by_madness(lines: List[str], i: int) -> Optional[str]:
+        """Detect 'Fueled by Madness' special power name.
+
+        Args:
+            lines: All lines from back card
+            i: Current line index
+
+        Returns:
+            Power name if detected, None otherwise
+        """
+        line_lower = lines[i].lower()
+        if "fueled" in line_lower and "madness" in line_lower:
+            words = lines[i].split()
+            power_words = []
+            for word in words:
+                if word[0].isupper() or word.lower() in ["by", "the"]:
+                    power_words.append(word)
+                elif power_words:
+                    break
+            if power_words:
+                return " ".join(power_words)
+        return None
+
+    @staticmethod
+    def _detect_healing_prayer(lines: List[str], i: int) -> Optional[str]:
+        """Detect 'Healing Prayer' special power name.
+
+        Args:
+            lines: All lines from back card
+            i: Current line index
+
+        Returns:
+            Power name if detected, None otherwise
+        """
+        line_lower = lines[i].lower()
+        is_healing_pattern = ("healing" in line_lower and "prayer" in line_lower) or (
+            ("at the end" in line_lower or "atthe end" in line_lower)
+            and "turn" in line_lower
+            and ("heal" in line_lower or "wound" in line_lower)
+        )
+
+        if is_healing_pattern:
+            # Look backwards for power name
+            power_name_candidates = []
+            for j in range(max(0, i - 5), i):
+                prev_line = lines[j].strip()
+                prev_lower = prev_line.lower()
+                if "healing" in prev_lower and "prayer" in prev_lower:
+                    words = prev_line.split()
+                    healing_idx = None
+                    prayer_idx = None
+                    for idx, word in enumerate(words):
+                        if "healing" in word.lower():
+                            healing_idx = idx
+                        if "prayer" in word.lower():
+                            prayer_idx = idx
+                    if healing_idx is not None and prayer_idx is not None:
+                        power_name_candidates.append(
+                            " ".join(
+                                words[
+                                    min(healing_idx, prayer_idx) : max(healing_idx, prayer_idx) + 1
+                                ]
+                            )
+                        )
+
+            if power_name_candidates:
+                return power_name_candidates[-1]
+            return "Healing Prayer"
+        return None
+
+    @staticmethod
+    def _detect_gain_sanity_pattern(lines: List[str], i: int, found_common_power: bool) -> Optional[str]:
+        """Detect 'Fueled by Madness' pattern via gain/sanity keywords.
+
+        Args:
+            lines: All lines from back card
+            i: Current line index
+            found_common_power: Whether we've already found a common power
+
+        Returns:
+            Power name if detected, None otherwise
+        """
+        if found_common_power:
+            return None
+
+        from scripts.models.parsing_config import get_parsing_patterns
+
+        patterns_config = get_parsing_patterns()
+        gain_patterns = (
+            patterns_config.power_parsing_gain_patterns
+            if patterns_config.power_parsing_gain_patterns
+            else ["gain", "goin", "go in"]
+        )
+        sanity_patterns = (
+            patterns_config.power_parsing_sanity_patterns
+            if patterns_config.power_parsing_sanity_patterns
+            else ["sanity", "santiy"]
+        )
+
+        line_lower = lines[i].lower()
+        has_gain = any(g in line_lower for g in gain_patterns)
+        has_sanity = any(s in line_lower for s in sanity_patterns)
+
+        # Check next few lines for sanity if current line has gain
+        if has_gain and not has_sanity and i + 1 < len(lines):
+            for j in range(i + 1, min(i + 4, len(lines))):
+                if any(s in lines[j].lower() for s in sanity_patterns):
+                    has_sanity = True
+                    break
+
+        # Check previous lines for gain if current line has sanity
+        if has_sanity and not has_gain and i > 0:
+            for j in range(max(0, i - 3), i):
+                if any(g in lines[j].lower() for g in gain_patterns):
+                    has_gain = True
+                    break
+
+        if has_gain and has_sanity:
+            return "Fueled by Madness"
+        return None
+
+    @staticmethod
+    def _extract_power_name_from_context(
+        lines: List[str], i: int, found_common_power: bool
+    ) -> Optional[str]:
+        """Extract power name by looking backwards in context.
+
+        Args:
+            lines: All lines from back card
+            i: Current line index
+            found_common_power: Whether we've already found a common power
+
+        Returns:
+            Power name if found, None otherwise
+        """
+        if found_common_power:
+            return None
+
+        line_lower = lines[i].lower()
+        action_patterns = [
+            "when you run",
+            "when attacking",
+            "when you attack",
+            "when attacked",
+            "during a run",
+            "you may",
+            "deal",
+            "wound",
+            "heal",
+            "stress",
+            "move",
+            "additional",
+            "sneak",
+            "free",
+            "reroll",
+        ]
+
+        has_action_pattern = any(pattern in line_lower for pattern in action_patterns)
+        has_level_indicator = bool(re.search(r"^(?:level\s*)?[1234][:\-]?\s*", line_lower))
+
+        # Check if next few lines also look like power descriptions
+        looks_like_power_sequence = False
+        if has_action_pattern or has_level_indicator:
+            continuation_count = 0
+            for j in range(i + 1, min(i + 4, len(lines))):
+                next_line = lines[j].lower() if j < len(lines) else ""
+                if any(pattern in next_line for pattern in action_patterns):
+                    continuation_count += 1
+                if re.search(r"^(?:level\s*)?[1234][:\-]?\s*", next_line):
+                    continuation_count += 1
+                if next_line.startswith("instead"):
+                    continuation_count += 1
+
+            looks_like_power_sequence = continuation_count >= 1
+
+        if not (has_action_pattern or has_level_indicator) or not looks_like_power_sequence:
+            return None
+
+        # Look backwards for power name
+        power_name_candidates = []
+        for j in range(max(0, i - 5), i):
+            prev_line = lines[j].strip()
+            prev_lower = prev_line.lower()
+
+            # Skip game rules
+            if any(
+                skip in prev_lower
+                for skip in [
+                    "your turn",
+                    "take",
+                    "draw",
+                    "investigate",
+                    "fight",
+                    "resolve",
+                    "mythos",
+                    "card",
+                    "actions",
+                    "safe space",
+                ]
+            ):
+                continue
+
+            # Skip quotes/mottos
+            is_quote = (
+                prev_line.startswith('"')
+                or prev_line.startswith("'")
+                or prev_line.endswith('"')
+                or prev_line.endswith("'")
+                or "certain" in prev_lower
+                or "life" in prev_lower
+                or "things" in prev_lower
+            )
+
+            if is_quote:
+                continue
+
+            # Check if previous line looks like a title/name
+            word_count = len(prev_line.split())
+            if (
+                word_count >= 1
+                and word_count <= 4
+                and prev_line[0].isupper()
+                and not any(
+                    cp.value.upper() in prev_line.upper() for cp in CommonPowerEnum
+                )
+                and not prev_line.endswith(".")
+                and not prev_line.endswith(",")
+                and not prev_line.endswith(":")
+            ):
+                power_name_candidates.append(prev_line)
+
+        if power_name_candidates:
+            return power_name_candidates[-1]
+
+        # Generate name based on first action words
+        first_words = line_lower.split()[:5]
+        if "run" in first_words or "move" in first_words:
+            return "Movement Power"
+        elif "attack" in first_words or "wound" in first_words or "deal" in first_words:
+            return "Combat Power"
+        elif "heal" in first_words or "stress" in first_words:
+            return "Healing Power"
+        elif "sneak" in first_words:
+            return "Stealth Power"
+        elif "reroll" in first_words:
+            return "Reroll Power"
+        else:
+            # Use first capitalized words from the line
+            words = lines[i].split()
+            name_words = []
+            for word in words[:3]:
+                if word[0].isupper() and len(word) > 2:
+                    name_words.append(word)
+                elif name_words:
+                    break
+            if name_words:
+                return " ".join(name_words)
+            return "Special Power"
+
+    @staticmethod
+    def _find_missed_common_powers(data: "BackCardData", text: str) -> None:
+        """Scan entire text for any common power names we might have missed.
+
+        This is a fallback to catch powers that weren't detected line-by-line.
+        Only looks for power names that appear as standalone lines or short lines,
+        not embedded in descriptions.
+
+        Args:
+            data: BackCardData instance to update
+            text: Full cleaned text from back card
+        """
+        import re
+
+        text_upper = text.upper()
+        found_power_names = {cp.name for cp in data.common_powers}
+        lines = [line.strip() for line in text.split("\n") if line.strip()]
+
+        # Check each common power name
+        for common_power in CommonPowerEnum:
+            power_name = common_power.value
+            power_upper = power_name.upper()
+
+            # Skip if we already found this power
+            if power_name in found_power_names:
+                continue
+
+            # Look for power name as a standalone line or very short line (likely a power header)
+            for line in lines:
+                line_upper = line.upper().strip()
+                line_len = len(line.strip())
+
+                # Skip very long lines (likely descriptions, not power names)
+                if line_len > 60:
+                    continue
+
+                # Skip lines that look like descriptions (contain common description words)
+                description_keywords = [
+                    "LEVEL",
+                    "DESCRIPTION",
+                    "GAIN",
+                    "ADD",
+                    "WHEN",
+                    "YOU",
+                    "MAY",
+                    "INSTEAD",
+                    "DICE",
+                    "SUCCESS",
+                ]
+                if any(keyword in line_upper for keyword in description_keywords):
+                    continue
+
+                # Check for exact match on short lines
+                if line_upper == power_upper:
+                    if not any(cp.name == power_name for cp in data.common_powers):
+                        data.common_powers.append(
+                            Power(name=power_name, is_special=False, levels=[])
+                        )
+                    break
+
+                # Check if power name appears as a word in short lines
+                pattern = r"\b" + re.escape(power_upper) + r"\b"
+                if re.search(pattern, line_upper) and line_len <= len(power_upper) + 10:
+                    # Line is close to power name length (allow small OCR errors)
+                    if not any(cp.name == power_name for cp in data.common_powers):
+                        data.common_powers.append(
+                            Power(name=power_name, is_special=False, levels=[])
+                        )
+                    break
+
+                # Try fuzzy matching on short lines only
+                try:
+                    from rapidfuzz import fuzz
+
+                    ratio = fuzz.ratio(line_upper, power_upper)
+                    if ratio >= 85.0 and line_len <= len(power_upper) + 10:
+                        # High similarity and similar length
+                        if not any(cp.name == power_name for cp in data.common_powers):
+                            data.common_powers.append(
+                                Power(name=power_name, is_special=False, levels=[])
+                            )
+                        break
+                except ImportError:
+                    pass
+
+    @staticmethod
+    def _detect_common_power(line: str) -> Optional[str]:
+        """Detect if a line contains a common power name.
+
+        Args:
+            line: Line to check
+
+        Returns:
+            Common power name if found, None otherwise
+        """
+        import re
+
+        line_upper = line.upper()
+
+        # First try exact match (check if power name is in the line or line equals power name)
+        for common_power in CommonPowerEnum:
+            power_name = common_power.value
+            power_upper = power_name.upper()
+
+            # Exact match
+            if line_upper == power_upper:
+                return power_name
+            # Power name appears as a word in the line
+            pattern = r"\b" + re.escape(power_upper) + r"\b"
+            if re.search(pattern, line_upper):
+                return power_name
+            # Power name is contained in line (for OCR errors)
+            if power_upper in line_upper and len(line_upper) <= len(power_upper) + 5:
+                # Line is close to power name length (allow small OCR errors)
+                return power_name
+
+        # Try fuzzy matching for OCR errors
+        try:
+            from rapidfuzz import fuzz
+
+            best_match = None
+            best_ratio = 0.0
+            line_clean = line.strip().upper()
+
+            for common_power in CommonPowerEnum:
+                power_name = common_power.value
+                ratio1 = fuzz.ratio(line_clean, power_name.upper())
+                ratio2 = fuzz.partial_ratio(line_clean, power_name.upper())
+                ratio3 = fuzz.token_sort_ratio(line_clean, power_name.upper())
+
+                ratio = max(ratio1, ratio2, ratio3)
+
+                # Lower threshold to 60% to catch more OCR errors
+                if ratio > best_ratio and ratio >= 60.0:
+                    best_ratio = ratio
+                    best_match = power_name
+
+            return best_match
+        except ImportError:
+            return None
+
+    @staticmethod
+    def _process_level_indicator(
+        current_power: Power, power_content_lines: List[str], line: str, line_lower: str
+    ) -> Tuple[List[str], bool]:
+        """Process a line with a level indicator (Level 1, Level 2, etc.).
+
+        Args:
+            current_power: Current power being processed
+            power_content_lines: Accumulated content lines for current level
+            line: Current line
+            line_lower: Lowercase version of current line
+
+        Returns:
+            Tuple of (updated power_content_lines, whether level was processed)
+        """
+        level_match = re.search(r"^(?:level\s*)?(\d+)[:\-]?\s*", line_lower)
+        if not level_match:
+            return power_content_lines, False
+
+        # Save previous level if we have accumulated content
+        if power_content_lines:
+            level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+            description = " ".join(power_content_lines).strip()
+            if description and len(description.split()) > 2:
+                # Only add if we don't already have this level and haven't exceeded max
+                if level_num not in [lev.level for lev in current_power.levels] and len(current_power.levels) < 4:
+                    current_power.add_level_from_text(level_num, description)
+
+        # Start new level (cap at 4, OCR might extract invalid numbers)
+        extracted_level = int(level_match.group(1))
+        level_num = min(max(extracted_level, 1), 4)  # Ensure between 1 and 4
+        description = re.sub(r"^(?:level\s*)?\d+[:\-]?\s*", "", line, flags=re.I).strip()
+        if description:
+            return [description], True
+        return [], True
+
+    @staticmethod
+    def _process_instead_indicator(
+        current_power: Power, power_content_lines: List[str], line: str, line_lower: str
+    ) -> Tuple[List[str], bool]:
+        """Process a line starting with 'Instead' (indicates new level).
+
+        Args:
+            current_power: Current power being processed
+            power_content_lines: Accumulated content lines for current level
+            line: Current line
+            line_lower: Lowercase version of current line
+
+        Returns:
+            Tuple of (updated power_content_lines, whether instead was processed)
+        """
+        is_instead = line_lower.strip().startswith("instead")
+        if not is_instead:
+            return power_content_lines, False
+
+        # Save previous level if we have accumulated content
+        if power_content_lines and current_power.levels:
+            prev_level_num = min(len(current_power.levels), 4)  # Cap at level 4
+            description = " ".join(power_content_lines).strip()
+            if description and len(description.split()) > 2:
+                # Only add if we don't already have this level
+                if prev_level_num not in [lev.level for lev in current_power.levels]:
+                    current_power.add_level_from_text(prev_level_num, description)
+
+        # Start new level
+        description = re.sub(r"^instead[,\s]*", "", line, flags=re.I).strip()
+        if description:
+            return [description], True
+        return [], True
+
+    @staticmethod
+    def _process_power_content_line(
+        current_power: Power,
+        power_content_lines: List[str],
+        line: str,
+        line_lower: str,
+        line_upper: str,
+        lines: List[str],
+        i: int,
+    ) -> List[str]:
+        """Process a line that's part of power content (description continuation).
+
+        Args:
+            current_power: Current power being processed
+            power_content_lines: Accumulated content lines
+            line: Current line
+            line_lower: Lowercase version of line
+            line_upper: Uppercase version of line
+            lines: All lines
+            i: Current line index
+
+        Returns:
+            Updated power_content_lines
+        """
+        # Check if this looks like a level description continuation
+        is_description = any(
+            line_lower.startswith(prefix)
+            for prefix in [
+                "you may",
+                "instead",
+                "gain",
+                "when",
+                "reduce",
+                "attacking",
+                "target",
+            ]
+        ) or (
+            re.match(r"^[A-Z]", line)
+            and len(line.split()) > 2
+            and line_upper not in [cp.value.upper() for cp in CommonPowerEnum]
+        )
+
+        # Check if this is a continuation of the current description
+        is_continuation = (
+            len(line.split()) <= 8
+            and not line[0].isupper()
+            and power_content_lines
+            and not any(cp.value.upper() in line_upper for cp in CommonPowerEnum)
+        )
+
+        if is_description or is_continuation:
+            power_content_lines.append(line)
+        elif power_content_lines:
+            # Check if next line is a new power
+            next_is_power = False
+            if i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+                next_upper = next_line.upper()
+                if any(
+                    cp.value.upper() in next_upper or next_upper == cp.value.upper()
+                    for cp in CommonPowerEnum
+                ):
+                    next_is_power = True
+
+            # Save accumulated level if we have enough content
+            max_levels = 4
+            if len(current_power.levels) < max_levels and not next_is_power:
+                level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+                description = " ".join(power_content_lines).strip()
+                if description and len(description.split()) > 2:
+                    # Only add if we don't already have this level
+                    if level_num not in [lev.level for lev in current_power.levels]:
+                        current_power.add_level_from_text(level_num, description)
+                return []
+
+        return power_content_lines
+
     @classmethod
     def parse_from_text(cls, text: str) -> "BackCardData":
         """Parse back card text to extract powers and their levels."""
@@ -633,8 +1204,6 @@ class BackCardData(BaseModel):
         lines = [line.strip() for line in cleaned_text.split("\n") if line.strip()]
 
         data = cls()
-
-        # Look for special power (usually mentioned first, has unique name)
         current_power: Optional[Power] = None
         power_content_lines: List[str] = []
         found_common_power = False
@@ -645,283 +1214,45 @@ class BackCardData(BaseModel):
             line_lower = line.lower()
             line_upper = line.upper()
 
-            # Skip game rules sections (YOUR TURN, TAKE ACTIONS, etc.)
-            if any(
-                keyword in line_upper
-                for keyword in [
-                    "YOUR TURN",
-                    "TAKE",
-                    "DRAW MYTHOS",
-                    "INVESTIGATE",
-                    "FIGHT",
-                    "RESOLVE",
-                    "OR FIGHT!",
-                    "INVESTIGATE OR FIGHT!",
-                ]
-            ):
+            # Skip game rules sections
+            if cls._is_game_rules_line(line):
                 i += 1
                 continue
 
-            # Check for special power BEFORE we find any common powers
-            is_special_power = False
+            # Detect special power names (try multiple strategies)
             special_power_name = None
+            is_special_power = False
 
-            # Strategy: Special powers appear BEFORE common powers and have unique patterns
-            # They typically:
-            # 1. Have a unique name (not a common power name)
-            # 2. Have level indicators (1, 2, 3, 4) or "When you..." patterns
-            # 3. Appear before any common power names
-            # 4. Have descriptions that don't match common power patterns
-
-            # Check for explicit special power names
-            if "fueled" in line_lower and "madness" in line_lower:
-                # Extract the power name
-                words = line.split()
-                power_words = []
-                for word in words:
-                    if word[0].isupper() or word.lower() in ["by", "the"]:
-                        power_words.append(word)
-                    elif power_words:
-                        break
-                if power_words:
-                    special_power_name = " ".join(power_words)
-                    is_special_power = True
-
-            # Check for "HEALING PRAYER" or "At the end of your turn" pattern (Ahmed's power)
-            if ("healing" in line_lower and "prayer" in line_lower) or (
-                ("at the end" in line_lower or "atthe end" in line_lower)
-                and "turn" in line_lower
-                and ("heal" in line_lower or "wound" in line_lower)
-            ):
-                # Look backwards for power name, or use "Healing Prayer"
-                power_name_candidates = []
-                for j in range(max(0, i - 5), i):
-                    prev_line = lines[j].strip()
-                    prev_lower = prev_line.lower()
-                    if "healing" in prev_lower and "prayer" in prev_lower:
-                        # Extract "Healing Prayer" from the line
-                        words = prev_line.split()
-                        healing_idx = None
-                        prayer_idx = None
-                        for idx, word in enumerate(words):
-                            if "healing" in word.lower():
-                                healing_idx = idx
-                            if "prayer" in word.lower():
-                                prayer_idx = idx
-                        if healing_idx is not None and prayer_idx is not None:
-                            power_name_candidates.append(
-                                " ".join(
-                                    words[
-                                        min(healing_idx, prayer_idx) : max(healing_idx, prayer_idx)
-                                        + 1
-                                    ]
-                                )
-                            )
-
-                if power_name_candidates:
-                    special_power_name = power_name_candidates[-1]
-                else:
-                    special_power_name = "Healing Prayer"
+            # Strategy 1: Explicit "Fueled by Madness"
+            special_power_name = cls._detect_fueled_by_madness(lines, i)
+            if special_power_name:
                 is_special_power = True
 
-            # Check for special power description patterns
-            # Load simple keywords from TOML config
-            from scripts.models.parsing_config import get_parsing_patterns
-
-            patterns_config = get_parsing_patterns()
-            gain_patterns = (
-                patterns_config.power_parsing_gain_patterns
-                if patterns_config.power_parsing_gain_patterns
-                else ["gain", "goin", "go in"]
-            )
-            sanity_patterns = (
-                patterns_config.power_parsing_sanity_patterns
-                if patterns_config.power_parsing_sanity_patterns
-                else ["sanity", "santiy"]
-            )
-
-            # Check current line and surrounding lines for the pattern
-            has_gain = any(g in line_lower for g in gain_patterns)
-            has_sanity = any(s in line_lower for s in sanity_patterns)
-
-            # Check next few lines for sanity if current line has gain
-            if has_gain and not has_sanity and i + 1 < len(lines):
-                for j in range(i + 1, min(i + 4, len(lines))):
-                    if any(s in lines[j].lower() for s in sanity_patterns):
-                        has_sanity = True
-                        break
-
-            # Check previous lines for gain if current line has sanity
-            if has_sanity and not has_gain and i > 0:
-                for j in range(max(0, i - 3), i):
-                    if any(g in lines[j].lower() for g in gain_patterns):
-                        has_gain = True
-                        break
-
-            # Pattern 1: "Gain X while your sanity..." (Fueled by Madness)
-            if not is_special_power and not found_common_power and (has_gain and has_sanity):
-                special_power_name = "Fueled by Madness"
-                is_special_power = True
-
-            # Pattern 2: Look for power-like descriptions BEFORE common powers
-            # These are typically action-based powers (When you Run, When attacking, etc.)
-            if not is_special_power and not found_common_power:
-                # Check for action-based patterns
-                action_patterns = [
-                    "when you run",
-                    "when attacking",
-                    "when you attack",
-                    "when attacked",
-                    "during a run",
-                    "you may",
-                    "deal",
-                    "wound",
-                    "heal",
-                    "stress",
-                    "move",
-                    "additional",
-                    "sneak",
-                    "free",
-                    "reroll",
-                ]
-
-                has_action_pattern = any(pattern in line_lower for pattern in action_patterns)
-
-                # Check if this line has a level indicator or looks like a power level
-                has_level_indicator = bool(re.search(r"^(?:level\s*)?[1234][:\-]?\s*", line_lower))
-
-                # Check if next few lines also look like power descriptions
-                looks_like_power_sequence = False
-                if has_action_pattern or has_level_indicator:
-                    # Check next 2-3 lines for continuation patterns
-                    continuation_count = 0
-                    for j in range(i + 1, min(i + 4, len(lines))):
-                        next_line = lines[j].lower() if j < len(lines) else ""
-                        if any(pattern in next_line for pattern in action_patterns):
-                            continuation_count += 1
-                        # Check for level indicators
-                        if re.search(r"^(?:level\s*)?[1234][:\-]?\s*", next_line):
-                            continuation_count += 1
-                        # Check for "Instead" which indicates level progression
-                        if next_line.startswith("instead"):
-                            continuation_count += 1
-
-                    looks_like_power_sequence = continuation_count >= 1
-
-                # If it looks like a power description and we haven't found common powers yet
-                if (has_action_pattern or has_level_indicator) and looks_like_power_sequence:
-                    # Try to extract a power name - look backwards more carefully
-                    power_name_candidates = []
-
-                    # Look backwards up to 5 lines for a potential power name
-                    for j in range(max(0, i - 5), i):
-                        prev_line = lines[j].strip()
-                        prev_lower = prev_line.lower()
-
-                        # Skip game rules and common patterns
-                        if any(
-                            skip in prev_lower
-                            for skip in [
-                                "your turn",
-                                "take",
-                                "draw",
-                                "investigate",
-                                "fight",
-                                "resolve",
-                                "mythos",
-                                "card",
-                                "actions",
-                                "safe space",
-                            ]
-                        ):
-                            continue
-
-                        # Skip quotes/mottos (lines starting with quotes or common quote patterns)
-                        is_quote = (
-                            prev_line.startswith('"')
-                            or prev_line.startswith("'")
-                            or prev_line.endswith('"')
-                            or prev_line.endswith("'")
-                            or "certain" in prev_lower
-                            or "life" in prev_lower
-                            or "things" in prev_lower
-                        )
-
-                        if is_quote:
-                            continue
-
-                        # Check if previous line looks like a title/name
-                        # Power names are typically:
-                        # - Short (1-4 words)
-                        # - Start with capital letter
-                        # - Not a common power name
-                        # - Not a quote/motto
-                        word_count = len(prev_line.split())
-
-                        if (
-                            word_count >= 1
-                            and word_count <= 4
-                            and prev_line[0].isupper()
-                            and not any(
-                                cp.value.upper() in prev_line.upper() for cp in CommonPowerEnum
-                            )
-                            and not prev_line.endswith(".")
-                            and not prev_line.endswith(",")
-                            and not prev_line.endswith(":")
-                        ):
-                            power_name_candidates.append(prev_line)
-
-                    if power_name_candidates:
-                        # Use the last candidate (closest to the description)
-                        special_power_name = power_name_candidates[-1]
-                    else:
-                        # Generate a name based on the first action in the description
-                        # Extract key words from the first action line
-                        first_words = line_lower.split()[:5]  # First 5 words
-
-                        if "run" in first_words or "move" in first_words:
-                            special_power_name = "Movement Power"
-                        elif (
-                            "attack" in first_words
-                            or "wound" in first_words
-                            or "deal" in first_words
-                        ):
-                            special_power_name = "Combat Power"
-                        elif "heal" in first_words or "stress" in first_words:
-                            special_power_name = "Healing Power"
-                        elif "sneak" in first_words:
-                            special_power_name = "Stealth Power"
-                        elif "reroll" in first_words:
-                            special_power_name = "Reroll Power"
-                        else:
-                            # Use first capitalized words from the line as name
-                            words = line.split()
-                            name_words = []
-                            for word in words[:3]:  # Max 3 words
-                                if word[0].isupper() and len(word) > 2:
-                                    name_words.append(word)
-                                elif name_words:
-                                    break
-                            if name_words:
-                                special_power_name = " ".join(name_words)
-                            else:
-                                special_power_name = "Special Power"
-
+            # Strategy 2: "Healing Prayer" pattern
+            if not is_special_power:
+                special_power_name = cls._detect_healing_prayer(lines, i)
+                if special_power_name:
                     is_special_power = True
 
-            # Check if it's a common power name (all caps, matches known powers)
-            is_common_power = False
-            common_power_name = None
+            # Strategy 3: Gain/sanity pattern (Fueled by Madness)
+            if not is_special_power:
+                special_power_name = cls._detect_gain_sanity_pattern(lines, i, found_common_power)
+                if special_power_name:
+                    is_special_power = True
 
-            for common_power in CommonPowerEnum:
-                power_name = common_power.value
-                if power_name.upper() in line_upper or line_upper == power_name.upper():
-                    common_power_name = power_name
-                    is_common_power = True
-                    found_common_power = True
-                    break
+            # Strategy 4: Extract from context (action-based patterns)
+            if not is_special_power:
+                special_power_name = cls._extract_power_name_from_context(lines, i, found_common_power)
+                if special_power_name:
+                    is_special_power = True
 
-            # If we found a power name, save previous power and start new one
+            # Detect common power names
+            common_power_name = cls._detect_common_power(line)
+            is_common_power = common_power_name is not None
+            if is_common_power:
+                found_common_power = True
+
+            # Handle power name detection
             if is_special_power and special_power_name:
                 # Save previous power
                 if current_power:
@@ -942,7 +1273,17 @@ class BackCardData(BaseModel):
                     if current_power.is_special:
                         data.special_power = current_power
                     else:
-                        data.common_powers.append(current_power)
+                        # Only add if we don't already have this common power
+                        if not any(cp.name == current_power.name for cp in data.common_powers):
+                            data.common_powers.append(current_power)
+
+                # Check if we already have this common power (avoid duplicates)
+                if any(cp.name == common_power_name for cp in data.common_powers):
+                    # Skip duplicate, but continue processing content for the existing power
+                    current_power = None
+                    power_content_lines = []
+                    i += 1
+                    continue
 
                 # Start tracking common power
                 current_power = Power(name=common_power_name, is_special=False, levels=[])
@@ -950,245 +1291,198 @@ class BackCardData(BaseModel):
                 i += 1
                 continue
 
-            # If we're tracking a power, collect content lines
+            # Process power content and levels
             if current_power:
-                # Check for level indicators (Level 1, Level 2, etc. or just numbers at start)
-                # Also check for "Instead" which indicates a new level
-                level_match = re.search(r"^(?:level\s*)?(\d+)[:\-]?\s*", line_lower)
-                is_instead = line_lower.strip().startswith("instead")
+                # Try processing level indicator
+                updated_lines, processed = cls._process_level_indicator(
+                    current_power, power_content_lines, line, line_lower
+                )
+                if processed:
+                    power_content_lines = updated_lines
+                    i += 1
+                    continue
 
-                if level_match:
-                    # Save previous level if we have accumulated content
-                    if power_content_lines:
-                        level_num = len(current_power.levels) + 1
-                        description = " ".join(power_content_lines).strip()
-                        if description and len(description.split()) > 2:
-                            current_power.add_level_from_text(level_num, description)
-                        power_content_lines = []
+                # Try processing "Instead" indicator
+                updated_lines, processed = cls._process_instead_indicator(
+                    current_power, power_content_lines, line, line_lower
+                )
+                if processed:
+                    power_content_lines = updated_lines
+                    i += 1
+                    continue
 
-                    # Start new level
-                    level_num = int(level_match.group(1))
-                    description = re.sub(
-                        r"^(?:level\s*)?\d+[:\-]?\s*", "", line, flags=re.I
-                    ).strip()
-                    if description:
-                        power_content_lines = [description]
-                elif is_instead and current_power.levels:
-                    # "Instead" indicates a new level (usually level 2, 3, or 4)
-                    # Save previous level if we have accumulated content
-                    if power_content_lines:
-                        prev_level_num = len(current_power.levels)
-                        description = " ".join(power_content_lines).strip()
-                        if description and len(description.split()) > 2:
-                            current_power.add_level_from_text(prev_level_num, description)
-                        power_content_lines = []
+                # Handle special power "Instead" in middle of line
+                if current_power.is_special:
+                    instead_match = re.search(r"^[^a-z]*instead[,\s]+", line_lower)
+                    if instead_match and current_power.levels:
+                        if power_content_lines:
+                            prev_level_num = len(current_power.levels)
+                            description = " ".join(power_content_lines).strip()
+                            if description and len(description.split()) > 2:
+                                current_power.add_level_from_text(prev_level_num, description)
+                            power_content_lines = []
 
-                    # Start new level (increment from previous)
-                    level_num = len(current_power.levels) + 1
-                    description = re.sub(r"^instead[,\s]*", "", line, flags=re.I).strip()
-                    if description:
-                        power_content_lines = [description]
-                elif is_instead and not current_power.levels:
-                    # First level starting with "Instead" - this is unusual but possible
-                    description = re.sub(r"^instead[,\s]*", "", line, flags=re.I).strip()
-                    if description:
-                        power_content_lines = [description]
-                else:
-                    # For special powers, check if this line starts with "Instead" - indicates new level
-                    is_new_instead_level = False
-                    if current_power.is_special:
-                        # Check if line starts with "Instead" (may have punctuation before it)
-                        instead_match = re.search(r"^[^a-z]*instead[,\s]+", line_lower)
-                        if instead_match and current_power.levels:
-                            # Save previous level if we have accumulated content
-                            if power_content_lines:
-                                prev_level_num = len(current_power.levels)
-                                description = " ".join(power_content_lines).strip()
-                                if description and len(description.split()) > 2:
-                                    current_power.add_level_from_text(prev_level_num, description)
-                                power_content_lines = []
-
-                            # Start new level
-                            level_num = len(current_power.levels) + 1
-                            description = re.sub(
-                                r"^[^a-z]*instead[,\s]+", "", line, flags=re.I
-                            ).strip()
-                            if description:
-                                power_content_lines = [description]
-                            is_new_instead_level = True
-
-                    if is_new_instead_level:
-                        # Already handled above, continue to next iteration
+                        description = re.sub(
+                            r"^[^a-z]*instead[,\s]+", "", line, flags=re.I
+                        ).strip()
+                        if description:
+                            power_content_lines = [description]
                         i += 1
                         continue
 
-                    # Check if this looks like a level description continuation
-                    is_description = any(
-                        line_lower.startswith(prefix)
-                        for prefix in [
-                            "you may",
-                            "instead",
-                            "gain",
-                            "when",
-                            "reduce",
-                            "attacking",
-                            "target",
-                        ]
-                    ) or (
-                        re.match(r"^[A-Z]", line)
-                        and len(line.split()) > 2
-                        and line_upper not in [cp.value.upper() for cp in CommonPowerEnum]
-                    )
-
-                    # Check if this is a continuation of the current description
-                    is_continuation = (
-                        len(line.split()) <= 8
-                        and not line[0].isupper()
-                        and power_content_lines
-                        and not any(cp.value.upper() in line_upper for cp in CommonPowerEnum)
-                    )
-
-                    if is_description or is_continuation:
-                        power_content_lines.append(line)
-                    elif power_content_lines:
-                        # We have accumulated content but hit something that doesn't look like continuation
-                        # Check if next line is a new power or if we should save this level
-                        next_is_power = False
-                        if i + 1 < len(lines):
-                            next_line = lines[i + 1].strip()
-                            next_upper = next_line.upper()
-                            # Check if next line is a common power name
-                            if any(
-                                cp.value.upper() in next_upper or next_upper == cp.value.upper()
-                                for cp in CommonPowerEnum
-                            ):
-                                next_is_power = True
-
-                        # Save accumulated level if we have enough content and haven't hit max levels
-                        # Special powers have 4 levels, common powers have 4 levels
-                        max_levels = 4
-                        if len(current_power.levels) < max_levels and not next_is_power:
-                            level_num = len(current_power.levels) + 1
-                            description = " ".join(power_content_lines).strip()
-                            if description and len(description.split()) > 2:
-                                current_power.add_level_from_text(level_num, description)
-                            power_content_lines = []
+                # Process content line
+                power_content_lines = cls._process_power_content_line(
+                    current_power, power_content_lines, line, line_lower, line_upper, lines, i
+                )
 
             i += 1
 
-        # Don't forget the last power
-        if current_power:
-            # Save any remaining accumulated level content
-            # Special powers have 4 levels, common powers have 4 levels
-            max_levels = 4
-            if power_content_lines and len(current_power.levels) < max_levels:
-                level_num = len(current_power.levels) + 1
-                description = " ".join(power_content_lines).strip()
-                if description and len(description.split()) > 2:
+        # Finalize last power
+        cls._finalize_power(current_power, power_content_lines, data, cleaned_text, lines)
+
+        return data
+
+    @staticmethod
+    def _finalize_power(
+        current_power: Optional[Power],
+        power_content_lines: List[str],
+        data: "BackCardData",
+        cleaned_text: str,
+        lines: List[str],
+    ) -> None:
+        """Finalize the last power being processed.
+
+        Args:
+            current_power: Current power being processed (may be None)
+            power_content_lines: Accumulated content lines
+            data: BackCardData instance to update
+            cleaned_text: Full cleaned text for post-processing
+            lines: All lines for post-processing
+        """
+        if not current_power:
+            return
+
+        # Save any remaining accumulated level content
+        max_levels = 4
+        if power_content_lines and len(current_power.levels) < max_levels:
+            level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+            description = " ".join(power_content_lines).strip()
+            if description and len(description.split()) > 2:
+                # Only add if we don't already have this level
+                if level_num not in [lev.level for lev in current_power.levels]:
                     current_power.add_level_from_text(level_num, description)
 
-            # For special powers, ensure we have 4 levels by checking if descriptions contain "Instead"
-            # This handles cases where multiple levels are in one description
-            if current_power.is_special and len(current_power.levels) < 4:
-                # Strategy 1: Check if any level description contains multiple "Instead" markers
-                for level in current_power.levels:
-                    desc = level.description
-                    # Count "Instead" occurrences (case-insensitive, handle OCR errors)
-                    instead_patterns = [
-                        r"\binstead\b",
-                        r"\binstea\b",  # OCR error
-                        r"\binste\b",  # OCR error
-                        r"\binstea\s+",  # OCR error with space
+        # For special powers, ensure we have 4 levels by checking if descriptions contain "Instead"
+        if current_power.is_special and len(current_power.levels) < 4:
+            # Strategy 1: Check if any level description contains multiple "Instead" markers
+            for level in current_power.levels:
+                desc = level.description
+                # Count "Instead" occurrences (case-insensitive, handle OCR errors)
+                instead_patterns = [
+                    r"\binstead\b",
+                    r"\binstea\b",  # OCR error
+                    r"\binste\b",  # OCR error
+                    r"\binstea\s+",  # OCR error with space
+                ]
+                instead_count = 0
+                for pattern in instead_patterns:
+                    instead_count += len(re.findall(pattern, desc, re.I))
+
+                if instead_count > 1 and len(current_power.levels) < 4:
+                    # Try to split on "Instead" (and variants) to create additional levels
+                    split_patterns = [
+                        r"\s+instead[,\s]+",
+                        r"\s+instea[,\s]+",
+                        r"\s+inste[,\s]+",
+                        r"[,\s]+instead[,\s]+",
                     ]
-                    instead_count = 0
-                    for pattern in instead_patterns:
-                        instead_count += len(re.findall(pattern, desc, re.I))
+                    parts = None
+                    for split_pattern in split_patterns:
+                        parts = re.split(split_pattern, desc, flags=re.I)
+                        if len(parts) > 1:
+                            break
 
-                    if instead_count > 1 and len(current_power.levels) < 4:
-                        # Try to split on "Instead" (and variants) to create additional levels
-                        split_patterns = [
-                            r"\s+instead[,\s]+",
-                            r"\s+instea[,\s]+",
-                            r"\s+inste[,\s]+",
-                            r"[,\s]+instead[,\s]+",
-                        ]
-                        parts = None
-                        for split_pattern in split_patterns:
-                            parts = re.split(split_pattern, desc, flags=re.I)
-                            if len(parts) > 1:
-                                break
-
-                        if parts and len(parts) > 1:
-                            # Update current level with first part
-                            level.description = parts[0].strip()
-                            # Add remaining parts as new levels
-                            for part in parts[1:]:
-                                part_clean = part.strip()
-                                if (
-                                    part_clean
-                                    and len(part_clean.split()) > 2
-                                    and len(current_power.levels) < 4
-                                ):
-                                    new_level_num = len(current_power.levels) + 1
+                    if parts and len(parts) > 1:
+                        # Update current level with first part
+                        level.description = parts[0].strip()
+                        # Add remaining parts as new levels (but don't exceed 4 levels total)
+                        for part in parts[1:]:
+                            part_clean = part.strip()
+                            if (
+                                part_clean
+                                and len(part_clean.split()) > 2
+                                and len(current_power.levels) < 4
+                            ):
+                                # Ensure we don't exceed level 4
+                                new_level_num = min(len(current_power.levels) + 1, 4)
+                                # Only add if we don't already have this level
+                                if new_level_num not in [lev.level for lev in current_power.levels]:
                                     current_power.add_level_from_text(new_level_num, part_clean)
 
-                # Strategy 2: If still missing levels, try to extract from the full text
-                # Look for patterns like "Level 1:", "Level 2:", etc. in the original text
-                if len(current_power.levels) < 4:
-                    # Re-scan the cleaned text for explicit level markers
-                    level_markers = re.finditer(
-                        r"(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)",
+            # Strategy 2: If still missing levels, try to extract from the full text
+            # Look for patterns like "Level 1:", "Level 2:", etc. in the original text
+            if len(current_power.levels) < 4:
+                # Re-scan the cleaned text for explicit level markers
+                level_markers = re.finditer(
+                    r"(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)",
+                    cleaned_text,
+                    re.IGNORECASE | re.DOTALL,
+                )
+
+                found_levels = {}
+                for match in level_markers:
+                    level_num = int(match.group(1))
+                    level_desc = match.group(2).strip()
+                    # Clean up the description
+                    level_desc = re.sub(
+                        r"^\s*instead[,\s]+", "", level_desc, flags=re.I
+                    ).strip()
+                    if level_desc and len(level_desc.split()) > 2:
+                        found_levels[level_num] = level_desc
+
+                # Add missing levels if we found them
+                for level_num in range(1, 5):
+                    if (
+                        level_num not in [level.level for level in current_power.levels]
+                        and level_num in found_levels
+                    ):
+                        current_power.add_level_from_text(level_num, found_levels[level_num])
+
+            # Strategy 3: If still missing, try to infer from "Instead" patterns in full text
+            if len(current_power.levels) < 4:
+                # Find all "Instead" occurrences in the text after the power name
+                instead_matches = list(
+                    re.finditer(
+                        r"\b(?:instead|instea|inste)[,\s]+([^\.]+?)(?=\b(?:instead|instea|inste)[,\s]|\b(?:level\s*)?[1234][:\-]|\Z)",
                         cleaned_text,
                         re.IGNORECASE | re.DOTALL,
                     )
+                )
 
-                    found_levels = {}
-                    for match in level_markers:
-                        level_num = int(match.group(1))
-                        level_desc = match.group(2).strip()
-                        # Clean up the description
-                        level_desc = re.sub(
-                            r"^\s*instead[,\s]+", "", level_desc, flags=re.I
-                        ).strip()
-                        if level_desc and len(level_desc.split()) > 2:
-                            found_levels[level_num] = level_desc
-
-                    # Add missing levels if we found them
-                    for level_num in range(1, 5):
+                # If we found multiple "Instead" patterns, they might be separate levels
+                # Only process up to 4 levels total
+                if len(instead_matches) >= len(current_power.levels):
+                    # Try to map them to levels (max 4 levels)
+                    for idx, match in enumerate(instead_matches):
+                        level_num = min(idx + 1, 4)  # Cap at level 4
                         if (
-                            level_num not in [l.level for l in current_power.levels]
-                            and level_num in found_levels
+                            level_num not in [level.level for level in current_power.levels]
+                            and len(current_power.levels) < 4
                         ):
-                            current_power.add_level_from_text(level_num, found_levels[level_num])
+                            desc = match.group(1).strip()
+                            if desc and len(desc.split()) > 2:
+                                current_power.add_level_from_text(level_num, desc)
 
-                # Strategy 3: If still missing, try to infer from "Instead" patterns in full text
-                if len(current_power.levels) < 4:
-                    # Find all "Instead" occurrences in the text after the power name
-                    instead_matches = list(
-                        re.finditer(
-                            r"\b(?:instead|instea|inste)[,\s]+([^\.]+?)(?=\b(?:instead|instea|inste)[,\s]|\b(?:level\s*)?[1234][:\-]|\Z)",
-                            cleaned_text,
-                            re.IGNORECASE | re.DOTALL,
-                        )
-                    )
-
-                    # If we found multiple "Instead" patterns, they might be separate levels
-                    if len(instead_matches) >= len(current_power.levels):
-                        # Try to map them to levels
-                        for idx, match in enumerate(instead_matches):
-                            level_num = idx + 1
-                            if (
-                                level_num not in [l.level for l in current_power.levels]
-                                and level_num <= 4
-                            ):
-                                desc = match.group(1).strip()
-                                if desc and len(desc.split()) > 2:
-                                    current_power.add_level_from_text(level_num, desc)
-
+        if current_power:
             if current_power.is_special:
                 data.special_power = current_power
             else:
-                data.common_powers.append(current_power)
+                # Only add if we don't already have this common power (avoid duplicates)
+                if not any(cp.name == current_power.name for cp in data.common_powers):
+                    data.common_powers.append(current_power)
+
+        # Post-process: scan entire text for any missed common power names
+        BackCardData._find_missed_common_powers(data, cleaned_text)
 
         # Post-process: ensure special power has at least one level with description
         if data.special_power and not data.special_power.has_levels:
@@ -1207,15 +1501,15 @@ class BackCardData(BaseModel):
                 if patterns_config.power_parsing_sanity_patterns
                 else ["sanity", "santiy"]
             )
-            for i, line in enumerate(lines):
+            for line_idx, line in enumerate(lines):
                 line_lower = line.lower()
                 # Check if this line has gain pattern
                 has_gain = any(g in line_lower for g in gain_patterns)
                 has_sanity = any(s in line_lower for s in sanity_patterns)
 
                 # Also check surrounding lines for multi-line patterns
-                if has_gain and not has_sanity and i + 1 < len(lines):
-                    for j in range(i + 1, min(i + 4, len(lines))):
+                if has_gain and not has_sanity and line_idx + 1 < len(lines):
+                    for j in range(line_idx + 1, min(line_idx + 4, len(lines))):
                         if any(s in lines[j].lower() for s in sanity_patterns):
                             has_sanity = True
                             break
@@ -1224,7 +1518,7 @@ class BackCardData(BaseModel):
                     # Collect multi-line description
                     desc_lines = [line.strip()]
                     # Look ahead for continuation (up to 3 more lines)
-                    for j in range(i + 1, min(i + 4, len(lines))):
+                    for j in range(line_idx + 1, min(line_idx + 4, len(lines))):
                         next_line = lines[j].strip()
                         # Skip empty lines and common power names
                         if not next_line or any(
