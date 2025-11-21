@@ -136,25 +136,49 @@ COMMON_POWER_PREV_LINE_ENDINGS: Final[List[str]] = [
     "TARGET",
 ]
 
+# Special power region coordinates
+# Format: (x_start_percent, y_start_percent, width_percent, height_percent)
+SPECIAL_POWER_REGION: Final[Tuple[float, float, float, float]] = (
+    0.43,  # X start: 43%
+    0.13,  # Y start: 13%
+    0.55,  # Width: 55%
+    0.25,  # Height: 25%
+)
+
+# Special power level widths (as percentage of special power region width)
+# These define 4 vertical sub-regions within the special power region
+SPECIAL_POWER_LEVEL_WIDTHS: Final[List[float]] = [
+    0.32,    # Level 1: 32%
+    0.2267,  # Level 2: 22.67%
+    0.1987,  # Level 3: 19.87%
+    0.2545,  # Level 4: 25.45%
+]
+
 # Common power region coordinates
 # Format: (x_start_percent, y_start_percent, width_percent, height_percent)
 COMMON_POWER_REGIONS: Final[List[Tuple[float, float, float, float]]] = [
-    # Region 1: Right side, upper-middle (most common layout)
-    (0.55, 0.20, 0.40, 0.55),
-    # Region 2: Middle-right, slightly lower
-    (0.50, 0.25, 0.45, 0.60),
-    # Region 3: Right side, broader coverage
-    (0.60, 0.15, 0.35, 0.65),
+    # Region 1: X start at 43%, Y start at 41%, width 55%, height 15%
+    # Height increased from 10% to 15% to improve OCR accuracy while still focusing on power names
+    (0.43, 0.41, 0.55, 0.15),
+    # Region 2: X start at 43%, Y start at 68%, width 55%, height 15%
+    # Height increased from 10% to 15% to improve OCR accuracy while still focusing on power names
+    (0.43, 0.68, 0.55, 0.15),
 ]
 
 # Front card region percentages
 FRONT_CARD_TOP_PERCENT: Final[float] = 0.25
-FRONT_CARD_MOTTO_START_PERCENT: Final[float] = 0.26  # Start slightly below name/location (25%)
+FRONT_CARD_LOCATION_END_PERCENT: Final[float] = 0.30  # Location region ends at 30%
+FRONT_CARD_MOTTO_START_PERCENT: Final[float] = 0.39  # Start slightly below name/location (25%)
 FRONT_CARD_MOTTO_END_PERCENT: Final[float] = (
-    0.48  # End before story starts (60%), allows for multi-line mottos
+    0.49  # End before story starts (50%), allows for multi-line mottos (height = 10%)
 )
-FRONT_CARD_STORY_START_PERCENT: Final[float] = 0.60
-FRONT_CARD_STORY_HEIGHT_PERCENT: Final[float] = 0.40
+FRONT_CARD_STORY_START_PERCENT: Final[float] = 0.50
+FRONT_CARD_STORY_HEIGHT_PERCENT: Final[float] = 0.45
 
 # Punctuation characters that indicate continuation
 PUNCTUATION_CONTINUATION_CHARS: Final[str] = ":,;.-"
+
+# Quote characters (straight and curly quotes)
+# Straight quotes: " (U+0022), ' (U+0027)
+# Curly quotes: " (U+201C), " (U+201D), ' (U+2018), ' (U+2019)
+QUOTE_CHARACTERS: Final[str] = '"\'\u201c\u201d\u2018\u2019'

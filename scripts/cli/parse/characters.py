@@ -38,6 +38,7 @@ except ImportError as e:
     sys.exit(1)
 
 try:
+    from scripts.cli.parse.parsing_constants import COMMON_POWER_MAX_POWERS
     from scripts.cli.parse.parsing_models import FrontCardFields
     from scripts.models.character import CharacterData
     from scripts.models.constants import CommonPower, Filename
@@ -485,41 +486,60 @@ def _parse_character_data(
 
         back_data = BackCardData.parse_from_text(back_text)
 
-        # Extract common powers from region-specific extraction if available
-        # Only use region extraction if it finds at least one power
-        # Otherwise, fall back to whole-card parsing (but be aware it may have false positives)
-        common_power_names: List[str] = []
-        region_extraction_used = False
+        # Extract special power from region-specific extraction
+        special_power = back_data.special_power
         if use_optimal_strategies and back_path and back_path.exists():
             try:
-                region_powers = extract_common_powers_from_back_card(back_path)
-                if region_powers and len(region_powers) > 0:
-                    common_power_names = region_powers
-                    region_extraction_used = True
+                from scripts.utils.optimal_ocr import extract_special_power_from_back_card
+                
+                region_special_power = extract_special_power_from_back_card(back_path)
+                if region_special_power and region_special_power.levels:
+                    special_power = region_special_power
                     if not quiet:
                         console.print(
-                            f"  Found {len(common_power_names)} common powers via region extraction: {', '.join(common_power_names)}"
+                            f"  Found special power via region extraction: {special_power.name} ({len(special_power.levels)} levels)"
                         )
             except Exception as e:
                 if not quiet:
                     console.print(
-                        f"[yellow]Warning: Region-specific common power extraction failed ({e}), using parsed powers[/yellow]"
+                        f"[yellow]Warning: Region-specific special power extraction failed ({e})[/yellow]"
                     )
 
-        # Fall back to parsed powers from whole-card text if region extraction didn't find any
-        if not region_extraction_used:
-            common_power_names = [cp.name for cp in back_data.common_powers]
-            if not quiet and common_power_names:
-                console.print(
-                    f"  Using common powers from whole-card parsing: {', '.join(common_power_names)}"
-                )
+        # Extract common powers from region-specific extraction
+        # Use region extraction results only (don't fall back to whole-card parsing to avoid false positives)
+        common_power_names: List[str] = []
+        if use_optimal_strategies and back_path and back_path.exists():
+            try:
+                region_powers = extract_common_powers_from_back_card(back_path)
+                if region_powers:
+                    common_power_names = region_powers
+                    if not quiet:
+                        console.print(
+                            f"  Found {len(common_power_names)} common power(s) via region extraction: {', '.join(common_power_names)}"
+                        )
+            except Exception as e:
+                if not quiet:
+                    console.print(
+                        f"[yellow]Warning: Region-specific common power extraction failed ({e})[/yellow]"
+                    )
+        
+        # Only fall back to whole-card parsing if region extraction found nothing at all
+        # But limit to 2 powers to avoid false positives
+        if not common_power_names:
+            whole_card_powers = [cp.name for cp in back_data.common_powers]
+            if whole_card_powers:
+                common_power_names = whole_card_powers[:2]  # Limit to 2 to avoid false positives
+                if not quiet:
+                    console.print(
+                        f"  Using common powers from whole-card parsing (limited to 2): {', '.join(common_power_names)}"
+                    )
 
         parsed_data = CharacterData(
             name=front_data.name or "Unknown",
             location=front_data.location,
             motto=front_data.motto,
             story=front_data.story,
-            special_power=back_data.special_power,
+            special_power=special_power,
             common_powers=common_power_names,
         )
     else:
@@ -527,21 +547,38 @@ def _parse_character_data(
         story_to_use = story_text or extracted_story_from_fields
         parsed_data = CharacterData.from_images(front_text, back_text, story_to_use)
 
+        # Try region-specific special power extraction even in fallback mode
+        if use_optimal_strategies and back_path and back_path.exists():
+            try:
+                from scripts.utils.optimal_ocr import extract_special_power_from_back_card
+                
+                region_special_power = extract_special_power_from_back_card(back_path)
+                if region_special_power and region_special_power.levels:
+                    parsed_data.special_power = region_special_power
+                    if not quiet:
+                        console.print(
+                            f"  Updated special power via region extraction: {region_special_power.name} ({len(region_special_power.levels)} levels)"
+                        )
+            except Exception:
+                # Silently fall back to parsed special power
+                pass
+
         # Try region-specific common power extraction even in fallback mode
-        # Only use if it finds at least one power (prefer region extraction over whole-card parsing)
+        # Use region extraction if available, limit whole-card fallback to 2 powers
         if use_optimal_strategies and back_path and back_path.exists():
             try:
                 region_powers = extract_common_powers_from_back_card(back_path)
-                if region_powers and len(region_powers) > 0:
+                if region_powers:
                     # Prefer region-extracted powers if we found any
-                    parsed_data.common_powers = region_powers
+                    parsed_data.common_powers = region_powers[:COMMON_POWER_MAX_POWERS]  # Cap at 2
                     if not quiet:
                         console.print(
-                            f"  Updated common powers via region extraction: {', '.join(region_powers)}"
+                            f"  Updated common powers via region extraction (capped at {COMMON_POWER_MAX_POWERS}): {', '.join(region_powers)}"
                         )
             except Exception:
-                # Silently fall back to parsed powers
-                pass
+                # Silently fall back to parsed powers, but limit to 2
+                if len(parsed_data.common_powers) > COMMON_POWER_MAX_POWERS:
+                    parsed_data.common_powers = parsed_data.common_powers[:COMMON_POWER_MAX_POWERS]
 
     if not quiet:
         console.print(
@@ -773,6 +810,25 @@ def _process_character_verify(
     Returns:
         ParsingResult with quality metrics
     """
+    # Generate annotated images for visualization
+    try:
+        from scripts.cli.tools.visualize_extraction_regions import (
+            draw_back_card_regions,
+            draw_front_card_regions,
+        )
+
+        # Generate front card annotated image
+        front_annotated_path = char_dir / "front_annotated.png"
+        draw_front_card_regions(front_path, front_annotated_path)
+
+        # Generate back card annotated image if back card exists
+        if back_path and back_path.exists():
+            back_annotated_path = char_dir / "back_annotated.png"
+            draw_back_card_regions(back_path, back_annotated_path)
+    except Exception as e:
+        # Don't fail verification if annotation fails, just warn
+        console.print(f"  [dim]Note: Could not generate annotated images: {e}[/dim]")
+
     existing_data = load_existing_character_json(char_dir)
     story_file = char_dir / Filename.STORY_TXT
     story_path = story_file if story_file.exists() else None

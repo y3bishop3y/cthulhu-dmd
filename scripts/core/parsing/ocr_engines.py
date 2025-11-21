@@ -79,7 +79,18 @@ class OCRStrategy:
             Extracted text
         """
         try:
-            processed = self.preprocess_fn(image_path)
+            # Convert to PNG if lossy format (improves OCR accuracy)
+            # PNG files are saved alongside originals for reuse (not auto-deleted)
+            optimized_path = image_path
+            try:
+                from scripts.utils.image_conversion import get_ocr_optimized_path
+
+                optimized_path = get_ocr_optimized_path(image_path, use_temp=False)
+            except ImportError:
+                # Fallback if conversion utility not available
+                pass
+
+            processed = self.preprocess_fn(optimized_path)
             text = self.ocr_fn(processed)
 
             # Apply NLP post-processing if enabled
