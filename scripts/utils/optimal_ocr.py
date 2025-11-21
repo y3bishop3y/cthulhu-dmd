@@ -9,8 +9,16 @@ as determined by benchmark testing.
 
 import json
 import sys
+import tempfile
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Dict, Optional, Tuple
+
+try:
+    import cv2
+    import numpy as np
+except ImportError:
+    cv2 = None
+    np = None
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -18,7 +26,7 @@ if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
 try:
-    from scripts.core.parsing.ocr_engines import OCRStrategy, get_all_strategies
+    from scripts.core.parsing.ocr_engines import get_all_strategies
 except ImportError as e:
     print(f"Error: Missing required import: {e}\n", file=sys.stderr)
     raise
@@ -203,6 +211,207 @@ def _extract_with_strategy(image_path: Path, strategy_name: str) -> str:
         return ""
 
     return strategy.extract(image_path)
+
+
+def extract_text_from_region_with_strategy(
+    image_path: Path,
+    region: Tuple[int, int, int, int],
+    strategy_name: str,
+) -> str:
+    """Extract text from a specific image region using an OCR strategy.
+
+    Args:
+        image_path: Path to full image file
+        region: (x, y, width, height) bounding box
+        strategy_name: Name of OCR strategy to use
+
+    Returns:
+        Extracted text from region
+    """
+    if cv2 is None or np is None:
+        raise ImportError("cv2 and numpy required for region extraction")
+
+    # Load image
+    img = cv2.imread(str(image_path))
+    if img is None:
+        raise ValueError(f"Could not read image: {image_path}")
+
+    # Crop region
+    x, y, w, h = region
+    # Ensure coordinates are within image bounds
+    x = max(0, x)
+    y = max(0, y)
+    w = min(w, img.shape[1] - x)
+    h = min(h, img.shape[0] - y)
+
+    if w <= 0 or h <= 0:
+        return ""
+
+    cropped = img[y : y + h, x : x + w]
+
+    # Save cropped region to temporary file
+    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp_file:
+        tmp_path = Path(tmp_file.name)
+        cv2.imwrite(str(tmp_path), cropped)
+
+    try:
+        # Extract using strategy
+        text = _extract_with_strategy(tmp_path, strategy_name)
+        return text
+    finally:
+        # Clean up temp file
+        if tmp_path.exists():
+            tmp_path.unlink()
+
+
+def extract_front_card_fields_with_optimal_strategies(
+    image_path: Path, config: Optional[Dict[str, Dict]] = None
+) -> Dict[str, str]:
+    """Extract front card fields using layout-aware extraction with optimal strategies per field.
+
+    Uses CardLayoutExtractor to identify regions, then extracts each field
+    with its optimal strategy from the benchmark results.
+
+    Args:
+        image_path: Path to front card image
+        config: Optional pre-loaded optimal strategies config
+
+    Returns:
+        Dictionary with extracted fields: name, location, motto, story
+    """
+    if cv2 is None or np is None:
+        # Fallback to whole-card extraction
+        return {
+            "name": "",
+            "location": "",
+            "motto": "",
+            "story": extract_front_card_with_optimal_strategy(image_path, config),
+        }
+
+    try:
+        from scripts.core.parsing.layout import CardLayoutExtractor
+    except ImportError:
+        # Fallback if layout extractor not available
+        return {
+            "name": "",
+            "location": "",
+            "motto": "",
+            "story": extract_front_card_with_optimal_strategy(image_path, config),
+        }
+
+    # Load optimal strategies config
+    if config is None:
+        try:
+            config = load_optimal_strategies()
+        except FileNotFoundError:
+            # Fallback to whole-card extraction
+            return {
+                "name": "",
+                "location": "",
+                "motto": "",
+                "story": extract_front_card_with_optimal_strategy(image_path, config),
+            }
+
+    extractor = CardLayoutExtractor()
+    results = {}
+
+    try:
+        # Get optimal strategies for each field
+        name_strategy = (
+            get_optimal_strategy_for_category("name", config) or "tesseract_bilateral_psm3"
+        )
+        location_strategy = (
+            get_optimal_strategy_for_category("location", config) or "tesseract_bilateral_psm3"
+        )
+        motto_strategy = (
+            get_optimal_strategy_for_category("motto", config) or "tesseract_bilateral_psm3"
+        )
+        story_strategy = (
+            get_optimal_strategy_for_category("story", config) or "tesseract_enhanced_psm3"
+        )
+
+        # Preprocess image for layout detection
+        image = extractor.preprocess_image(image_path, invert_for_white_text=False)
+
+        # Extract name and location from top region
+        img_height, img_width = image.shape[:2]
+        top_height = int(img_height * 0.25)
+
+        # Extract name region (top portion of top region)
+        name_region = (0, 0, img_width, top_height // 2)
+        name_text = extract_text_from_region_with_strategy(image_path, name_region, name_strategy)
+
+        # Extract location region (bottom portion of top region)
+        location_region = (0, top_height // 2, img_width, top_height // 2)
+        location_text = extract_text_from_region_with_strategy(
+            image_path, location_region, location_strategy
+        )
+
+        # Extract motto from middle region
+        top_y = int(img_height * 0.25)
+        bottom_y = int(img_height * 0.65)
+        motto_region = (0, top_y, img_width, bottom_y - top_y)
+        motto_text = extract_text_from_region_with_strategy(
+            image_path, motto_region, motto_strategy
+        )
+
+        # Extract story from bottom region (use specialized extraction for white-on-black)
+        # Story extraction needs special handling, so use the layout extractor's method
+        story_text = extractor.extract_description_region(image_path)
+
+        # If story extraction failed, try with optimal strategy on bottom region
+        if not story_text or len(story_text) < 10:
+            bottom_region = (0, int(img_height * 0.60), img_width, int(img_height * 0.40))
+            story_text = extract_text_from_region_with_strategy(
+                image_path, bottom_region, story_strategy
+            )
+
+        # Parse name/location from extracted text
+        name_lines = [line.strip() for line in name_text.split("\n") if line.strip()]
+        location_lines = [line.strip() for line in location_text.split("\n") if line.strip()]
+
+        # Find name (first all-caps line with length > 5)
+        name = ""
+        for line in name_lines:
+            if line.isupper() and len(line) > 5:
+                name = line
+                break
+
+        # Find location (all-caps line, may have comma)
+        location = ""
+        for line in location_lines:
+            if line.isupper() and len(line) > 3:
+                location = line
+                break
+
+        # Clean motto (short phrase)
+        motto_lines = [line.strip() for line in motto_text.split("\n") if line.strip()]
+        motto = ""
+        for line in motto_lines:
+            word_count = len(line.split())
+            if 2 <= word_count <= 10 and len(line) < 100:
+                motto = line
+                break
+
+        results = {
+            "name": name,
+            "location": location,
+            "motto": motto,
+            "story": story_text or "",
+        }
+
+    except Exception as e:
+        # If layout-aware extraction fails, fall back to whole-card extraction
+        print(f"Warning: Layout-aware extraction failed: {e}", file=sys.stderr)
+        whole_card_text = extract_front_card_with_optimal_strategy(image_path, config)
+        results = {
+            "name": "",
+            "location": "",
+            "motto": "",
+            "story": whole_card_text,
+        }
+
+    return results
 
 
 def update_optimal_strategies_from_benchmark(

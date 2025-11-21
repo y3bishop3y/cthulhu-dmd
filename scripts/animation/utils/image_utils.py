@@ -26,6 +26,19 @@ except ImportError as e:
 DEFAULT_UPSCALE_FACTOR: Final[int] = 2
 DEFAULT_QUALITY: Final[int] = 95
 
+# File extension constants
+EXT_JPG: Final[str] = ".jpg"
+EXT_JPEG: Final[str] = ".jpeg"
+EXT_PNG: Final[str] = ".png"
+EXT_WEBP: Final[str] = ".webp"
+
+# Image format constants
+FORMAT_JPEG: Final[str] = "JPEG"
+FORMAT_PNG: Final[str] = "PNG"
+FORMAT_WEBP: Final[str] = "WEBP"
+MODE_RGB: Final[str] = "RGB"
+MODE_RGBA: Final[str] = "RGBA"
+
 
 def enhance_contrast(image: np.ndarray, clip_limit: float = 2.0, tile_size: int = 8) -> np.ndarray:
     """Enhance image contrast using CLAHE.
@@ -45,10 +58,10 @@ def enhance_contrast(image: np.ndarray, clip_limit: float = 2.0, tile_size: int 
     else:
         # Color image - apply to each channel
         lab = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-        l, a, b = cv2.split(lab)
+        lightness, a, b = cv2.split(lab)
         clahe = cv2.createCLAHE(clipLimit=clip_limit, tileGridSize=(tile_size, tile_size))
-        l = clahe.apply(l)
-        lab = cv2.merge([l, a, b])
+        lightness = clahe.apply(lightness)
+        lab = cv2.merge([lightness, a, b])
         return cv2.cvtColor(lab, cv2.COLOR_LAB2BGR)
 
 
@@ -135,8 +148,8 @@ def ensure_rgb(image: Image.Image) -> Image.Image:
     Returns:
         PIL Image in RGB mode
     """
-    if image.mode != "RGB":
-        return image.convert("RGB")
+    if image.mode != MODE_RGB:
+        return image.convert(MODE_RGB)
     return image
 
 
@@ -149,8 +162,8 @@ def ensure_rgba(image: Image.Image) -> Image.Image:
     Returns:
         PIL Image in RGBA mode
     """
-    if image.mode != "RGBA":
-        return image.convert("RGBA")
+    if image.mode != MODE_RGBA:
+        return image.convert(MODE_RGBA)
     return image
 
 
@@ -165,12 +178,12 @@ def save_image(image: Image.Image, output_path: Path, quality: int = DEFAULT_QUA
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     ext = output_path.suffix.lower()
-    if ext in [".jpg", ".jpeg"]:
-        image.save(output_path, "JPEG", quality=quality, optimize=True)
-    elif ext == ".png":
-        image.save(output_path, "PNG", optimize=True)
-    elif ext == ".webp":
-        image.save(output_path, "WEBP", quality=quality, method=6)
+    if ext in [EXT_JPG, EXT_JPEG]:
+        image.save(output_path, FORMAT_JPEG, quality=quality, optimize=True)
+    elif ext == EXT_PNG:
+        image.save(output_path, FORMAT_PNG, optimize=True)
+    elif ext == EXT_WEBP:
+        image.save(output_path, FORMAT_WEBP, quality=quality, method=6)
     else:
         # Default to PNG
-        image.save(output_path, "PNG", optimize=True)
+        image.save(output_path, FORMAT_PNG, optimize=True)

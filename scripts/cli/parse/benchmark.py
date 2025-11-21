@@ -18,7 +18,7 @@ import re
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, Final, List, Optional, Tuple
 
 # Add project root to path (go up 2 levels from scripts/parsing/)
 project_root = Path(__file__).parent.parent.parent
@@ -38,54 +38,113 @@ except ImportError as e:
     raise
 
 try:
+    from scripts.cli.parse.benchmark_models import (
+        BENCHMARK_CATEGORIES,
+        CATEGORY_SPECIAL_POWER,
+        CATEGORY_STORY,
+        BenchmarkResult,
+        BenchmarkResultsSummary,
+        BestStrategyPerCategory,
+        ComponentStrategies,
+        ExtractedData,
+        ExtractionScores,
+        LevelScores,
+    )
+    from scripts.cli.parse.parsing_constants import (
+        BLACK_DICE_PATTERNS,
+        DICE_SYMBOL_CONTEXT_PATTERNS,
+        DICE_SYMBOLS,
+        GREEN_DICE_PATTERNS,
+        MIN_DICE_SYMBOL_COUNT,
+        MIN_SANITY_MENTION_COUNT,
+        RED_SWIRL_PATTERNS,
+        SANITY_ON_A_PATTERN,
+        WORD_PROXIMITY_THRESHOLD_CLOSE,
+        WORD_PROXIMITY_THRESHOLD_FAR,
+    )
     from scripts.core.parsing.ocr_engines import OCRStrategy, get_all_strategies
     from scripts.models.character import BackCardData, CharacterData, FrontCardData
-    from scripts.models.constants import Filename
+    from scripts.models.constants import FileExtension, Filename
 except ImportError as e:
     print(f"Error: Missing required import: {e}\n", file=sys.stderr)
     raise
 
 console = Console()
 
+# Constants
+BENCHMARK_DIR: Final[str] = ".generated/benchmark"
+DEFAULT_TOP_RESULTS: Final[int] = 10
+DEFAULT_SEASON: Final[str] = "season1"
+
+# Scoring constants
+SCORE_MIN: Final[float] = 0.0
+SCORE_MAX: Final[float] = 100.0
+SCORE_NEUTRAL: Final[float] = 50.0  # Neutral score when no ground truth
+SCORE_EXACT_MATCH: Final[float] = 100.0
+SCORE_PARTIAL_MATCH: Final[float] = 80.0  # Partial match (e.g., location parts match)
+SCORE_SIMILARITY_MULTIPLIER: Final[float] = 100.0  # Convert similarity ratio (0-1) to score (0-100)
+SCORE_OVERLAP_MULTIPLIER: Final[float] = 80.0  # Multiplier for word overlap score
+
+# Similarity score constants
+SIMILARITY_MIN: Final[float] = 0.0
+SIMILARITY_MAX: Final[float] = 1.0
+SIMILARITY_PERFECT_MATCH: Final[float] = 1.0
+
+# Dice recognition scoring constants
+DICE_SCORE_INCREMENT: Final[float] = 25.0  # Points for finding dice/swirl mentions
+DICE_SCORE_BONUS: Final[float] = 10.0  # Bonus points for finding both dice and sanity
+DICE_SCORE_VISUAL_BONUS: Final[float] = 15.0  # Bonus for finding both visually
+
+# Mechanics recognition scoring constants
+MECHANICS_SCORE_BASE: Final[float] = 10.0  # Base points for key mechanics
+MECHANICS_SCORE_IMPORTANT: Final[float] = 15.0  # Points for important mechanics (e.g., "instead")
+MECHANICS_SCORE_MINOR: Final[float] = 5.0  # Points for minor mechanics (e.g., "dice")
+MECHANICS_SCORE_NUMBER: Final[float] = 5.0  # Points per number found
+MECHANICS_SCORE_NUMBER_CAP: Final[float] = 15.0  # Maximum points for numbers
+
+# Power level scoring constants
+POWER_LEVEL_COUNT: Final[int] = 4  # Number of power levels (1-4)
+POWER_LEVEL_DIVISOR: Final[float] = 4.0  # Divisor for calculating average level score
+
 
 def similarity_score(text1: str, text2: str) -> float:
     """Calculate similarity score between two texts (0-1)."""
     if not text1 and not text2:
-        return 1.0
+        return SIMILARITY_PERFECT_MATCH
     if not text1 or not text2:
-        return 0.0
+        return SIMILARITY_MIN
     return SequenceMatcher(None, text1.lower().strip(), text2.lower().strip()).ratio()
 
 
 def score_name_extraction(extracted: Optional[str], ground_truth: str) -> float:
     """Score name extraction (0-100)."""
     if not extracted:
-        return 0.0
+        return SCORE_MIN
     # Exact match
     if extracted.strip().lower() == ground_truth.lower():
-        return 100.0
+        return SCORE_EXACT_MATCH
     # Fuzzy match
     sim = similarity_score(extracted, ground_truth)
-    return sim * 100.0
+    return sim * SCORE_SIMILARITY_MULTIPLIER
 
 
 def score_location_extraction(extracted: Optional[str], ground_truth: Optional[str]) -> float:
     """Score location extraction (0-100)."""
     if not ground_truth:
-        return 50.0  # Neutral if no ground truth
+        return SCORE_NEUTRAL
     if not extracted:
-        return 0.0
+        return SCORE_MIN
     # Exact match
     if extracted.strip().lower() == ground_truth.lower():
-        return 100.0
+        return SCORE_EXACT_MATCH
     # Check if key parts match (city, country)
     extracted_parts = set(extracted.lower().split(","))
     truth_parts = set(ground_truth.lower().split(","))
     if extracted_parts.intersection(truth_parts):
-        return 80.0
+        return SCORE_PARTIAL_MATCH
     # Fuzzy match
     sim = similarity_score(extracted, ground_truth)
-    return sim * 100.0
+    return sim * SCORE_SIMILARITY_MULTIPLIER
 
 
 def score_motto_extraction(extracted: Optional[str], ground_truth: Optional[str]) -> float:
@@ -98,9 +157,9 @@ def score_motto_extraction(extracted: Optional[str], ground_truth: Optional[str]
     4. Return the higher of the two
     """
     if not ground_truth:
-        return 50.0
+        return SCORE_NEUTRAL
     if not extracted:
-        return 0.0
+        return SCORE_MIN
 
     # Remove quotes/punctuation for comparison (they're often OCR errors)
     extracted_clean = re.sub(r'["\'"]', "", extracted.strip())
@@ -108,20 +167,20 @@ def score_motto_extraction(extracted: Optional[str], ground_truth: Optional[str]
 
     # Exact match (after cleaning)
     if extracted_clean.lower() == truth_clean.lower():
-        return 100.0
+        return SCORE_EXACT_MATCH
 
     # Calculate similarity score (most accurate for mottos)
     sim = similarity_score(extracted_clean, truth_clean)
-    similarity_score_value = sim * 100.0
+    similarity_score_value = sim * SCORE_SIMILARITY_MULTIPLIER
 
     # Calculate word overlap score (fallback)
     truth_words = set(truth_clean.lower().split())
     extracted_words = set(extracted_clean.lower().split())
     if truth_words and extracted_words:
         overlap = len(truth_words.intersection(extracted_words)) / len(truth_words)
-        overlap_score = overlap * 80.0
+        overlap_score = overlap * SCORE_OVERLAP_MULTIPLIER
     else:
-        overlap_score = 0.0
+        overlap_score = SCORE_MIN
 
     # Return the higher score (similarity is usually more accurate)
     return max(similarity_score_value, overlap_score)
@@ -130,12 +189,12 @@ def score_motto_extraction(extracted: Optional[str], ground_truth: Optional[str]
 def score_story_extraction(extracted: Optional[str], ground_truth: Optional[str]) -> float:
     """Score story extraction (0-100)."""
     if not ground_truth:
-        return 50.0
+        return SCORE_NEUTRAL
     if not extracted:
-        return 0.0
+        return SCORE_MIN
     # Use similarity score
     sim = similarity_score(extracted, ground_truth)
-    return sim * 100.0
+    return sim * SCORE_SIMILARITY_MULTIPLIER
 
 
 def score_special_power_levels(
@@ -147,18 +206,22 @@ def score_special_power_levels(
         (overall_score, level_scores_dict)
     """
     if not ground_truth_levels:
-        return 50.0, {}
+        return SCORE_NEUTRAL, {}
 
     if not extracted_levels:
-        return 0.0, {}
+        return SCORE_MIN, {}
 
     level_scores = {}
-    total_score = 0.0
+    total_score = SCORE_MIN
 
     # Score each level (1-4)
-    for level_num in range(1, 5):
-        truth_level = next((level for level in ground_truth_levels if level.get("level") == level_num), None)
-        extracted_level = next((level for level in extracted_levels if level.get("level") == level_num), None)
+    for level_num in range(1, POWER_LEVEL_COUNT + 1):
+        truth_level = next(
+            (level for level in ground_truth_levels if level.get("level") == level_num), None
+        )
+        extracted_level = next(
+            (level for level in extracted_levels if level.get("level") == level_num), None
+        )
 
         if truth_level and extracted_level:
             desc_truth = truth_level.get("description", "").strip()
@@ -166,18 +229,18 @@ def score_special_power_levels(
 
             if desc_extracted:
                 sim = similarity_score(desc_extracted, desc_truth)
-                score = sim * 100.0
+                score = sim * SCORE_SIMILARITY_MULTIPLIER
             else:
-                score = 0.0
+                score = SCORE_MIN
         elif truth_level:
-            score = 0.0  # Missing level
+            score = SCORE_MIN  # Missing level
         else:
-            score = 50.0  # No ground truth for this level
+            score = SCORE_NEUTRAL  # No ground truth for this level
 
         level_scores[f"level_{level_num}"] = score
         total_score += score
 
-    overall_score = total_score / 4.0 if level_scores else 0.0
+    overall_score = total_score / POWER_LEVEL_DIVISOR if level_scores else SCORE_MIN
     return overall_score, level_scores
 
 
@@ -204,8 +267,8 @@ def score_dice_recognition(
     import re
 
     text_lower = extracted_text.lower()
-    score = 0.0
-    max_score = 100.0
+    score = SCORE_MIN
+    max_score = SCORE_MAX
 
     # If we have parsed power levels, check those too (more reliable)
     if parsed_power_levels:
@@ -215,124 +278,94 @@ def score_dice_recognition(
         text_lower = text_lower + " " + parsed_text
 
     # Check for green dice mentions (handle OCR errors)
-    # Look for: "green dice", "gain green", "gain" + number + "green", etc.
-    green_patterns = [
-        r"green\s+dice",
-        r"gain\s+.*?green",
-        r"goin\s+.*?green",  # OCR error: "goin" = "gain"
-        r"psone",  # OCR error: "PSOne" = "Green"
-        r"green\s+die",
-        r"\d+\s+green",  # "2 green dice" or "2 green"
-        r"gain\s+\d+\s+green",  # "gain 2 green"
-        r"goin\s+\d+\s+green",  # OCR error
-    ]
-    green_found = any(re.search(pattern, text_lower) for pattern in green_patterns)
+    green_found = any(re.search(pattern, text_lower) for pattern in GREEN_DICE_PATTERNS)
 
     # Also check if "green" and "dice" appear separately (within reasonable distance)
     green_pos = text_lower.find("green")
     dice_pos = text_lower.find("dice")
-    if green_pos != -1 and dice_pos != -1 and abs(green_pos - dice_pos) < 50:
+    if (
+        green_pos != -1
+        and dice_pos != -1
+        and abs(green_pos - dice_pos) < WORD_PROXIMITY_THRESHOLD_CLOSE
+    ):
         green_found = True
 
     # Check for "gain" + symbol patterns (common: "gain @" = gain green dice)
-    if re.search(r"gain\s+[@#®]", text_lower) or re.search(r"goin\s+[@#®]", text_lower):
+    if any(re.search(pattern, text_lower) for pattern in DICE_SYMBOL_CONTEXT_PATTERNS[:2]):
         green_found = True
 
     if green_found:
-        score += 25.0
+        score += DICE_SCORE_INCREMENT
 
     # Check for black dice mentions
-    black_patterns = [
-        r"black\s+dice",
-        r"gain\s+.*?black",
-        r"goin\s+.*?black",  # OCR error
-        r"black\s+die",
-        r"\d+\s+black",
-        r"gain\s+\d+\s+black",
-    ]
-    black_found = any(re.search(pattern, text_lower) for pattern in black_patterns)
+    black_found = any(re.search(pattern, text_lower) for pattern in BLACK_DICE_PATTERNS)
 
     # Also check if "black" and "dice" appear separately
     black_pos = text_lower.find("black")
-    if black_pos != -1 and dice_pos != -1 and abs(black_pos - dice_pos) < 50:
+    if (
+        black_pos != -1
+        and dice_pos != -1
+        and abs(black_pos - dice_pos) < WORD_PROXIMITY_THRESHOLD_CLOSE
+    ):
         black_found = True
 
     if black_found:
-        score += 25.0
+        score += DICE_SCORE_INCREMENT
 
     # Check for dice symbols (common OCR representations)
-    # Look for symbols that might represent dice: @, #, ®, o, 0, etc.
-    dice_symbols = ["@", "#", "®"]
     # Check if symbols appear near "gain", "dice", or power descriptions
-    symbol_context_patterns = [
-        r"gain\s+[@#®]",
-        r"goin\s+[@#®]",  # OCR error
-        r"@\s+dice",
-        r"#\s+dice",
-        r"@\s+while",  # "gain @ while your sanity"
-        r"#\s+while",
-        r"@\s+per",  # "gain @ per turn"
-        r"@\s+when",
-    ]
-    symbol_found = any(symbol in text_lower for symbol in dice_symbols) or any(
-        re.search(pattern, text_lower) for pattern in symbol_context_patterns
+    symbol_found = any(symbol in text_lower for symbol in DICE_SYMBOLS) or any(
+        re.search(pattern, text_lower) for pattern in DICE_SYMBOL_CONTEXT_PATTERNS
     )
 
     # Also check for standalone symbols that appear multiple times (likely dice mentions)
-    symbol_counts = sum(text_lower.count(symbol) for symbol in dice_symbols)
-    if symbol_counts >= 2:  # Multiple dice symbols = very likely dice mentions
+    symbol_counts = sum(text_lower.count(symbol) for symbol in DICE_SYMBOLS)
+    if symbol_counts >= MIN_DICE_SYMBOL_COUNT:
         symbol_found = True
 
     if symbol_found:
-        score += 25.0
+        score += DICE_SCORE_INCREMENT
 
     # Check for red swirl mentions (handle OCR errors)
     # Red swirls are often mentioned with "sanity" and "red"
-    red_swirl_patterns = [
-        r"red\s+swirl",
-        r"red\s+swir",  # OCR might cut off
-        r"or\s+swirl",  # OCR error: "oR" = "Red"
-        r"sanity.*?red",
-        r"red.*?sanity",
-        r"sanity.*?on.*?red",  # "sanity is on a Red Swirl"
-        r"red\s+swirl.*?sanity",
-        r"sanity.*?red\s+swirl",
-        r"sanity.*?on\s+a\s+red",  # "sanity is on a Red Swirl"
-        r"sanity.*?ison\s+a\s+red",  # OCR error: "ison" = "is on"
-        r"sanity.*?on\s+a\s+or",  # OCR error: "oR" = "Red"
-    ]
-    red_swirl_found = any(re.search(pattern, text_lower) for pattern in red_swirl_patterns)
+    red_swirl_found = any(re.search(pattern, text_lower) for pattern in RED_SWIRL_PATTERNS)
 
     # Also check if "red" and "swirl" appear separately (within reasonable distance)
     red_pos = text_lower.find("red")
     swirl_pos = text_lower.find("swirl")
-    if red_pos != -1 and swirl_pos != -1 and abs(red_pos - swirl_pos) < 50:
+    if (
+        red_pos != -1
+        and swirl_pos != -1
+        and abs(red_pos - swirl_pos) < WORD_PROXIMITY_THRESHOLD_CLOSE
+    ):
         red_swirl_found = True
 
     # Check for "sanity" + "red" pattern (common way red swirls are mentioned)
     sanity_pos = text_lower.find("sanity")
     if sanity_pos != -1:
-        # Look for "red" near "sanity" (within 100 chars)
-        if red_pos != -1 and abs(sanity_pos - red_pos) < 100:
+        # Look for "red" near "sanity" (within threshold)
+        if red_pos != -1 and abs(sanity_pos - red_pos) < WORD_PROXIMITY_THRESHOLD_FAR:
             red_swirl_found = True
         # Also check for "swirl" near "sanity"
-        if swirl_pos != -1 and abs(sanity_pos - swirl_pos) < 100:
+        if swirl_pos != -1 and abs(sanity_pos - swirl_pos) < WORD_PROXIMITY_THRESHOLD_FAR:
             red_swirl_found = True
         # Check for patterns like "sanity is on a [red/swirl]"
-        if re.search(r"sanity.*?on\s+a\s+", text_lower[sanity_pos : sanity_pos + 100]):
+        if re.search(
+            SANITY_ON_A_PATTERN, text_lower[sanity_pos : sanity_pos + WORD_PROXIMITY_THRESHOLD_FAR]
+        ):
             red_swirl_found = True
 
     # If we find "sanity" mentioned multiple times, it's likely discussing red swirls
     sanity_count = text_lower.count("sanity")
-    if sanity_count >= 2 and (red_pos != -1 or swirl_pos != -1):
+    if sanity_count >= MIN_SANITY_MENTION_COUNT and (red_pos != -1 or swirl_pos != -1):
         red_swirl_found = True
 
     if red_swirl_found:
-        score += 25.0
+        score += DICE_SCORE_INCREMENT
 
     # Bonus: If we found dice symbols AND sanity mentions, likely discussing dice + red swirls
     if symbol_found and sanity_pos != -1:
-        score = min(score + 10.0, max_score)  # Bonus points
+        score = min(score + DICE_SCORE_BONUS, max_score)
 
     # Visual detection: If we have the image, use computer vision to detect symbols directly
     if back_image_path and back_image_path.exists():
@@ -345,20 +378,20 @@ def score_dice_recognition(
             if visual_results["dice_found"]:
                 # We found dice visually - give full credit for dice detection
                 if not green_found and not black_found and not symbol_found:
-                    score += 25.0  # Add dice score if OCR missed it
+                    score += DICE_SCORE_INCREMENT
                 else:
-                    score = max(score, 25.0)  # Ensure at least 25 points for dice
+                    score = max(score, DICE_SCORE_INCREMENT)
 
             if visual_results["red_swirl_found"]:
                 # We found red swirls visually - give full credit
                 if not red_swirl_found:
-                    score += 25.0  # Add red swirl score if OCR missed it
+                    score += DICE_SCORE_INCREMENT
                 else:
-                    score = max(score, min(score + 10.0, max_score))  # Boost if both found
+                    score = max(score, min(score + DICE_SCORE_BONUS, max_score))
 
             # If visual detection found both, we're very confident
             if visual_results["dice_found"] and visual_results["red_swirl_found"]:
-                score = min(score + 15.0, max_score)  # Bonus for finding both visually
+                score = min(score + DICE_SCORE_VISUAL_BONUS, max_score)
         except Exception:
             # If visual detection fails, fall back to OCR-only scoring
             pass
@@ -380,20 +413,20 @@ def score_power_mechanics_recognition(
     - Numbers (dice counts, healing amounts)
     """
     text_lower = extracted_text.lower()
-    score = 0.0
+    score = SCORE_MIN
     checks = 0
 
     # Check for key mechanics
     mechanics = {
-        "gain": 10.0,
-        "add": 10.0,
-        "instead": 15.0,  # Important for level detection
-        "heal": 10.0,
-        "healing": 10.0,
-        "reroll": 10.0,
-        "attack": 10.0,
-        "action": 10.0,
-        "dice": 5.0,
+        "gain": MECHANICS_SCORE_BASE,
+        "add": MECHANICS_SCORE_BASE,
+        "instead": MECHANICS_SCORE_IMPORTANT,
+        "heal": MECHANICS_SCORE_BASE,
+        "healing": MECHANICS_SCORE_BASE,
+        "reroll": MECHANICS_SCORE_BASE,
+        "attack": MECHANICS_SCORE_BASE,
+        "action": MECHANICS_SCORE_BASE,
+        "dice": MECHANICS_SCORE_MINOR,
     }
 
     for mechanic, points in mechanics.items():
@@ -406,10 +439,10 @@ def score_power_mechanics_recognition(
 
     numbers = re.findall(r"\b\d+\b", text_lower)
     if numbers:
-        score += min(len(numbers) * 5.0, 15.0)  # Cap at 15 points
+        score += min(len(numbers) * MECHANICS_SCORE_NUMBER, MECHANICS_SCORE_NUMBER_CAP)
     checks += 1
 
-    return min(score, 100.0)  # Cap at 100
+    return min(score, SCORE_MAX)
 
 
 def benchmark_strategy(
@@ -417,11 +450,11 @@ def benchmark_strategy(
     front_image: Path,
     back_image: Path,
     ground_truth: CharacterData,
-) -> Dict:
+) -> BenchmarkResult:
     """Benchmark a single OCR strategy.
 
     Returns:
-        Dictionary with scores and extracted data
+        BenchmarkResult with scores and extracted data
     """
     try:
         # Extract text
@@ -455,7 +488,7 @@ def benchmark_strategy(
                 for level in ground_truth.special_power.levels
             ]
 
-        power_score, level_scores = score_special_power_levels(
+        power_score, level_scores_dict = score_special_power_levels(
             extracted_levels, ground_truth_levels
         )
 
@@ -476,39 +509,44 @@ def benchmark_strategy(
             + mechanics_score * 0.15
         )
 
-        return {
-            "strategy_name": strategy.name,
-            "strategy_description": strategy.description,
-            "overall_score": round(overall_score, 2),
-            "scores": {
-                "name": round(name_score, 2),
-                "location": round(location_score, 2),
-                "motto": round(motto_score, 2),
-                "story": round(story_score, 2),
-                "special_power": round(power_score, 2),
-                "dice_recognition": round(dice_score, 2),
-                "mechanics_recognition": round(mechanics_score, 2),
-            },
-            "level_scores": level_scores,
-            "extracted": {
-                "name": front_data.name,
-                "location": front_data.location,
-                "motto": front_data.motto,
-                "story": front_data.story[:200] + "..."
-                if front_data.story and len(front_data.story) > 200
-                else front_data.story,
-                "special_power_levels": len(extracted_levels),
-            },
-            "front_text_length": len(front_text),
-            "back_text_length": len(back_text),
-        }
+        # Build Pydantic models
+        scores = ExtractionScores(
+            name=name_score,
+            location=location_score,
+            motto=motto_score,
+            story=story_score,
+            special_power=power_score,
+            dice_recognition=dice_score,
+            mechanics_recognition=mechanics_score,
+        )
+
+        level_scores = LevelScores.from_dict(level_scores_dict)
+
+        extracted = ExtractedData(
+            name=front_data.name,
+            location=front_data.location,
+            motto=front_data.motto,
+            story=front_data.story,
+            special_power_levels=len(extracted_levels),
+        )
+
+        return BenchmarkResult(
+            strategy_name=strategy.name,
+            strategy_description=strategy.description,
+            overall_score=overall_score,
+            scores=scores,
+            level_scores=level_scores,
+            extracted=extracted,
+            front_text_length=len(front_text),
+            back_text_length=len(back_text),
+        )
     except Exception as e:
-        return {
-            "strategy_name": strategy.name,
-            "strategy_description": strategy.description,
-            "overall_score": 0.0,
-            "error": str(e),
-        }
+        return BenchmarkResult(
+            strategy_name=strategy.name,
+            strategy_description=strategy.description,
+            overall_score=0.0,
+            error=str(e),
+        )
 
 
 @click.command()
@@ -521,14 +559,14 @@ def benchmark_strategy(
 @click.option(
     "--season",
     type=str,
-    default="season1",
-    help="Season directory (default: season1)",
+    default=DEFAULT_SEASON,
+    help=f"Season directory (default: {DEFAULT_SEASON})",
 )
 @click.option(
     "--top",
     type=int,
-    default=10,
-    help="Show top N strategies (default: 10)",
+    default=DEFAULT_TOP_RESULTS,
+    help=f"Show top N strategies (default: {DEFAULT_TOP_RESULTS})",
 )
 @click.option(
     "--save-results/--no-save-results",
@@ -555,15 +593,24 @@ def main(character: str, season: str, top: int, save_results: bool):
 
     ground_truth = CharacterData(**char_data)
 
-    # Find images
-    front_image = data_dir / Filename.FRONT
-    back_image = data_dir / Filename.BACK
+    # Find images - try multiple extensions
+    front_image = None
+    back_image = None
 
-    # Try .webp first, then .jpg
-    if not front_image.exists():
-        front_image = data_dir / f"{Filename.FRONT.replace('.webp', '.jpg')}"
-    if not back_image.exists():
-        back_image = data_dir / f"{Filename.BACK.replace('.webp', '.jpg')}"
+    # Try different extensions in order of preference
+    for ext in [FileExtension.WEBP, FileExtension.JPG, FileExtension.JPEG]:
+        candidate_front = data_dir / f"front{ext.value}"
+        candidate_back = data_dir / f"back{ext.value}"
+        if candidate_front.exists() and front_image is None:
+            front_image = candidate_front
+        if candidate_back.exists() and back_image is None:
+            back_image = candidate_back
+
+    # Fallback to default if not found
+    if front_image is None:
+        front_image = data_dir / Filename.FRONT
+    if back_image is None:
+        back_image = data_dir / Filename.BACK
 
     if not front_image.exists():
         console.print(f"[red]Error: Front image not found in {data_dir}[/red]")
@@ -579,7 +626,7 @@ def main(character: str, season: str, top: int, save_results: bool):
     console.print(f"Testing {len(strategies)} strategies...\n")
 
     # Benchmark each strategy
-    results = []
+    results: List[BenchmarkResult] = []
     with Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
@@ -596,12 +643,22 @@ def main(character: str, season: str, top: int, save_results: bool):
             progress.advance(task)
 
     # Sort by overall score
-    results.sort(key=lambda x: x["overall_score"], reverse=True)
+    results.sort(key=lambda x: x.overall_score, reverse=True)
+
+    # Create summary
+    summary = BenchmarkResultsSummary(
+        character=character,
+        season=season,
+        timestamp=datetime.now().isoformat(),
+        total_strategies=len(results),
+        top_score=results[0].overall_score if results else 0.0,
+        results=results,
+    )
 
     # Save results if requested
     benchmark_file_path = None
     if save_results:
-        benchmark_file_path = save_benchmark_results(results, character, season, project_root)
+        benchmark_file_path = save_benchmark_results(summary, project_root)
 
         # Automatically update optimal strategies config
         try:
@@ -632,10 +689,10 @@ def main(character: str, season: str, top: int, save_results: bool):
     summary_table.add_column("Mech", justify="right", width=8)
 
     for i, result in enumerate(results[:top], 1):
-        if "error" in result:
+        if result.error:
             summary_table.add_row(
                 str(i),
-                result["strategy_name"],
+                result.strategy_name,
                 "[red]ERROR[/red]",
                 "-",
                 "-",
@@ -646,9 +703,8 @@ def main(character: str, season: str, top: int, save_results: bool):
                 "-",
             )
         else:
-            scores = result["scores"]
             # Color code overall score
-            overall = result["overall_score"]
+            overall = result.overall_score
             if overall >= 80:
                 overall_str = f"[green]{overall:.1f}[/green]"
             elif overall >= 60:
@@ -658,15 +714,15 @@ def main(character: str, season: str, top: int, save_results: bool):
 
             summary_table.add_row(
                 str(i),
-                result["strategy_name"][:28],
+                result.strategy_name[:28],
                 overall_str,
-                f"{scores['name']:.1f}",
-                f"{scores['location']:.1f}",
-                f"{scores['motto']:.1f}",
-                f"{scores['story']:.1f}",
-                f"{scores['special_power']:.1f}",
-                f"{scores['dice_recognition']:.1f}",
-                f"{scores['mechanics_recognition']:.1f}",
+                f"{result.scores.name:.1f}",
+                f"{result.scores.location:.1f}",
+                f"{result.scores.motto:.1f}",
+                f"{result.scores.story:.1f}",
+                f"{result.scores.special_power:.1f}",
+                f"{result.scores.dice_recognition:.1f}",
+                f"{result.scores.mechanics_recognition:.1f}",
             )
 
     console.print(summary_table)
@@ -675,91 +731,77 @@ def main(character: str, season: str, top: int, save_results: bool):
     console.print("\n[bold]Detailed Results for Top 3 Strategies:[/bold]\n")
 
     for i, result in enumerate(results[:3], 1):
-        if "error" in result:
+        if result.error:
             console.print(
-                Panel(
-                    f"[red]Error: {result['error']}[/red]", title=f"#{i} {result['strategy_name']}"
-                )
+                Panel(f"[red]Error: {result.error}[/red]", title=f"#{i} {result.strategy_name}")
             )
             continue
 
-        extracted = result["extracted"]
-        scores = result["scores"]
-        level_scores = result.get("level_scores", {})
-
         details = f"""
-[bold]Overall Score: {result["overall_score"]:.2f}/100[/bold]
+[bold]Overall Score: {result.overall_score:.2f}/100[/bold]
 
 [bold]Extraction Scores:[/bold]
-  Name:        {scores["name"]:.1f}/100
-  Location:    {scores["location"]:.1f}/100
-  Motto:       {scores["motto"]:.1f}/100
-  Story:       {scores["story"]:.1f}/100
-  Special Power: {scores["special_power"]:.1f}/100
-  Dice Recognition: {scores["dice_recognition"]:.1f}/100
-  Mechanics:   {scores["mechanics_recognition"]:.1f}/100
+  Name:        {result.scores.name:.1f}/100
+  Location:    {result.scores.location:.1f}/100
+  Motto:       {result.scores.motto:.1f}/100
+  Story:       {result.scores.story:.1f}/100
+  Special Power: {result.scores.special_power:.1f}/100
+  Dice Recognition: {result.scores.dice_recognition:.1f}/100
+  Mechanics:   {result.scores.mechanics_recognition:.1f}/100
 
 [bold]Level-by-Level Scores:[/bold]
-"""
-        for level_num in range(1, 5):
-            level_key = f"level_{level_num}"
-            if level_key in level_scores:
-                details += f"  Level {level_num}: {level_scores[level_key]:.1f}/100\n"
-            else:
-                details += f"  Level {level_num}: [red]Not extracted[/red]\n"
+  Level 1: {result.level_scores.level_1:.1f}/100
+  Level 2: {result.level_scores.level_2:.1f}/100
+  Level 3: {result.level_scores.level_3:.1f}/100
+  Level 4: {result.level_scores.level_4:.1f}/100
 
-        details += f"""
 [bold]Extracted Data:[/bold]
-  Name: {extracted["name"] or "[red]Not found[/red]"}
-  Location: {extracted["location"] or "[red]Not found[/red]"}
-  Motto: {extracted["motto"] or "[red]Not found[/red]"}
-  Story: {extracted["story"] or "[red]Not found[/red]"}
-  Special Power Levels Found: {extracted["special_power_levels"]}/4
+  Name: {result.extracted.name or "[red]Not found[/red]"}
+  Location: {result.extracted.location or "[red]Not found[/red]"}
+  Motto: {result.extracted.motto or "[red]Not found[/red]"}
+  Story: {result.extracted.story or "[red]Not found[/red]"}
+  Special Power Levels Found: {result.extracted.special_power_levels}/4
 
 [bold]Text Extraction:[/bold]
-  Front card: {result["front_text_length"]} characters
-  Back card: {result["back_text_length"]} characters
+  Front card: {result.front_text_length} characters
+  Back card: {result.back_text_length} characters
 """
 
-        console.print(Panel(details, title=f"#{i} {result['strategy_name']}", border_style="blue"))
+        console.print(Panel(details, title=f"#{i} {result.strategy_name}", border_style="blue"))
 
     console.print(f"\n[dim]Tested {len(results)} strategies total[/dim]\n")
 
     if save_results:
-        console.print("[dim]Results saved to .generated/benchmark/[/dim]\n")
+        console.print(f"[dim]Results saved to {BENCHMARK_DIR}/[/dim]\n")
 
 
 def save_benchmark_results(
-    results: List[Dict],
-    character: str,
-    season: str,
+    summary: BenchmarkResultsSummary,
     project_root: Path,
 ) -> Path:
     """Save benchmark results to JSON file.
 
     Args:
-        results: List of benchmark result dictionaries
-        character: Character name
-        season: Season directory name
+        summary: BenchmarkResultsSummary with all results
         project_root: Project root directory
     """
-    # Create .generated/benchmark directory
-    generated_dir = project_root / ".generated" / "benchmark"
+    # Create benchmark directory
+    generated_dir = project_root / BENCHMARK_DIR
     generated_dir.mkdir(parents=True, exist_ok=True)
 
     # Create filename with timestamp
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = f"{season}_{character}_{timestamp}.json"
+    filename = f"{summary.season}_{summary.character}_{timestamp}{FileExtension.JSON.value}"
     output_path = generated_dir / filename
 
-    # Prepare data to save
+    # Convert to dict for JSON serialization
     output_data = {
-        "character": character,
-        "season": season,
-        "timestamp": datetime.now().isoformat(),
-        "total_strategies": len(results),
-        "top_score": results[0]["overall_score"] if results else 0.0,
-        "results": results,
+        "character": summary.character,
+        "season": summary.season,
+        "timestamp": summary.timestamp,
+        "total_strategies": summary.total_strategies,
+        "top_score": summary.top_score,
+        "results": [result.to_dict() for result in summary.results],
     }
 
     # Save to JSON
@@ -771,72 +813,58 @@ def save_benchmark_results(
 
 
 def find_best_strategies_per_category(
-    results: List[Dict],
-) -> Dict[str, Dict[str, Any]]:
+    results: List[BenchmarkResult],
+) -> Dict[str, BestStrategyPerCategory]:
     """Find the best strategy for each category from benchmark results.
 
     Args:
-        results: List of benchmark result dictionaries
+        results: List of benchmark results
 
     Returns:
-        Dictionary mapping category to best strategy info:
-        {
-            "name": {"strategy_name": "...", "score": 100.0, ...},
-            "location": {...},
-            "motto": {...},
-            "story": {...},
-            "special_power": {...},
-            "dice_recognition": {...},
-            "mechanics_recognition": {...},
-        }
+        Dictionary mapping category to best strategy
     """
-    categories = [
-        "name",
-        "location",
-        "motto",
-        "story",
-        "special_power",
-        "dice_recognition",
-        "mechanics_recognition",
-    ]
+    best_strategies: Dict[str, BestStrategyPerCategory] = {}
 
-    best_strategies = {}
-
-    for category in categories:
+    for category in BENCHMARK_CATEGORIES:
         best_score = -1.0
-        best_result = None
+        best_result: Optional[BenchmarkResult] = None
 
         for result in results:
-            if "error" in result:
+            if result.error:
                 continue
 
-            score = result["scores"].get(category, 0.0)
+            score = getattr(result.scores, category, 0.0)
             if score > best_score:
                 best_score = score
                 best_result = result
 
         if best_result:
-            best_strategies[category] = {
-                "strategy_name": best_result["strategy_name"],
-                "strategy_description": best_result.get("strategy_description", ""),
-                "score": best_score,
-                "extracted": best_result["extracted"].get(
-                    category.replace("_recognition", "").replace(
-                        "special_power", "special_power_levels"
-                    )
+            # Get extracted value for this category
+            extracted_value = getattr(
+                best_result.extracted,
+                category.replace("_recognition", "").replace(
+                    "special_power", "special_power_levels"
                 ),
-            }
+                None,
+            )
+
+            best_strategies[category] = BestStrategyPerCategory(
+                strategy_name=best_result.strategy_name,
+                strategy_description=best_result.strategy_description,
+                score=best_score,
+                extracted=extracted_value,
+            )
 
     return best_strategies
 
 
 def benchmark_hybrid_strategy(
-    best_strategies: Dict[str, Dict[str, Any]],
+    best_strategies: Dict[str, BestStrategyPerCategory],
     strategies_dict: Dict[str, OCRStrategy],
     front_image: Path,
     back_image: Path,
     ground_truth: CharacterData,
-) -> Dict:
+) -> BenchmarkResult:
     """Benchmark a hybrid strategy that uses best strategy for each category.
 
     Args:
@@ -847,10 +875,14 @@ def benchmark_hybrid_strategy(
         ground_truth: Ground truth character data
 
     Returns:
-        Dictionary with scores and extracted data for hybrid strategy
+        BenchmarkResult with scores and extracted data for hybrid strategy
     """
     # Extract text using best strategy for story (front card)
-    story_strategy_name = best_strategies.get("story", {}).get("strategy_name")
+    story_strategy_name = (
+        best_strategies.get(CATEGORY_STORY).strategy_name
+        if best_strategies.get(CATEGORY_STORY)
+        else None
+    )
     if story_strategy_name and story_strategy_name in strategies_dict:
         story_strategy = strategies_dict[story_strategy_name]
         front_text = story_strategy.extract(front_image)
@@ -859,7 +891,11 @@ def benchmark_hybrid_strategy(
         front_text = list(strategies_dict.values())[0].extract(front_image)
 
     # Extract text using best strategy for special power (back card)
-    power_strategy_name = best_strategies.get("special_power", {}).get("strategy_name")
+    power_strategy_name = (
+        best_strategies.get(CATEGORY_SPECIAL_POWER).strategy_name
+        if best_strategies.get(CATEGORY_SPECIAL_POWER)
+        else None
+    )
     if power_strategy_name and power_strategy_name in strategies_dict:
         power_strategy = strategies_dict[power_strategy_name]
         back_text = power_strategy.extract(back_image)
@@ -883,17 +919,20 @@ def benchmark_hybrid_strategy(
     extracted_levels = []
     if back_data.special_power and back_data.special_power.levels:
         extracted_levels = [
-            {"level": l.level, "description": l.description} for l in back_data.special_power.levels
+            {"level": level.level, "description": level.description}
+            for level in back_data.special_power.levels
         ]
 
     ground_truth_levels = []
     if ground_truth.special_power and ground_truth.special_power.levels:
         ground_truth_levels = [
-            {"level": l.level, "description": l.description}
-            for l in ground_truth.special_power.levels
+            {"level": level.level, "description": level.description}
+            for level in ground_truth.special_power.levels
         ]
 
-    power_score, level_scores = score_special_power_levels(extracted_levels, ground_truth_levels)
+    power_score, level_scores_dict = score_special_power_levels(
+        extracted_levels, ground_truth_levels
+    )
 
     # Score dice recognition
     dice_score = score_dice_recognition(back_text, extracted_levels, back_image)
@@ -919,36 +958,43 @@ def benchmark_hybrid_strategy(
     if power_strategy_name:
         strategy_parts.append(f"Power: {power_strategy_name}")
 
-    return {
-        "strategy_name": "hybrid_best_per_category",
-        "strategy_description": "Hybrid: " + " | ".join(strategy_parts),
-        "overall_score": round(overall_score, 2),
-        "scores": {
-            "name": round(name_score, 2),
-            "location": round(location_score, 2),
-            "motto": round(motto_score, 2),
-            "story": round(story_score, 2),
-            "special_power": round(power_score, 2),
-            "dice_recognition": round(dice_score, 2),
-            "mechanics_recognition": round(mechanics_score, 2),
-        },
-        "level_scores": level_scores,
-        "extracted": {
-            "name": front_data.name,
-            "location": front_data.location,
-            "motto": front_data.motto,
-            "story": front_data.story[:200] + "..."
-            if front_data.story and len(front_data.story) > 200
-            else front_data.story,
-            "special_power_levels": len(extracted_levels),
-        },
-        "front_text_length": len(front_text),
-        "back_text_length": len(back_text),
-        "component_strategies": {
-            "story": story_strategy_name,
-            "special_power": power_strategy_name,
-        },
-    }
+    # Build Pydantic models
+    scores = ExtractionScores(
+        name=name_score,
+        location=location_score,
+        motto=motto_score,
+        story=story_score,
+        special_power=power_score,
+        dice_recognition=dice_score,
+        mechanics_recognition=mechanics_score,
+    )
+
+    level_scores = LevelScores.from_dict(level_scores_dict)
+
+    extracted = ExtractedData(
+        name=front_data.name,
+        location=front_data.location,
+        motto=front_data.motto,
+        story=front_data.story,
+        special_power_levels=len(extracted_levels),
+    )
+
+    component_strategies = ComponentStrategies(
+        story=story_strategy_name,
+        special_power=power_strategy_name,
+    )
+
+    return BenchmarkResult(
+        strategy_name="hybrid_best_per_category",
+        strategy_description="Hybrid: " + " | ".join(strategy_parts),
+        overall_score=overall_score,
+        scores=scores,
+        level_scores=level_scores,
+        extracted=extracted,
+        front_text_length=len(front_text),
+        back_text_length=len(back_text),
+        component_strategies=component_strategies,
+    )
 
 
 if __name__ == "__main__":
