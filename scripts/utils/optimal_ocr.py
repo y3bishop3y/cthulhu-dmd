@@ -8,10 +8,29 @@ as determined by benchmark testing.
 """
 
 import json
+import re
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, Optional, Tuple
+from typing import Dict, Final, List, Optional, Tuple
+
+from scripts.cli.parse.parsing_models import FieldStrategies, FrontCardFields, ImageRegions
+
+# Motto extraction constants
+MOTTO_MIN_WORDS: Final[int] = 2
+MOTTO_MAX_WORDS_QUOTED: Final[int] = 15
+MOTTO_MAX_CHARS_QUOTED: Final[int] = 150
+MOTTO_MIN_WORDS_COMBINED: Final[int] = 3
+MOTTO_MIN_WORDS_PHRASE: Final[int] = 4
+MOTTO_MAX_WORDS_SINGLE: Final[int] = 10
+MOTTO_MAX_CHARS_SINGLE: Final[int] = 100
+MOTTO_MIN_ALNUM_RATIO: Final[float] = 0.3
+MOTTO_MIN_LINE_LENGTH: Final[int] = 2
+MOTTO_MAX_ALL_CAPS_LENGTH: Final[int] = 5
+MOTTO_MAX_GARBAGE_BEFORE_QUOTE: Final[int] = 15  # Max chars of garbage before quote to remove
+
+# Story extraction constants
+STORY_MIN_LENGTH: Final[int] = 10  # Minimum story text length to consider valid
 
 try:
     import cv2
@@ -213,6 +232,286 @@ def _extract_with_strategy(image_path: Path, strategy_name: str) -> str:
     return strategy.extract(image_path)
 
 
+def _get_field_strategies(config: Dict[str, Dict]) -> FieldStrategies:
+    """Get optimal OCR strategies for each field from config.
+
+    Args:
+        config: Optimal strategies configuration
+
+    Returns:
+        FieldStrategies model with strategy names for each field
+    """
+    return FieldStrategies(
+        name=get_optimal_strategy_for_category("name", config) or "tesseract_bilateral_psm3",
+        location=get_optimal_strategy_for_category("location", config) or "tesseract_bilateral_psm3",
+        motto=get_optimal_strategy_for_category("motto", config) or "tesseract_bilateral_psm3",
+        story=get_optimal_strategy_for_category("story", config) or "tesseract_enhanced_psm3",
+    )
+
+
+def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
+    """Calculate region coordinates for front card fields.
+
+    Args:
+        img_height: Image height in pixels
+        img_width: Image width in pixels
+
+    Returns:
+        ImageRegions model with region coordinates for each field
+    """
+    top_height = int(img_height * 0.25)
+    return ImageRegions(
+        name=(0, 0, img_width, top_height // 2),
+        location=(0, top_height // 2, img_width, top_height // 2),
+        motto=(
+            0,
+            int(img_height * 0.30),
+            img_width,
+            int(img_height * 0.65) - int(img_height * 0.30),
+        ),
+        story=(0, int(img_height * 0.60), img_width, int(img_height * 0.40)),
+    )
+
+
+def _parse_name_from_text(text: str) -> str:
+    """Parse character name from extracted text.
+
+    Args:
+        text: Raw OCR text from name region
+
+    Returns:
+        Extracted name or empty string
+    """
+    name_lines = [line.strip() for line in text.split("\n") if line.strip()]
+    # Sort by length descending to prefer longer matches
+    sorted_lines = sorted(name_lines, key=len, reverse=True)
+    for line in sorted_lines:
+        if line.isupper() and len(line) >= 3:
+            return line
+    return ""
+
+
+def _parse_location_from_text(text: str) -> str:
+    """Parse character location from extracted text.
+
+    Args:
+        text: Raw OCR text from location region
+
+    Returns:
+        Extracted location or empty string
+    """
+    location_lines = [line.strip() for line in text.split("\n") if line.strip()]
+    # Sort by length descending to prefer longer matches
+    sorted_lines = sorted(location_lines, key=len, reverse=True)
+    for line in sorted_lines:
+        if line.isupper() and len(line) >= 3:
+            return line
+    return ""
+
+
+def _filter_motto_lines(lines: List[str]) -> List[str]:
+    """Filter out name/location lines and OCR garbage from motto lines.
+
+    Args:
+        lines: List of text lines from motto region
+
+    Returns:
+        Filtered list of lines that might be mottos
+    """
+    filtered = []
+    for line in lines:
+        # Skip all-caps lines longer than threshold (likely name/location that leaked in)
+        if line.isupper() and len(line) > MOTTO_MAX_ALL_CAPS_LENGTH:
+            continue
+        # Skip very short lines
+        if len(line) < MOTTO_MIN_LINE_LENGTH:
+            continue
+        # Skip lines that are mostly symbols/numbers (less than threshold alphanumeric)
+        alnum_ratio = sum(c.isalnum() for c in line) / len(line) if line else 0
+        if alnum_ratio < MOTTO_MIN_ALNUM_RATIO:
+            continue
+        filtered.append(line)
+    return filtered
+
+
+def _extract_quoted_motto(filtered_lines: List[str]) -> str:
+    """Extract motto from lines containing quotes.
+
+    Args:
+        filtered_lines: Filtered motto lines
+
+    Returns:
+        Extracted motto or empty string
+    """
+    for line in filtered_lines:
+        if '"' in line or "'" in line:
+            word_count = len(line.split())
+            if (
+                MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_QUOTED
+                and len(line) < MOTTO_MAX_CHARS_QUOTED
+            ):
+                # Try to extract just the quoted part
+                quoted_match = re.search(r'["\']([^"\']+)["\']', line)
+                if quoted_match:
+                    motto = quoted_match.group(1).strip()
+                    if len(motto.split()) >= MOTTO_MIN_WORDS:  # At least minimum words
+                        return motto
+                else:
+                    return line
+    return ""
+
+
+def _extract_combined_motto(filtered_lines: List[str]) -> str:
+    """Extract motto by combining consecutive lines.
+
+    Args:
+        filtered_lines: Filtered motto lines
+
+    Returns:
+        Extracted motto or empty string
+    """
+    if len(filtered_lines) < 2:
+        return ""
+
+    for i in range(len(filtered_lines) - 1):
+        line1 = filtered_lines[i]
+        line2 = filtered_lines[i + 1]
+
+        # Skip if either line looks like name/location (all caps)
+        if (
+            (line1.isupper() and len(line1) > MOTTO_MIN_WORDS_COMBINED)
+            or (line2.isupper() and len(line2) > MOTTO_MIN_WORDS_COMBINED)
+        ):
+            continue
+
+        combined = f"{line1} {line2}".strip()
+        word_count = len(combined.split())
+
+        # Combined mottos can be longer (up to max words and chars)
+        if (
+            MOTTO_MIN_WORDS_COMBINED <= word_count <= MOTTO_MAX_WORDS_QUOTED
+            and len(combined) < MOTTO_MAX_CHARS_QUOTED
+        ):
+            # Check if it looks like a motto (has quotes, ends with punctuation)
+            if '"' in combined or combined.endswith(('.', '!', '?', '."', '!"', '?"')):
+                return combined
+            # Or if both lines together form a reasonable phrase
+            elif word_count >= MOTTO_MIN_WORDS_PHRASE:
+                # Prefer if it has quotes or looks complete
+                if '"' in combined or any(p in combined for p in ['.', '!', '?']):
+                    return combined
+    return ""
+
+
+def _extract_single_line_motto(filtered_lines: List[str]) -> str:
+    """Extract motto from single lines (last resort).
+
+    Args:
+        filtered_lines: Filtered motto lines
+
+    Returns:
+        Extracted motto or empty string
+    """
+    for line in filtered_lines:
+        # Skip all-caps (likely name/location)
+        if line.isupper():
+            continue
+        word_count = len(line.split())
+        if MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_SINGLE and len(line) < MOTTO_MAX_CHARS_SINGLE:
+            return line
+    return ""
+
+
+def _clean_motto_text(motto: str) -> str:
+    """Clean up motto text by removing OCR artifacts and fixing common errors.
+
+    Args:
+        motto: Raw motto text
+
+    Returns:
+        Cleaned motto text
+    """
+    if not motto:
+        return ""
+
+    # Remove leading/trailing pipes, dashes, and other OCR artifacts
+    motto = re.sub(r'^[-|~_\s]+', '', motto)
+    motto = re.sub(r'[-|~_\s]+$', '', motto)
+    # Remove pipes and other separators in the middle
+    motto = re.sub(r'\s*[|~_]\s*', ' ', motto)
+    # Remove leading prefixes like "- |" or "id —~—~~ ie 4" before quotes
+    motto = re.sub(r'^[-|\s~_id0-9]+\s*["\']', '"', motto)
+    # Remove leading garbage before quotes (more aggressive)
+    if '"' in motto or "'" in motto:
+        quote_char = '"' if '"' in motto else "'"
+        quote_start = motto.find(quote_char)
+        if quote_start > 0 and quote_start < MOTTO_MAX_GARBAGE_BEFORE_QUOTE:
+            motto = motto[quote_start:]
+    # Fix common OCR errors in mottos
+    motto = motto.replace('qT.', 'is')
+    motto = motto.replace('wriften', 'written')
+    motto = motto.replace('writen', 'written')
+    motto = motto.replace('writtn', 'written')
+    # Fix duplicate words (common OCR error: "is is" -> "is")
+    motto = re.sub(r'\b(\w+)\s+\1\b', r'\1', motto)
+    # Clean up multiple spaces
+    motto = re.sub(r'\s+', ' ', motto).strip()
+    # Remove trailing incomplete words (common OCR error at end)
+    motto = re.sub(r'\s+\w{1,2}$', '', motto)
+
+    return motto
+
+
+def _parse_motto_from_text(text: str) -> str:
+    """Parse character motto from extracted text.
+
+    Args:
+        text: Raw OCR text from motto region
+
+    Returns:
+        Extracted and cleaned motto or empty string
+    """
+    motto_lines = [line.strip() for line in text.split("\n") if line.strip()]
+    filtered_lines = _filter_motto_lines(motto_lines)
+
+    # Try different extraction strategies in order
+    motto = _extract_quoted_motto(filtered_lines)
+    if not motto:
+        motto = _extract_combined_motto(filtered_lines)
+    if not motto:
+        motto = _extract_single_line_motto(filtered_lines)
+
+    return _clean_motto_text(motto)
+
+
+def _extract_story_text(
+    image_path: Path, extractor, img_height: int, img_width: int, story_strategy: str
+) -> str:
+    """Extract story text from bottom region of front card.
+
+    Args:
+        image_path: Path to front card image
+        extractor: CardLayoutExtractor instance
+        img_height: Image height
+        img_width: Image width
+        story_strategy: OCR strategy to use for story extraction
+
+    Returns:
+        Extracted story text
+    """
+    # Use specialized extraction for white-on-black text
+    story_text = extractor.extract_description_region(image_path)
+
+    # If story extraction failed, try with optimal strategy on bottom region
+    if not story_text or len(story_text) < STORY_MIN_LENGTH:
+        bottom_region = (0, int(img_height * 0.60), img_width, int(img_height * 0.40))
+        story_text = extract_text_from_region_with_strategy(
+            image_path, bottom_region, story_strategy
+        )
+
+    return story_text or ""
+
+
 def extract_text_from_region_with_strategy(
     image_path: Path,
     region: Tuple[int, int, int, int],
@@ -266,7 +565,7 @@ def extract_text_from_region_with_strategy(
 
 def extract_front_card_fields_with_optimal_strategies(
     image_path: Path, config: Optional[Dict[str, Dict]] = None
-) -> Dict[str, str]:
+) -> FrontCardFields:
     """Extract front card fields using layout-aware extraction with optimal strategies per field.
 
     Uses CardLayoutExtractor to identify regions, then extracts each field
@@ -277,27 +576,27 @@ def extract_front_card_fields_with_optimal_strategies(
         config: Optional pre-loaded optimal strategies config
 
     Returns:
-        Dictionary with extracted fields: name, location, motto, story
+        FrontCardFields model with extracted fields: name, location, motto, story
     """
     if cv2 is None or np is None:
         # Fallback to whole-card extraction
-        return {
-            "name": "",
-            "location": "",
-            "motto": "",
-            "story": extract_front_card_with_optimal_strategy(image_path, config),
-        }
+        return FrontCardFields(
+            name="",
+            location="",
+            motto="",
+            story=extract_front_card_with_optimal_strategy(image_path, config),
+        )
 
     try:
         from scripts.core.parsing.layout import CardLayoutExtractor
     except ImportError:
         # Fallback if layout extractor not available
-        return {
-            "name": "",
-            "location": "",
-            "motto": "",
-            "story": extract_front_card_with_optimal_strategy(image_path, config),
-        }
+        return FrontCardFields(
+            name="",
+            location="",
+            motto="",
+            story=extract_front_card_with_optimal_strategy(image_path, config),
+        )
 
     # Load optimal strategies config
     if config is None:
@@ -305,113 +604,59 @@ def extract_front_card_fields_with_optimal_strategies(
             config = load_optimal_strategies()
         except FileNotFoundError:
             # Fallback to whole-card extraction
-            return {
-                "name": "",
-                "location": "",
-                "motto": "",
-                "story": extract_front_card_with_optimal_strategy(image_path, config),
-            }
+            return FrontCardFields(
+                name="",
+                location="",
+                motto="",
+                story=extract_front_card_with_optimal_strategy(image_path, config),
+            )
 
     extractor = CardLayoutExtractor()
-    results = {}
 
     try:
         # Get optimal strategies for each field
-        name_strategy = (
-            get_optimal_strategy_for_category("name", config) or "tesseract_bilateral_psm3"
-        )
-        location_strategy = (
-            get_optimal_strategy_for_category("location", config) or "tesseract_bilateral_psm3"
-        )
-        motto_strategy = (
-            get_optimal_strategy_for_category("motto", config) or "tesseract_bilateral_psm3"
-        )
-        story_strategy = (
-            get_optimal_strategy_for_category("story", config) or "tesseract_enhanced_psm3"
-        )
+        strategies = _get_field_strategies(config)
 
         # Preprocess image for layout detection
         image = extractor.preprocess_image(image_path, invert_for_white_text=False)
-
-        # Extract name and location from top region
         img_height, img_width = image.shape[:2]
-        top_height = int(img_height * 0.25)
 
-        # Extract name region (top portion of top region)
-        name_region = (0, 0, img_width, top_height // 2)
-        name_text = extract_text_from_region_with_strategy(image_path, name_region, name_strategy)
+        # Get region coordinates
+        regions = _get_image_regions(img_height, img_width)
 
-        # Extract location region (bottom portion of top region)
-        location_region = (0, top_height // 2, img_width, top_height // 2)
+        # Extract text from each region
+        name_text = extract_text_from_region_with_strategy(
+            image_path, regions.name, strategies.name
+        )
         location_text = extract_text_from_region_with_strategy(
-            image_path, location_region, location_strategy
+            image_path, regions.location, strategies.location
         )
-
-        # Extract motto from middle region
-        top_y = int(img_height * 0.25)
-        bottom_y = int(img_height * 0.65)
-        motto_region = (0, top_y, img_width, bottom_y - top_y)
         motto_text = extract_text_from_region_with_strategy(
-            image_path, motto_region, motto_strategy
+            image_path, regions.motto, strategies.motto
         )
 
-        # Extract story from bottom region (use specialized extraction for white-on-black)
-        # Story extraction needs special handling, so use the layout extractor's method
-        story_text = extractor.extract_description_region(image_path)
+        # Parse extracted text into fields
+        name = _parse_name_from_text(name_text)
+        location = _parse_location_from_text(location_text)
+        motto = _parse_motto_from_text(motto_text)
+        story = _extract_story_text(image_path, extractor, img_height, img_width, strategies.story)
 
-        # If story extraction failed, try with optimal strategy on bottom region
-        if not story_text or len(story_text) < 10:
-            bottom_region = (0, int(img_height * 0.60), img_width, int(img_height * 0.40))
-            story_text = extract_text_from_region_with_strategy(
-                image_path, bottom_region, story_strategy
-            )
-
-        # Parse name/location from extracted text
-        name_lines = [line.strip() for line in name_text.split("\n") if line.strip()]
-        location_lines = [line.strip() for line in location_text.split("\n") if line.strip()]
-
-        # Find name (first all-caps line with length > 5)
-        name = ""
-        for line in name_lines:
-            if line.isupper() and len(line) > 5:
-                name = line
-                break
-
-        # Find location (all-caps line, may have comma)
-        location = ""
-        for line in location_lines:
-            if line.isupper() and len(line) > 3:
-                location = line
-                break
-
-        # Clean motto (short phrase)
-        motto_lines = [line.strip() for line in motto_text.split("\n") if line.strip()]
-        motto = ""
-        for line in motto_lines:
-            word_count = len(line.split())
-            if 2 <= word_count <= 10 and len(line) < 100:
-                motto = line
-                break
-
-        results = {
-            "name": name,
-            "location": location,
-            "motto": motto,
-            "story": story_text or "",
-        }
+        return FrontCardFields(
+            name=name or None,
+            location=location or None,
+            motto=motto or None,
+            story=story or None,
+        )
 
     except Exception as e:
         # If layout-aware extraction fails, fall back to whole-card extraction
         print(f"Warning: Layout-aware extraction failed: {e}", file=sys.stderr)
-        whole_card_text = extract_front_card_with_optimal_strategy(image_path, config)
-        results = {
-            "name": "",
-            "location": "",
-            "motto": "",
-            "story": whole_card_text,
-        }
-
-    return results
+        return FrontCardFields(
+            name="",
+            location="",
+            motto="",
+            story=extract_front_card_with_optimal_strategy(image_path, config),
+        )
 
 
 def update_optimal_strategies_from_benchmark(

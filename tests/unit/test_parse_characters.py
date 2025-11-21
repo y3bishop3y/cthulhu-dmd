@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
+from scripts.cli.parse.parsing_models import FrontCardFields
 from scripts.models.character import CharacterData
 
 
@@ -371,11 +372,11 @@ class TestFieldSpecificExtraction:
             image_path = Path("test_front.jpg")
             result = extract_front_card_fields_with_optimal_strategies(image_path, mock_config)
 
-            assert isinstance(result, dict)
-            assert "name" in result
-            assert "location" in result
-            assert "motto" in result
-            assert "story" in result
+            assert isinstance(result, FrontCardFields)
+            assert result.name is not None
+            assert result.location is not None
+            assert result.motto is not None
+            assert result.story is not None
 
     @patch("scripts.utils.optimal_ocr.load_optimal_strategies")
     def test_extract_front_card_fields_fallback_on_error(self, mock_load_config):
@@ -395,10 +396,11 @@ class TestFieldSpecificExtraction:
             result = extract_front_card_fields_with_optimal_strategies(image_path)
 
             # Should fall back to whole-card extraction
-            assert result["story"] == "Whole card text"
-            assert result["name"] == ""
-            assert result["location"] == ""
-            assert result["motto"] == ""
+            assert isinstance(result, FrontCardFields)
+            assert result.story == "Whole card text"
+            assert result.name == ""
+            assert result.location == ""
+            assert result.motto == ""
 
     @patch("scripts.utils.optimal_ocr.cv2")
     def test_extract_text_from_region_with_strategy(self, mock_cv2):
@@ -459,12 +461,12 @@ class TestFieldSpecificExtraction:
         from scripts.cli.parse.characters import parse_character_images
 
         # Mock field-specific extraction
-        mock_front_fields.return_value = {
-            "name": "Test Character",
-            "location": "Test Location",
-            "motto": "Test Motto",
-            "story": "Test story",
-        }
+        mock_front_fields.return_value = FrontCardFields(
+            name="Test Character",
+            location="Test Location",
+            motto="Test Motto",
+            story="Test story",
+        )
 
         # Mock back card extraction
         mock_back.return_value = "Back card text\nCommon Powers: Marksman, Toughness"
@@ -492,12 +494,12 @@ class TestFieldSpecificExtraction:
         from scripts.cli.parse.characters import parse_character_images
 
         # Mock field-specific extraction returning empty
-        mock_front_fields.return_value = {
-            "name": "",
-            "location": "",
-            "motto": "",
-            "story": "",
-        }
+        mock_front_fields.return_value = FrontCardFields(
+            name="",
+            location="",
+            motto="",
+            story="",
+        )
 
         # Mock whole-card extraction (fallback)
         mock_whole_front.return_value = "Whole card text\nName: Test\nLocation: Test Location"

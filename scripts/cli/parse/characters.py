@@ -199,6 +199,207 @@ def _display_extraction_report(
     console.print()
 
 
+def _extract_front_card_with_optimal_strategies(
+    front_path: Path, quiet: bool = False
+) -> Tuple[Optional[FrontCardFields], str]:
+    """Extract front card using field-specific optimal strategies with fallback.
+
+    Args:
+        front_path: Path to front card image
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Tuple of (FrontCardFields or None, extracted text)
+    """
+    if not quiet:
+        console.print(
+            "  Extracting fields from front image (using field-specific optimal strategies)..."
+        )
+
+    try:
+        front_fields = extract_front_card_fields_with_optimal_strategies(front_path)
+        front_text = front_fields.to_text
+
+        # If field extraction didn't work well, fall back to whole-card extraction
+        # BUT preserve story if it was successfully extracted
+        extracted_story = front_fields.story if front_fields.story else None
+        if front_fields.is_empty or not front_fields.has_essential_fields:
+            if not quiet:
+                console.print(
+                    "  Field-specific extraction incomplete, using whole-card extraction..."
+                )
+            front_text = extract_front_card_with_optimal_strategy(front_path)
+            # Preserve story if it was extracted, even if name/location failed
+            if extracted_story:
+                front_fields = FrontCardFields(
+                    name=None,
+                    location=None,
+                    motto=None,
+                    story=extracted_story,
+                )
+            else:
+                front_fields = None
+        return front_fields, front_text
+    except Exception as e:
+        if not quiet:
+            console.print(
+                f"[yellow]Warning: Field-specific extraction failed ({e}), falling back to whole-card[/yellow]"
+            )
+        front_text = extract_front_card_with_optimal_strategy(front_path)
+        return None, front_text
+
+
+def _extract_back_card_with_optimal_strategies(
+    back_path: Path, quiet: bool = False
+) -> str:
+    """Extract back card using optimal strategy with fallback.
+
+    Args:
+        back_path: Path to back card image
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Extracted text from back card
+    """
+    if not quiet:
+        console.print("  Extracting text from back image (using optimal strategy)...")
+
+    try:
+        return extract_back_card_with_optimal_strategy(back_path)
+    except Exception as e:
+        if not quiet:
+            console.print(
+                f"[yellow]Warning: Optimal strategy failed ({e}), falling back to default[/yellow]"
+            )
+        return extract_text_from_image(back_path)
+
+
+def _extract_front_card_basic(front_path: Path, quiet: bool = False) -> str:
+    """Extract front card using basic OCR (no optimal strategies).
+
+    Args:
+        front_path: Path to front card image
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Extracted text from front card
+    """
+    if not quiet:
+        console.print("  Extracting text from front image...")
+    return extract_text_from_image(front_path)
+
+
+def _extract_back_card_basic(back_path: Path, quiet: bool = False) -> str:
+    """Extract back card using basic OCR (no optimal strategies).
+
+    Args:
+        back_path: Path to back card image
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Extracted text from back card
+    """
+    if not quiet:
+        console.print("  Extracting text from back image...")
+    return extract_text_from_image(back_path)
+
+
+def _load_story_from_file(story_file: Optional[Path], quiet: bool = False) -> Optional[str]:
+    """Load HTML-extracted story from file if available.
+
+    Args:
+        story_file: Optional path to story file
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Story text or None
+    """
+    if story_file and story_file.exists():
+        story_text = story_file.read_text(encoding="utf-8").strip()
+        if not quiet:
+            console.print(f"  Using HTML-extracted story (length: {len(story_text)} chars)")
+        return story_text
+    return None
+
+
+def _parse_character_data(
+    front_fields: Optional[FrontCardFields],
+    front_text: str,
+    back_text: str,
+    story_text: Optional[str],
+    quiet: bool = False,
+) -> CharacterData:
+    """Parse extracted text into CharacterData model.
+
+    Args:
+        front_fields: Optional FrontCardFields from field-specific extraction
+        front_text: Extracted text from front card
+        back_text: Extracted text from back card
+        story_text: Optional HTML-extracted story text
+        quiet: If True, suppress progress messages
+
+    Returns:
+        Parsed CharacterData
+    """
+    # Get story from field extraction if available
+    extracted_story_from_fields = None
+    if front_fields and front_fields.story:
+        extracted_story_from_fields = front_fields.story
+
+    if front_fields and front_fields.has_essential_fields:
+        # Use field-specific extraction results
+        story_to_use = story_text or extracted_story_from_fields
+        front_data = front_fields.to_front_card_data(story_override=story_to_use)
+
+        from scripts.models.character import BackCardData
+
+        back_data = BackCardData.parse_from_text(back_text)
+        common_power_names = [cp.name for cp in back_data.common_powers]
+
+        parsed_data = CharacterData(
+            name=front_data.name or "Unknown",
+            location=front_data.location,
+            motto=front_data.motto,
+            story=front_data.story,
+            special_power=back_data.special_power,
+            common_powers=common_power_names,
+        )
+    else:
+        # Fall back to standard parsing, but use field-extracted story if available
+        story_to_use = story_text or extracted_story_from_fields
+        parsed_data = CharacterData.from_images(front_text, back_text, story_to_use)
+
+    if not quiet:
+        console.print(
+            f"  Parsed: name={parsed_data.name}, location={parsed_data.location}, "
+            f"special_power={parsed_data.special_power.name if parsed_data.special_power else None}, "
+            f"common_powers={len(parsed_data.common_powers)}"
+        )
+
+    return parsed_data
+
+
+def _merge_with_existing_data(
+    parsed_data: CharacterData, existing_data: Optional[CharacterData]
+) -> Tuple[CharacterData, List[str]]:
+    """Merge parsed data with existing data if provided.
+
+    Args:
+        parsed_data: Newly parsed character data
+        existing_data: Optional existing character data
+
+    Returns:
+        Tuple of (merged CharacterData, list of issues)
+    """
+    if existing_data:
+        merged_data = existing_data.merge_with(parsed_data, prefer_html=True)
+        merged_issues = merged_data.detect_issues()
+        return merged_data, merged_issues
+
+    issues = parsed_data.detect_issues()
+    return parsed_data, issues
+
+
 def parse_character_images(
     front_path: Path,
     back_path: Path,
@@ -216,60 +417,23 @@ def parse_character_images(
         existing_data: Optional existing character data to merge with
         use_optimal_strategies: If True, use optimal OCR strategies from benchmark results
         quiet: If True, suppress progress messages
+
+    Returns:
+        Tuple of (CharacterData, list of issues)
     """
     if not quiet:
         console.print("[cyan]Parsing images for character...[/cyan]")
 
     # Extract text from images
-    front_fields: Optional[FrontCardFields] = None
     if use_optimal_strategies:
-        if not quiet:
-            console.print(
-                "  Extracting fields from front image (using field-specific optimal strategies)..."
-            )
-        try:
-            # Use field-specific extraction with optimal strategies
-            fields_dict = extract_front_card_fields_with_optimal_strategies(front_path)
-            front_fields = FrontCardFields.from_dict(fields_dict)
-
-            # Use computed property to get combined text
-            front_text = front_fields.to_text
-
-            # If field extraction didn't work well, fall back to whole-card extraction
-            if front_fields.is_empty or not front_fields.has_essential_fields:
-                if not quiet:
-                    console.print(
-                        "  Field-specific extraction incomplete, using whole-card extraction..."
-                    )
-                front_text = extract_front_card_with_optimal_strategy(front_path)
-                front_fields = None  # Clear fields to use parsed text instead
-        except Exception as e:
-            if not quiet:
-                console.print(
-                    f"[yellow]Warning: Field-specific extraction failed ({e}), falling back to whole-card[/yellow]"
-                )
-            front_text = extract_front_card_with_optimal_strategy(front_path)
-            front_fields = None
-
-        if not quiet:
-            console.print("  Extracting text from back image (using optimal strategy)...")
-        try:
-            back_text = extract_back_card_with_optimal_strategy(back_path)
-        except Exception as e:
-            if not quiet:
-                console.print(
-                    f"[yellow]Warning: Optimal strategy failed ({e}), falling back to default[/yellow]"
-                )
-            back_text = extract_text_from_image(back_path)
+        front_fields, front_text = _extract_front_card_with_optimal_strategies(front_path, quiet)
+        back_text = _extract_back_card_with_optimal_strategies(back_path, quiet)
     else:
-        if not quiet:
-            console.print("  Extracting text from front image...")
-        front_text = extract_text_from_image(front_path)
+        front_text = _extract_front_card_basic(front_path, quiet)
         front_fields = None
-        if not quiet:
-            console.print("  Extracting text from back image...")
-        back_text = extract_text_from_image(back_path)
+        back_text = _extract_back_card_basic(back_path, quiet)
 
+    # Validate extraction results
     if not front_text:
         if not quiet:
             console.print("[yellow]Warning: No text extracted from front image[/yellow]")
@@ -277,55 +441,14 @@ def parse_character_images(
         if not quiet:
             console.print("[yellow]Warning: No text extracted from back image[/yellow]")
 
-    # Use HTML-extracted story if available
-    story_text = None
-    if story_file and story_file.exists():
-        story_text = story_file.read_text(encoding="utf-8").strip()
-        if not quiet:
-            console.print(f"  Using HTML-extracted story (length: {len(story_text)} chars)")
+    # Load HTML-extracted story if available
+    story_text = _load_story_from_file(story_file, quiet)
 
-    # Parse using Pydantic models
-    # If we have field-specific extraction results, use them to enhance parsing
-    if front_fields and front_fields.has_essential_fields:
-        # Convert FrontCardFields to FrontCardData using model method
-        front_data = front_fields.to_front_card_data(story_override=story_text)
-
-        # Parse back card
-        from scripts.models.character import BackCardData
-
-        back_data = BackCardData.parse_from_text(back_text)
-
-        # Combine into CharacterData
-        common_power_names = [cp.name for cp in back_data.common_powers]
-        parsed_data = CharacterData(
-            name=front_data.name or "Unknown",
-            location=front_data.location,
-            motto=front_data.motto,
-            story=front_data.story,
-            special_power=back_data.special_power,
-            common_powers=common_power_names,
-        )
-    else:
-        # Fall back to standard parsing
-        parsed_data = CharacterData.from_images(front_text, back_text, story_text)
-    if not quiet:
-        console.print(
-            f"  Parsed: name={parsed_data.name}, location={parsed_data.location}, "
-            f"special_power={parsed_data.special_power.name if parsed_data.special_power else None}, "
-            f"common_powers={len(parsed_data.common_powers)}"
-        )
-
-    # Detect parsing issues using model method
-    issues = parsed_data.detect_issues()
+    # Parse extracted text into CharacterData
+    parsed_data = _parse_character_data(front_fields, front_text, back_text, story_text, quiet)
 
     # Merge with existing data if provided
-    if existing_data:
-        merged_data = existing_data.merge_with(parsed_data, prefer_html=True)
-        # Also check merged data for issues
-        merged_issues = merged_data.detect_issues()
-        return merged_data, merged_issues
-
-    return parsed_data, issues
+    return _merge_with_existing_data(parsed_data, existing_data)
 
 
 @click.command()

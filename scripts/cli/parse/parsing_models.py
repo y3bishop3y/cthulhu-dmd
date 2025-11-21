@@ -5,7 +5,7 @@ Pydantic models for character parsing operations.
 Provides type-safe data structures for parsing character cards with field-specific extraction.
 """
 
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Tuple
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -102,3 +102,21 @@ class FrontCardFields(BaseModel):
             motto=self.motto,
             story=story_override or self.story,
         )
+
+
+class FieldStrategies(BaseModel):
+    """OCR strategies for each field type."""
+
+    name: str = Field(description="OCR strategy for name extraction")
+    location: str = Field(description="OCR strategy for location extraction")
+    motto: str = Field(description="OCR strategy for motto extraction")
+    story: str = Field(description="OCR strategy for story extraction")
+
+
+class ImageRegions(BaseModel):
+    """Region coordinates for front card fields."""
+
+    name: Tuple[int, int, int, int] = Field(description="Name region (x, y, width, height)")
+    location: Tuple[int, int, int, int] = Field(description="Location region (x, y, width, height)")
+    motto: Tuple[int, int, int, int] = Field(description="Motto region (x, y, width, height)")
+    story: Tuple[int, int, int, int] = Field(description="Story region (x, y, width, height)")
