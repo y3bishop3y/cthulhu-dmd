@@ -238,7 +238,7 @@ def _extract_front_card_with_optimal_strategies(
                     story=extracted_story,
                 )
             else:
-                front_fields = None
+                front_fields = None  # type: ignore[assignment]
         return front_fields, front_text
     except Exception as e:
         if not quiet:
@@ -249,9 +249,7 @@ def _extract_front_card_with_optimal_strategies(
         return None, front_text
 
 
-def _extract_back_card_with_optimal_strategies(
-    back_path: Path, quiet: bool = False
-) -> str:
+def _extract_back_card_with_optimal_strategies(back_path: Path, quiet: bool = False) -> str:
     """Extract back card using optimal strategy with fallback.
 
     Args:

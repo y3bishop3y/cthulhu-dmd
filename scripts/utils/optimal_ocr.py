@@ -12,7 +12,7 @@ import re
 import sys
 import tempfile
 from pathlib import Path
-from typing import Dict, Final, List, Optional, Tuple
+from typing import Any, Dict, Final, List, Optional, Tuple
 
 from scripts.cli.parse.parsing_models import FieldStrategies, FrontCardFields, ImageRegions
 
@@ -36,8 +36,8 @@ try:
     import cv2
     import numpy as np
 except ImportError:
-    cv2 = None
-    np = None
+    cv2 = None  # type: ignore[assignment]
+    np = None  # type: ignore[assignment]
 
 # Add project root to path
 project_root = Path(__file__).parent.parent.parent
@@ -70,7 +70,7 @@ def load_optimal_strategies(config_path: Optional[Path] = None) -> Dict[str, Dic
         )
 
     with open(config_path, encoding="utf-8") as f:
-        config = json.load(f)
+        config: Dict[str, Dict] = json.load(f)
 
     return config
 
@@ -92,7 +92,8 @@ def get_optimal_strategy_for_category(
 
     strategy_info = config.get("strategies", {}).get(category)
     if strategy_info:
-        return strategy_info.get("strategy_name")
+        strategy_name: Optional[str] = strategy_info.get("strategy_name")
+        return strategy_name
 
     return None
 
@@ -243,7 +244,8 @@ def _get_field_strategies(config: Dict[str, Dict]) -> FieldStrategies:
     """
     return FieldStrategies(
         name=get_optimal_strategy_for_category("name", config) or "tesseract_bilateral_psm3",
-        location=get_optimal_strategy_for_category("location", config) or "tesseract_bilateral_psm3",
+        location=get_optimal_strategy_for_category("location", config)
+        or "tesseract_bilateral_psm3",
         motto=get_optimal_strategy_for_category("motto", config) or "tesseract_bilateral_psm3",
         story=get_optimal_strategy_for_category("story", config) or "tesseract_enhanced_psm3",
     )
@@ -378,9 +380,8 @@ def _extract_combined_motto(filtered_lines: List[str]) -> str:
         line2 = filtered_lines[i + 1]
 
         # Skip if either line looks like name/location (all caps)
-        if (
-            (line1.isupper() and len(line1) > MOTTO_MIN_WORDS_COMBINED)
-            or (line2.isupper() and len(line2) > MOTTO_MIN_WORDS_COMBINED)
+        if (line1.isupper() and len(line1) > MOTTO_MIN_WORDS_COMBINED) or (
+            line2.isupper() and len(line2) > MOTTO_MIN_WORDS_COMBINED
         ):
             continue
 
@@ -393,12 +394,12 @@ def _extract_combined_motto(filtered_lines: List[str]) -> str:
             and len(combined) < MOTTO_MAX_CHARS_QUOTED
         ):
             # Check if it looks like a motto (has quotes, ends with punctuation)
-            if '"' in combined or combined.endswith(('.', '!', '?', '."', '!"', '?"')):
+            if '"' in combined or combined.endswith((".", "!", "?", '."', '!"', '?"')):
                 return combined
             # Or if both lines together form a reasonable phrase
             elif word_count >= MOTTO_MIN_WORDS_PHRASE:
                 # Prefer if it has quotes or looks complete
-                if '"' in combined or any(p in combined for p in ['.', '!', '?']):
+                if '"' in combined or any(p in combined for p in [".", "!", "?"]):
                     return combined
     return ""
 
@@ -417,7 +418,10 @@ def _extract_single_line_motto(filtered_lines: List[str]) -> str:
         if line.isupper():
             continue
         word_count = len(line.split())
-        if MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_SINGLE and len(line) < MOTTO_MAX_CHARS_SINGLE:
+        if (
+            MOTTO_MIN_WORDS <= word_count <= MOTTO_MAX_WORDS_SINGLE
+            and len(line) < MOTTO_MAX_CHARS_SINGLE
+        ):
             return line
     return ""
 
@@ -435,10 +439,10 @@ def _clean_motto_text(motto: str) -> str:
         return ""
 
     # Remove leading/trailing pipes, dashes, and other OCR artifacts
-    motto = re.sub(r'^[-|~_\s]+', '', motto)
-    motto = re.sub(r'[-|~_\s]+$', '', motto)
+    motto = re.sub(r"^[-|~_\s]+", "", motto)
+    motto = re.sub(r"[-|~_\s]+$", "", motto)
     # Remove pipes and other separators in the middle
-    motto = re.sub(r'\s*[|~_]\s*', ' ', motto)
+    motto = re.sub(r"\s*[|~_]\s*", " ", motto)
     # Remove leading prefixes like "- |" or "id —~—~~ ie 4" before quotes
     motto = re.sub(r'^[-|\s~_id0-9]+\s*["\']', '"', motto)
     # Remove leading garbage before quotes (more aggressive)
@@ -448,16 +452,16 @@ def _clean_motto_text(motto: str) -> str:
         if quote_start > 0 and quote_start < MOTTO_MAX_GARBAGE_BEFORE_QUOTE:
             motto = motto[quote_start:]
     # Fix common OCR errors in mottos
-    motto = motto.replace('qT.', 'is')
-    motto = motto.replace('wriften', 'written')
-    motto = motto.replace('writen', 'written')
-    motto = motto.replace('writtn', 'written')
+    motto = motto.replace("qT.", "is")
+    motto = motto.replace("wriften", "written")
+    motto = motto.replace("writen", "written")
+    motto = motto.replace("writtn", "written")
     # Fix duplicate words (common OCR error: "is is" -> "is")
-    motto = re.sub(r'\b(\w+)\s+\1\b', r'\1', motto)
+    motto = re.sub(r"\b(\w+)\s+\1\b", r"\1", motto)
     # Clean up multiple spaces
-    motto = re.sub(r'\s+', ' ', motto).strip()
+    motto = re.sub(r"\s+", " ", motto).strip()
     # Remove trailing incomplete words (common OCR error at end)
-    motto = re.sub(r'\s+\w{1,2}$', '', motto)
+    motto = re.sub(r"\s+\w{1,2}$", "", motto)
 
     return motto
 
@@ -679,19 +683,36 @@ def update_optimal_strategies_from_benchmark(
     best_strategies = find_best_strategies_per_category(benchmark_data["results"])
 
     # Build config structure
-    config = {
+    # Handle best_strategies which is a dict mapping category names to BestStrategyPerCategory objects
+    story_strategy = best_strategies.get("story")
+    story_name = story_strategy.strategy_name if story_strategy else ""
+    story_score = story_strategy.score if story_strategy else 0.0
+
+    special_power_strategy = best_strategies.get("special_power")
+    power_name = special_power_strategy.strategy_name if special_power_strategy else ""
+    power_score = special_power_strategy.score if special_power_strategy else 0.0
+
+    # Convert BestStrategyPerCategory objects to dict format for JSON serialization
+    strategies_dict: Dict[str, Dict] = {}
+    for category, strategy_obj in best_strategies.items():
+        strategies_dict[category] = {
+            "strategy_name": strategy_obj.strategy_name,
+            "score": strategy_obj.score,
+        }
+
+    config: Dict[str, Any] = {
         "version": "1.0.0",
         "last_updated": benchmark_data.get("timestamp", "").split("T")[0],
         "description": "Optimal OCR strategies per category, determined from benchmark results",
-        "strategies": best_strategies,
+        "strategies": strategies_dict,
         "front_card_strategy": {
-            "strategy_name": best_strategies.get("story", {}).get("strategy_name", ""),
-            "description": f"Best for story extraction ({best_strategies.get('story', {}).get('score', 0):.1f}%)",
+            "strategy_name": story_name,
+            "description": f"Best for story extraction ({story_score:.1f}%)",
             "reason": "Story is the most important and hardest to extract from front card",
         },
         "back_card_strategy": {
-            "strategy_name": best_strategies.get("special_power", {}).get("strategy_name", ""),
-            "description": f"Best for power extraction ({best_strategies.get('special_power', {}).get('score', 0):.1f}%)",
+            "strategy_name": power_name,
+            "description": f"Best for power extraction ({power_score:.1f}%)",
             "reason": "Special power extraction is the most important back card field",
         },
     }

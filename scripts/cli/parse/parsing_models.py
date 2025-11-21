@@ -52,19 +52,19 @@ class FrontCardFields(BaseModel):
             story=layout_results.description or None,
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def has_essential_fields(self) -> bool:
         """Check if essential fields (name or location) are present."""
         return bool(self.name or self.location)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def has_all_fields(self) -> bool:
         """Check if all fields are present."""
         return bool(self.name and self.location and self.motto and self.story)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def to_text(self) -> str:
         """Combine fields into text format for parsing."""
@@ -79,7 +79,7 @@ class FrontCardFields(BaseModel):
             parts.append(self.story)
         return "\n".join(parts)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_empty(self) -> bool:
         """Check if all fields are empty."""
