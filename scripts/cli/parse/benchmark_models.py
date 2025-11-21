@@ -75,7 +75,7 @@ class ExtractionScores(BaseModel):
         default=0.0, ge=0.0, le=100.0, description="Mechanics recognition score"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def average_score(self) -> float:
         """Calculate average score across all categories."""
@@ -221,7 +221,7 @@ class BenchmarkResultsSummary(BaseModel):
         default_factory=list, description="All benchmark results"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def top_result(self) -> Optional[BenchmarkResult]:
         """Get the top-scoring result."""
@@ -229,7 +229,7 @@ class BenchmarkResultsSummary(BaseModel):
             return None
         return max(self.results, key=lambda r: r.overall_score)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def best_strategies_per_category(self) -> Dict[str, BestStrategyPerCategory]:
         """Find best strategy for each category."""

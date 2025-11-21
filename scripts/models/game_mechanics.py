@@ -103,6 +103,7 @@ class StandardDice(BaseModel):
                 description="Success - you succeeded at your attempt",
                 effect="success",
                 probability=1.0 / 6.0,  # 1 out of 6 faces
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -111,6 +112,7 @@ class StandardDice(BaseModel):
                 description="Tentacle - lose 1 sanity",
                 effect="lose_1_sanity",
                 probability=1.0 / 6.0,
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -119,6 +121,7 @@ class StandardDice(BaseModel):
                 description="Success + Tentacle - you succeeded but lose 1 sanity",
                 effect="success_and_lose_1_sanity",
                 probability=1.0 / 6.0,
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -127,6 +130,7 @@ class StandardDice(BaseModel):
                 description="Success - you succeeded at your attempt",
                 effect="success",
                 probability=1.0 / 6.0,  # Second success face
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -135,6 +139,7 @@ class StandardDice(BaseModel):
                 description="Elder Sign - means nothing unless you have a skill or card that uses them",
                 effect="none_unless_skill_or_card",
                 probability=1.0 / 6.0,
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -142,6 +147,7 @@ class StandardDice(BaseModel):
                 icon="blank",
                 description="Blank - no effect",
                 effect="none",
+                image_path=None,
                 probability=1.0 / 6.0,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
@@ -183,6 +189,7 @@ class BonusDice(BaseModel):
                 description="Blank - no effect",
                 effect="none",
                 probability=1.0 / 6.0,  # First blank face
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -191,6 +198,7 @@ class BonusDice(BaseModel):
                 description="Blank - no effect",
                 effect="none",
                 probability=1.0 / 6.0,  # Second blank face
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             # 1 Elder Sign face
@@ -200,6 +208,7 @@ class BonusDice(BaseModel):
                 description="Elder Sign - means nothing unless you have a skill or card that uses them",
                 effect="none_unless_skill_or_card",
                 probability=1.0 / 6.0,
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             # 2 Success faces
@@ -209,6 +218,7 @@ class BonusDice(BaseModel):
                 description="Success - you succeeded at your attempt",
                 effect="success",
                 probability=1.0 / 6.0,  # First success face
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             DiceFace(
@@ -217,6 +227,7 @@ class BonusDice(BaseModel):
                 description="Success - you succeeded at your attempt",
                 effect="success",
                 probability=1.0 / 6.0,  # Second success face
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
             # 1 Elder Sign + Success face
@@ -226,6 +237,7 @@ class BonusDice(BaseModel):
                 description="Elder Sign + Success - you succeeded, and elder sign may be used by skills/cards",
                 effect="success_and_elder_sign",
                 probability=1.0 / 6.0,
+                image_path=None,
                 rulebook_reference="DMD_Rulebook_web.pdf page 11",
             ),
         ],
@@ -302,25 +314,25 @@ class InsanityTrack(BaseModel):
         description="Red swirl numbers (1-6) that grant green dice bonuses",
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_dead(self) -> bool:
         """Check if character is dead from madness (slot 21)."""
         return self.current_insanity >= self.death_threshold
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def insanity_remaining(self) -> int:
         """Calculate remaining insanity slots before death."""
         return max(0, self.death_threshold - self.current_insanity)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def red_swirls_reached(self) -> int:
         """Count how many red swirls have been reached."""
         return sum(1 for slot in self.red_swirl_slots if self.current_insanity >= slot)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def level_ups_available(self) -> int:
         """Get number of level-ups available (red swirls reached)."""
@@ -458,7 +470,7 @@ class HealthTrack(BaseModel):
         default=6, ge=1, description="Damage value at which character dies (6th hit)"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def current_health(self) -> int:
         """Get current health value (max_health - damage_taken)."""
@@ -609,7 +621,7 @@ class TurnStructure(BaseModel):
         description="Available action types",
     )
     rest_action: RestAction = Field(
-        default_factory=RestAction, description="Rest action configuration"
+        default_factory=lambda: RestAction(), description="Rest action configuration"
     )
 
 
@@ -617,23 +629,23 @@ class GameMechanics(BaseModel):
     """Complete game mechanics configuration."""
 
     standard_dice: StandardDice = Field(
-        default_factory=StandardDice,
+        default_factory=lambda: StandardDice(),  # type: ignore[call-arg]
         description="Standard dice configuration (black dice)",
     )
     bonus_dice: BonusDice = Field(
-        default_factory=BonusDice,
+        default_factory=lambda: BonusDice(),  # type: ignore[call-arg]
         description="Bonus dice configuration (green dice)",
     )
     investigator_rolls: InvestigatorRoll = Field(
-        default_factory=InvestigatorRoll,
+        default_factory=lambda: InvestigatorRoll(),  # type: ignore[call-arg]
         description="How investigator rolls work",
     )
     sanity_cost: SanityCost = Field(
-        default_factory=SanityCost,
+        default_factory=lambda: SanityCost(),  # type: ignore[call-arg]
         description="Sanity cost for tentacles",
     )
     insanity_threshold: InsanityThreshold = Field(
-        default_factory=InsanityThreshold,
+        default_factory=lambda: InsanityThreshold(),  # type: ignore[call-arg]
         description="Insanity threshold (red sanity marker)",
     )
     turn_structure: TurnStructure = Field(

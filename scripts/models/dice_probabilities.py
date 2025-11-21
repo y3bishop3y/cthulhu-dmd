@@ -7,7 +7,7 @@ when rolling combinations of black and green dice.
 """
 
 from collections import defaultdict
-from typing import Dict, Final
+from typing import Dict, Final, Union
 
 from pydantic import BaseModel, Field, computed_field
 
@@ -48,7 +48,7 @@ class SingleDieStats(BaseModel):
     face_probabilities: Dict[str, float] = Field(..., description="Probability of each symbol type")
 
     @classmethod
-    def from_dice(cls, dice_type: DiceType, dice: StandardDice | BonusDice) -> "SingleDieStats":
+    def from_dice(cls, dice_type: DiceType, dice: Union[StandardDice, BonusDice]) -> "SingleDieStats":
         """Create SingleDieStats from a dice model by computing probabilities.
 
         Args:
@@ -72,7 +72,7 @@ class SingleDieStats(BaseModel):
 
         return cls(dice_type=dice_type, face_probabilities=dict(probs))
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def success_prob(self) -> float:
         """Probability of at least 1 success."""
@@ -87,7 +87,7 @@ class SingleDieStats(BaseModel):
             combo_success = self.face_probabilities.get(elder_success_key, 0.0)
             return (pure_success - combo_success) + combo_success
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def pure_success_prob(self) -> float:
         """Probability of pure success (no tentacle/elder sign)."""
@@ -102,7 +102,7 @@ class SingleDieStats(BaseModel):
                 DiceFaceSymbol.SUCCESS.value, 0.0
             ) - self.face_probabilities.get(elder_success_key, 0.0)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def tentacle_prob(self) -> float:
         """Probability of getting at least 1 tentacle."""
@@ -113,7 +113,7 @@ class SingleDieStats(BaseModel):
             ) + self.face_probabilities.get(success_tentacle_key, 0.0)
         return 0.0  # Green dice have no tentacles
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def elder_sign_prob(self) -> float:
         """Probability of getting at least 1 elder sign."""
@@ -125,13 +125,13 @@ class SingleDieStats(BaseModel):
                 DiceFaceSymbol.ELDER_SIGN.value, 0.0
             ) + self.face_probabilities.get(elder_success_key, 0.0)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def blank_prob(self) -> float:
         """Probability of blank."""
         return self.face_probabilities.get(DiceFaceSymbol.BLANK.value, 0.0)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_successes(self) -> float:
         """Expected number of successes per die."""
@@ -148,19 +148,19 @@ class SingleDieStats(BaseModel):
                 + GREEN_ELDER_SUCCESS_FACES * PROBABILITY_PER_FACE
             )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def success_percentage(self) -> float:
         """Success probability as a percentage."""
         return self.success_prob * 100.0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def tentacle_percentage(self) -> float:
         """Tentacle probability as a percentage."""
         return self.tentacle_prob * 100.0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def elder_sign_percentage(self) -> float:
         """Elder sign probability as a percentage."""
@@ -204,13 +204,13 @@ class CombinedRollStats(BaseModel):
             green_stats=green_stats,
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_dice(self) -> int:
         """Total number of dice rolled."""
         return self.black_dice + self.green_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_successes(self) -> float:
         """Expected number of successes."""
@@ -219,13 +219,13 @@ class CombinedRollStats(BaseModel):
             + self.green_stats.expected_successes * self.green_dice
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_tentacles(self) -> float:
         """Expected number of tentacles."""
         return self.black_stats.tentacle_prob * self.black_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_elder_signs(self) -> float:
         """Expected number of elder signs."""
@@ -234,7 +234,7 @@ class CombinedRollStats(BaseModel):
             + self.green_stats.elder_sign_prob * self.green_dice
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def prob_at_least_1_success(self) -> float:
         """Probability of at least 1 success."""
@@ -244,13 +244,13 @@ class CombinedRollStats(BaseModel):
             (1.0 - p_success_black) ** self.black_dice * (1.0 - p_success_green) ** self.green_dice
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def prob_at_least_1_tentacle(self) -> float:
         """Probability of at least 1 tentacle."""
         return 1.0 - (1.0 - self.black_stats.tentacle_prob) ** self.black_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def prob_at_least_1_elder(self) -> float:
         """Probability of at least 1 elder sign."""
@@ -259,25 +259,25 @@ class CombinedRollStats(BaseModel):
             * (1.0 - self.green_stats.elder_sign_prob) ** self.green_dice
         )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def max_possible_successes(self) -> int:
         """Theoretical maximum successes (all dice succeed)."""
         return self.total_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def success_percentage(self) -> float:
         """Probability of at least 1 success as a percentage."""
         return self.prob_at_least_1_success * 100.0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def tentacle_percentage(self) -> float:
         """Probability of at least 1 tentacle as a percentage."""
         return self.prob_at_least_1_tentacle * 100.0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def elder_percentage(self) -> float:
         """Probability of at least 1 elder sign as a percentage."""
@@ -303,13 +303,13 @@ class PowerImpactImprovement(BaseModel):
     base_stats: CombinedRollStats = Field(..., description="Base statistics")
     enhanced_stats: CombinedRollStats = Field(..., description="Enhanced statistics")
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_successes_increase(self) -> float:
         """Absolute increase in expected successes."""
         return self.enhanced_stats.expected_successes - self.base_stats.expected_successes
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def expected_successes_percent_increase(self) -> float:
         """Percentage increase in expected successes."""
@@ -321,19 +321,19 @@ class PowerImpactImprovement(BaseModel):
             )
         return 0.0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def max_successes_increase(self) -> int:
         """Increase in maximum possible successes."""
         return self.enhanced_stats.max_possible_successes - self.base_stats.max_possible_successes
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def tentacle_risk(self) -> float:
         """Expected tentacles (same as base, green dice have no tentacles)."""
         return self.enhanced_stats.expected_tentacles
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_significant_improvement(self) -> bool:
         """Check if the improvement is significant (>10% increase)."""
@@ -349,13 +349,13 @@ class PowerImpact(BaseModel):
     base: CombinedRollStats = Field(..., description="Statistics with base dice only")
     enhanced: CombinedRollStats = Field(..., description="Statistics with power enhancement")
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def improvement(self) -> PowerImpactImprovement:
         """Improvement metrics computed from base and enhanced stats."""
         return PowerImpactImprovement(base_stats=self.base, enhanced_stats=self.enhanced)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_dice_increase(self) -> int:
         """Total number of additional dice added."""
@@ -377,8 +377,8 @@ class DiceProbabilityCalculator:
 
     def __init__(self):
         """Initialize with standard dice configurations."""
-        self.black_dice = StandardDice()
-        self.green_dice = BonusDice()
+        self.black_dice = StandardDice()  # type: ignore[call-arg]
+        self.green_dice = BonusDice()  # type: ignore[call-arg]
 
     def get_face_probabilities(self, dice_type: DiceType) -> Dict[str, float]:
         """Get probability of each symbol type for a single die.
@@ -420,7 +420,7 @@ class DiceProbabilityCalculator:
             SingleDieStats model with all statistics computed
         """
         if dice_type == DiceType.BLACK:
-            dice = self.black_dice
+            dice: Union[StandardDice, BonusDice] = self.black_dice
         elif dice_type == DiceType.GREEN:
             dice = self.green_dice
         else:

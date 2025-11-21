@@ -9,7 +9,7 @@ handling OCR errors and extracting structured information.
 import re
 import sys
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 try:
     import spacy
@@ -85,7 +85,7 @@ def extract_healing_info(doc: spacy.tokens.Doc) -> dict:
     Returns:
         Dictionary with healing information
     """
-    info = {
+    info: Dict[str, Any] = {
         "has_healing": False,
         "stress_healed": 0,
         "wounds_healed": 0,
@@ -225,8 +225,8 @@ def parse_power_levels_with_nlp(text: str) -> List[dict]:
 
     # Process line by line first to detect level boundaries
     # Then use NLP for semantic analysis
-    levels = []
-    current_level_lines = []
+    levels: List[Dict[str, Any]] = []
+    current_level_lines: List[str] = []
 
     for i, line in enumerate(power_lines):
         line_lower = line.lower().strip()

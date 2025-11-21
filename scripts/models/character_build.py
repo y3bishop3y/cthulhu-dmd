@@ -102,7 +102,7 @@ class CharacterBuild(BaseModel):
     _common_power_1_data: Optional[CommonPowerLevelData] = PrivateAttr(default=None)
     _common_power_2_data: Optional[CommonPowerLevelData] = PrivateAttr(default=None)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def all_power_effects(self) -> List[PowerEffect]:
         """Get all power effects as PowerEffect objects."""
@@ -131,7 +131,7 @@ class CharacterBuild(BaseModel):
 
         return effects
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def power_combination(self) -> PowerCombination:
         """Get PowerCombination with all active powers."""
@@ -147,7 +147,7 @@ class CharacterBuild(BaseModel):
 
         return combination
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def statistics(self) -> CharacterStatistics:
         """Calculate complete character statistics."""

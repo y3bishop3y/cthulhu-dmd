@@ -120,13 +120,13 @@ class DiceAddition(BaseModel):
 
         return cls(green_dice=green_dice, black_dice=black_dice)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_dice_added(self) -> int:
         """Total number of dice added (green + black)."""
         return self.green_dice + self.black_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def adds_any_dice(self) -> bool:
         """Whether this addition adds any dice."""
@@ -213,7 +213,7 @@ class ElderSignConversion(BaseModel):
 
         return cls(elder_signs_as_successes=0)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def converts_any_number(self) -> bool:
         """Whether this converts any number of elder signs (unlimited)."""
@@ -322,13 +322,13 @@ class PowerLevelAnalysis(BaseModel):
         ..., ge=0.0, description="Expected tentacles with base dice only"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def green_dice_added(self) -> int:
         """Number of green dice added (convenience property)."""
         return self.dice_addition.green_dice
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def black_dice_added(self) -> int:
         """Number of black dice added (convenience property)."""

@@ -71,7 +71,7 @@ class PowerLevelStatistics(BaseModel):
         default=False, description="Whether this power has any defensive effects"
     )
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def has_any_improvements(self) -> bool:
         """Check if this power level has any improvements (conditional, reroll, healing, or defensive)."""
@@ -166,13 +166,13 @@ class Power(BaseModel):
     )
     levels: List[PowerLevel] = Field(default_factory=list, description="Power levels (1-4)")
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def has_levels(self) -> bool:
         """Whether this power has any levels."""
         return len(self.levels) > 0
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_complete(self) -> bool:
         """Whether this power has all expected levels."""
@@ -610,7 +610,7 @@ class FrontCardData(BaseModel):
 
         return data
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_complete(self) -> bool:
         """Whether all required fields are present."""
@@ -1243,7 +1243,7 @@ class BackCardData(BaseModel):
 
         return data
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def is_complete(self) -> bool:
         """Whether all required powers are present and complete."""

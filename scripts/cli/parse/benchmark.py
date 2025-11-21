@@ -999,7 +999,3 @@ def benchmark_hybrid_strategy(
 
 if __name__ == "__main__":
     main()
-
-
-if __name__ == "__main__":
-    main()

@@ -46,7 +46,7 @@ class PowerCombination(BaseModel):
     base_black_dice: int = Field(default=3, ge=0, description="Base black dice count")
     base_green_dice: int = Field(default=0, ge=0, description="Base green dice count")
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_green_dice(self) -> int:
         """Calculate total green dice from all effects."""
@@ -56,7 +56,7 @@ class PowerCombination(BaseModel):
                 total += effect.green_dice_added
         return total
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_black_dice(self) -> int:
         """Calculate total black dice from all effects."""
@@ -66,7 +66,7 @@ class PowerCombination(BaseModel):
                 total += effect.black_dice_added
         return total
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_rerolls(self) -> int:
         """Calculate total rerolls from all effects."""
@@ -76,7 +76,7 @@ class PowerCombination(BaseModel):
                 total += effect.rerolls_added
         return total
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def total_healing(self) -> tuple[int, int]:
         """Calculate total healing (wounds, stress) from all effects."""
@@ -88,7 +88,7 @@ class PowerCombination(BaseModel):
                 stress += effect.stress_healed
         return (wounds, stress)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def elder_sign_conversion(self) -> Optional[int]:
         """Get elder sign to success conversion (None = any number)."""
@@ -100,13 +100,13 @@ class PowerCombination(BaseModel):
                 break
         return conversion
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def has_conditional_effects(self) -> bool:
         """Check if any effects have conditions."""
         return any(effect.is_conditional for effect in self.effects)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def all_conditions(self) -> Set[str]:
         """Get all unique conditions from effects."""
@@ -122,8 +122,8 @@ class PowerCombinationCalculator:
     def __init__(self):
         """Initialize calculator with dice statistics."""
         self.calculator = DiceProbabilityCalculator()
-        self.black_stats = SingleDieStats.from_dice(DiceType.BLACK, StandardDice())
-        self.green_stats = SingleDieStats.from_dice(DiceType.GREEN, BonusDice())
+        self.black_stats = SingleDieStats.from_dice(DiceType.BLACK, StandardDice())  # type: ignore[call-arg]
+        self.green_stats = SingleDieStats.from_dice(DiceType.GREEN, BonusDice())  # type: ignore[call-arg]
 
     def calculate_combined_stats(self, combination: PowerCombination) -> CombinedRollStats:
         """Calculate combined roll statistics for a power combination.

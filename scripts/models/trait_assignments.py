@@ -110,13 +110,13 @@ class TraitSection(BaseModel):
 
         return cls(trait_name=trait_name, characters=characters)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def character_count(self) -> int:
         """Number of characters with this trait."""
         return len(self.characters)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def character_names(self) -> List[str]:
         """List of character names (with numbers) as strings."""
@@ -151,7 +151,7 @@ class TraitCharacterAssignments(BaseModel):
 
         return cls(trait_sections=trait_sections)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def character_to_traits(self) -> Dict[str, Set[str]]:
         """Mapping of character references to their traits."""
@@ -164,7 +164,7 @@ class TraitCharacterAssignments(BaseModel):
 
         return dict(char_to_traits)
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def characters_with_multiple_traits(self) -> Dict[str, Set[str]]:
         """Characters that have more than one trait."""

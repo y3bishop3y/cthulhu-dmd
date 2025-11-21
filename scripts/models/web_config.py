@@ -98,13 +98,13 @@ class WebScrapingConfig(BaseSettings):
             except ImportError:
                 # Fallback to tomli for older Python versions
                 try:
-                    import tomli
+                    import toml  # type: ignore[import-untyped]i
 
                     with open(file_path, "rb") as f:
                         data = tomli.load(f)
                 except ImportError:
                     # Fallback to toml (pypi package)
-                    import toml
+                    import toml  # type: ignore[import-untyped]
 
                     with open(file_path, encoding="utf-8") as f:
                         data = toml.load(f)
@@ -209,13 +209,13 @@ class WebSettingsConfig(BaseSettings):
             except ImportError:
                 # Fallback to tomli for older Python versions
                 try:
-                    import tomli
+                    import toml  # type: ignore[import-untyped]i
 
                     with open(file_path, "rb") as f:
                         data = tomli.load(f)
                 except ImportError:
                     # Fallback to toml (pypi package)
-                    import toml
+                    import toml  # type: ignore[import-untyped]
 
                     with open(file_path, encoding="utf-8") as f:
                         data = toml.load(f)

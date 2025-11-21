@@ -63,7 +63,7 @@ def detect_font_characteristics(image: np.ndarray) -> dict:
     # Serif fonts tend to have more variation in stroke width
     binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
     # Count transitions (serif fonts have more transitions)
-    transitions = np.sum(np.diff(binary, axis=1) != 0)
+    transitions: int = int(np.sum(np.diff(binary, axis=1) != 0))
     is_serif = transitions > (gray.shape[0] * gray.shape[1] * 0.1)
 
     return {
