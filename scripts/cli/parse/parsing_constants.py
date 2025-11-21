@@ -2,10 +2,11 @@
 """
 Constants for OCR parsing and pattern matching.
 
-Provides regex patterns and constants used for OCR text analysis and dice/swirl detection.
+Centralizes regex patterns, region coordinates, and related numerical constants
+for dice/swirl detection and common power extraction.
 """
 
-from typing import Final, List
+from typing import Final, List, Tuple
 
 # Dice symbols commonly used in OCR text
 DICE_SYMBOLS: Final[List[str]] = ["@", "#", "®"]
@@ -71,3 +72,89 @@ MIN_DICE_SYMBOL_COUNT: Final[int] = 2
 
 # Minimum sanity mention count to consider red swirl discussion
 MIN_SANITY_MENTION_COUNT: Final[int] = 2
+
+# Common power extraction constants
+COMMON_POWER_MAX_LINE_LENGTH: Final[int] = 50
+COMMON_POWER_MAX_WORDS: Final[int] = 3
+COMMON_POWER_MAX_LENGTH_DIFF: Final[int] = 10
+COMMON_POWER_PARTIAL_MATCH_THRESHOLD: Final[int] = 3
+COMMON_POWER_FUZZY_MATCH_THRESHOLD: Final[float] = 75.0
+COMMON_POWER_PARTIAL_FUZZY_THRESHOLD: Final[float] = 85.0
+COMMON_POWER_PARTIAL_LENGTH_DIFF_THRESHOLD: Final[int] = 2
+COMMON_POWER_MAX_POWERS: Final[int] = 2
+COMMON_POWER_PREV_LINE_LENGTH_THRESHOLD: Final[int] = 50
+COMMON_POWER_CLOSE_MATCH_LENGTH_DIFF: Final[int] = 5
+COMMON_POWER_WITHOUT_FUZZY_LENGTH_DIFF: Final[int] = 4
+COMMON_POWER_MULTIWORD_START_CHARS: Final[int] = 2
+COMMON_POWER_SINGLEWORD_START_CHARS: Final[int] = 2
+
+# Common power description keywords
+COMMON_POWER_DESCRIPTION_KEYWORDS: Final[List[str]] = [
+    "LEVEL",
+    "DESCRIPTION",
+    "GAIN",
+    "ADD",
+    "WHEN",
+    "YOU",
+    "MAY",
+    "INSTEAD",
+    "DICE",
+    "SUCCESS",
+    "ATTACK",
+    "MOVE",
+    "HEAL",
+    "TARGET",
+    "SPACE",
+    "ROLL",
+    "DEAL",
+    "TAKE",
+    "DRAW",
+    "COUNT",
+    "NUMBER",
+    "EACH",
+]
+
+# Common power description keywords in line content
+COMMON_POWER_LINE_KEYWORDS: Final[List[str]] = [
+    "INSTEAD",
+    "WHEN YOU",
+    "GAIN",
+    "ADD",
+    "HEAL",
+    "DEAL",
+    "COUNT",
+    "ATTACK",
+]
+
+# Common power previous line ending keywords
+COMMON_POWER_PREV_LINE_ENDINGS: Final[List[str]] = [
+    "STRESS",
+    "WOUND",
+    "DICE",
+    "SUCCESS",
+    "SPACE",
+    "TARGET",
+]
+
+# Common power region coordinates
+# Format: (x_start_percent, y_start_percent, width_percent, height_percent)
+COMMON_POWER_REGIONS: Final[List[Tuple[float, float, float, float]]] = [
+    # Region 1: Right side, upper-middle (most common layout)
+    (0.55, 0.20, 0.40, 0.55),
+    # Region 2: Middle-right, slightly lower
+    (0.50, 0.25, 0.45, 0.60),
+    # Region 3: Right side, broader coverage
+    (0.60, 0.15, 0.35, 0.65),
+]
+
+# Front card region percentages
+FRONT_CARD_TOP_PERCENT: Final[float] = 0.25
+FRONT_CARD_MOTTO_START_PERCENT: Final[float] = 0.26  # Start slightly below name/location (25%)
+FRONT_CARD_MOTTO_END_PERCENT: Final[float] = (
+    0.48  # End before story starts (60%), allows for multi-line mottos
+)
+FRONT_CARD_STORY_START_PERCENT: Final[float] = 0.60
+FRONT_CARD_STORY_HEIGHT_PERCENT: Final[float] = 0.40
+
+# Punctuation characters that indicate continuation
+PUNCTUATION_CONTINUATION_CHARS: Final[str] = ":,;.-"

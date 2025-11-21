@@ -13,6 +13,25 @@ from typing import TYPE_CHECKING, List, Optional, Tuple
 
 from pydantic import BaseModel, Field, computed_field
 
+from scripts.models.character_constants import (
+    COMMON_POWER_FUZZY_THRESHOLD,
+    COMMON_POWER_LENGTH_TOLERANCE,
+    LOCATION_MAX_LENGTH,
+    MAX_POWER_LEVELS,
+    MIN_POWER_DESCRIPTION_WORDS,
+    NAME_MAX_LENGTH,
+    NAME_MIN_LENGTH,
+    POWER_ACTION_PATTERNS,
+)
+from scripts.models.character_parsing_helpers import (
+    extract_motto_from_multiline,
+    extract_motto_from_quotes,
+    extract_motto_from_single_line,
+    fix_story_ocr_errors,
+    is_common_power_description_line,
+    is_game_rules_line,
+    score_story_paragraph,
+)
 from scripts.models.constants import CommonPower as CommonPowerEnum
 
 if TYPE_CHECKING:
@@ -207,90 +226,6 @@ class FrontCardData(BaseModel):
         """
         from scripts.core.parsing.text import clean_ocr_text
 
-        def fix_story_ocr_errors(story: str) -> str:
-            """Fix common OCR errors in story text."""
-            # Common OCR error corrections for story text
-            corrections = {
-                # Name variations
-                "Benchle": "Benchley",
-                "Benchle's": "Benchley's",
-                "Benchle s": "Benchley's",
-                "Benchleyys": "Benchleys",  # Double 'y' error
-                "Benchleyy": "Benchley",  # Double 'y' error
-                "Benchleyy's": "Benchley's",
-                "Benchleyy ": "Benchley ",
-                # Word errors
-                "word ond": "word and",
-                "odmirably": "admirably",
-                "rereserve": "reserve",  # Double 're' error (fix this BEFORE "serve" -> "reserve")
-                "serve": "reserve",  # But be careful - "serve" might be correct in some contexts
-                "fallow": "fellow",
-                "Jest": "lest",
-                "seftle": "settle",
-                "isiquite": "is quite",
-                "is quite": "is quite",  # Ensure spacing
-                "ypper": "upper",
-                "resdlve": "resolve",
-                "tendericie": "tendencies",
-                "bar rd": "barely",
-                "only bar": "only barely",
-                "onlybarely": "only barely",
-                "barelyely": "barely",  # Double 'ely' error
-                "barelyely-": "barely. ",  # With punctuation
-                "barelyely ": "barely ",  # With space
-                # Spacing and punctuation
-                "  ": " ",  # Double spaces
-                " -": "-",  # Space before dash
-                "- ": "-",  # Space after dash (in "eye-twitch")
-            }
-
-            fixed = story
-            # Apply corrections in order (longer patterns first to avoid partial matches)
-            # But also prioritize specific fixes over general ones (e.g., "rereserve" before "serve")
-            priority_order = [
-                "rereserve",  # Must come before "serve"
-                "Benchleyys",  # Must come before "Benchleyy"
-                "Benchleyy's",  # Must come before "Benchleyy"
-                "Benchleyy ",  # Must come before "Benchleyy"
-            ]
-
-            # First apply priority corrections (case-insensitive)
-            for error in priority_order:
-                if error in corrections:
-                    # Use regex for case-insensitive replacement
-                    pattern = re.compile(re.escape(error), re.IGNORECASE)
-                    fixed = pattern.sub(corrections[error], fixed)
-
-            # Then apply remaining corrections sorted by length (longest first)
-            remaining_corrections = {
-                k: v for k, v in corrections.items() if k not in priority_order
-            }
-            sorted_corrections = sorted(
-                remaining_corrections.items(), key=lambda x: len(x[0]), reverse=True
-            )
-            for error, correction in sorted_corrections:
-                # Use regex for case-insensitive replacement
-                pattern = re.compile(re.escape(error), re.IGNORECASE)
-                fixed = pattern.sub(correction, fixed)
-
-            # Fix spacing issues
-            fixed = re.sub(r"\s+", " ", fixed)
-            fixed = re.sub(r"([a-z])([A-Z])", r"\1 \2", fixed)  # Add space between words
-
-            # Fix double letters that are OCR errors (but keep legitimate doubles like "all", "will")
-            # Only fix if it's clearly an error (like "Benchleyy" -> "Benchley")
-            fixed = re.sub(r"Benchleyy+", "Benchley", fixed, flags=re.I)
-
-            # Fix "rereserve" -> "reserve" (can be created by whitespace normalization of "re reserve")
-            # This must happen AFTER whitespace normalization
-            fixed = re.sub(r"\brereserve\b", "reserve", fixed, flags=re.I)
-
-            # Fix punctuation issues
-            fixed = re.sub(r"([a-z])-([A-Z])", r"\1. \2", fixed)  # "word-Word" -> "word. Word"
-            fixed = re.sub(r"([a-z])-([a-z])", r"\1-\2", fixed)  # Keep hyphens in compound words
-
-            return fixed.strip()
-
         # If image path is provided, try layout-aware extraction first
         if image_path and image_path.exists():
             try:
@@ -326,8 +261,8 @@ class FrontCardData(BaseModel):
             # Check if it's all caps and looks like a name (has letters, reasonable length)
             if (
                 line.isupper()
-                and len(line) > 5
-                and len(line) < 60
+                and len(line) > NAME_MIN_LENGTH
+                and len(line) < NAME_MAX_LENGTH
                 and re.match(r"^[A-Z\s]+$", line)
                 and not re.match(r"^[A-Z\s]{1,3}$", line)  # Not just initials
             ):
@@ -338,7 +273,12 @@ class FrontCardData(BaseModel):
         # Look for location (usually after name, in format "CITY, COUNTRY" or "CITY, STATE")
         for line in lines:
             # Look for location pattern: CITY, COUNTRY/STATE
-            if "," in line and line.isupper() and len(line) < 60 and re.match(r"^[A-Z\s,]+$", line):
+            if (
+                "," in line
+                and line.isupper()
+                and len(line) < LOCATION_MAX_LENGTH
+                and re.match(r"^[A-Z\s,]+$", line)
+            ):
                 if data.location is None:
                     data.location = line.title()
                     break
@@ -351,110 +291,15 @@ class FrontCardData(BaseModel):
         # 4. Often split across 2 lines (e.g., "Shoot first.\nNever ask.")
 
         # Strategy 1: Look for quoted text first
-        quote_patterns = [
-            r'"([^"]+)"',  # Standard quotes
-            r"'([^']+)'",  # Single quotes
-            r'["\']([^"\']+)["\']',  # Any quote type
-        ]
+        data.motto = extract_motto_from_quotes(cleaned_text)
 
-        for pattern in quote_patterns:
-            quotes = re.findall(pattern, cleaned_text)
-            if quotes:
-                # Take the first complete quote that looks like a motto
-                for quote in quotes:
-                    quote_clean = quote.strip()
-                    # Check if it looks like a motto (short, has keywords, not too long)
-                    if 5 < len(quote_clean) < 150 and any(
-                        word in quote_clean.lower()
-                        for word in [
-                            "first",
-                            "never",
-                            "always",
-                            "shoot",
-                            "ask",
-                            "trust",
-                            "certain",
-                            "life",
-                        ]
-                    ):
-                        data.motto = quote_clean
-                        break
-                if data.motto:
-                    break
-
-        # Strategy 2: Look for multi-line mottos (common pattern: "Shoot first.\nNever ask.")
+        # Strategy 2: Look for multi-line mottos
         if not data.motto:
-            # Look in first 15 lines (motto is usually near the top)
-            for i in range(min(15, len(lines))):
-                line = lines[i]
-                line_lower = line.lower().strip()
-
-                # Check if this line starts a motto (has motto keywords, short)
-                motto_start_keywords = ["shoot", "never", "always", "first", "trust", "certain"]
-                if (
-                    any(keyword in line_lower for keyword in motto_start_keywords)
-                    and len(line.split()) <= 5  # Short line
-                    and not line.isupper()  # Not all caps (name/location are all caps)
-                    and i > 0  # Not the first line (that's usually the name)
-                ):
-                    # Check if next line completes it
-                    if i + 1 < len(lines):
-                        next_line = lines[i + 1].strip()
-                        next_lower = next_line.lower()
-
-                        # Check if next line completes the motto
-                        motto_end_keywords = [
-                            "ask",
-                            "never",
-                            "always",
-                            "trust",
-                            "certain",
-                            "life",
-                            "things",
-                        ]
-                        if (
-                            any(keyword in next_lower for keyword in motto_end_keywords)
-                            and len(next_line.split()) <= 5
-                            and not next_line.isupper()
-                        ):
-                            combined = f"{line} {next_line}".strip()
-                            # Clean up punctuation
-                            combined = re.sub(r"\s+", " ", combined)
-                            if 10 < len(combined) < 100:  # Reasonable motto length
-                                data.motto = combined
-                                break
+            data.motto = extract_motto_from_multiline(lines)
 
         # Strategy 3: Look for single-line mottos without quotes
         if not data.motto:
-            for _i, line in enumerate(lines[:20]):  # Check first 20 lines
-                line_lower = line.lower().strip()
-                # Skip if it's the name or location
-                if (data.name and data.name.lower() in line_lower) or (
-                    data.location and data.location.lower() in line_lower
-                ):
-                    continue
-
-                # Check if it looks like a motto (short, has keywords, not all caps)
-                motto_keywords = [
-                    "first",
-                    "never",
-                    "always",
-                    "shoot",
-                    "ask",
-                    "trust",
-                    "certain",
-                    "life",
-                ]
-                if (
-                    len(line.split()) >= 2
-                    and len(line.split()) <= 8  # Short phrase
-                    and not line.isupper()
-                    and not line.isdigit()
-                    and any(word in line_lower for word in motto_keywords)
-                    and len(line) < 100
-                ):
-                    data.motto = line.strip()
-                    break
+            data.motto = extract_motto_from_single_line(lines, data.name, data.location)
 
         # Story is usually the longest paragraph after the motto
         # Find paragraphs (separated by blank lines or significant whitespace)
@@ -463,84 +308,15 @@ class FrontCardData(BaseModel):
         if len(paragraphs) == 1:
             paragraphs = [p.strip() for p in cleaned_text.split("\n") if p.strip()]
 
-        # Filter out very short paragraphs and the name/location/motto
-        story_paragraphs = []
+        # Filter and score paragraphs for story quality
+        scored_paragraphs = []
         for p in paragraphs:
             p_stripped = p.strip()
-            if (
-                len(p_stripped) > 80  # Lower threshold to catch more
-                and not p_stripped.isupper()
-                and (not data.name or data.name.lower() not in p_stripped.lower())
-                and (not data.location or data.location.lower() not in p_stripped.lower())
-                and (not data.motto or data.motto.lower() not in p_stripped.lower())
-            ):
-                story_paragraphs.append(p_stripped)
+            score = score_story_paragraph(p_stripped, data.name, data.location, data.motto)
+            if score > 0:  # Only include paragraphs with positive scores
+                scored_paragraphs.append((score, p_stripped))
 
-        if story_paragraphs:
-            # Score each paragraph by quality (length, word count, OCR error indicators)
-            scored_paragraphs = []
-            for para in story_paragraphs:
-                score = len(para)
-                word_count = len(para.split())
-                score += word_count * 5  # Prefer paragraphs with more words
-
-                # Penalize OCR errors
-                error_chars = sum(para.count(c) for c in "@#$%^&*|~`")
-                score -= error_chars * 5  # Heavier penalty
-
-                # Prefer paragraphs that look like prose (have common words)
-                common_words = [
-                    "the",
-                    "and",
-                    "of",
-                    "to",
-                    "a",
-                    "in",
-                    "is",
-                    "it",
-                    "that",
-                    "for",
-                    "his",
-                    "but",
-                    "most",
-                ]
-                para_lower = para.lower()
-                common_word_count = sum(1 for word in para_lower.split() if word in common_words)
-                score += common_word_count * 3
-
-                # Bonus for story-like words
-                story_words = [
-                    "signature",
-                    "warning",
-                    "thoughts",
-                    "demeanor",
-                    "investigators",
-                    "reserve",
-                    "fellow",
-                    "glare",
-                    "battled",
-                    "cults",
-                    "decades",
-                    "maintaining",
-                ]
-                story_word_count = sum(1 for word in story_words if word in para_lower)
-                score += story_word_count * 10
-
-                # Penalize if it looks like game rules (all caps, short, has keywords)
-                rule_keywords = [
-                    "YOUR",
-                    "TURN",
-                    "TAKE",
-                    "ACTIONS",
-                    "DRAW",
-                    "MYTHOS",
-                    "INVESTIGATE",
-                    "FIGHT",
-                ]
-                if any(keyword in para.upper() for keyword in rule_keywords):
-                    score -= 100  # Heavy penalty for game rules
-
-                scored_paragraphs.append((score, para))
+        if scored_paragraphs:
 
             # Sort by score and take the best
             scored_paragraphs.sort(reverse=True, key=lambda x: x[0])
@@ -633,18 +409,7 @@ class BackCardData(BaseModel):
         Returns:
             True if line should be skipped
         """
-        line_upper = line.upper()
-        game_rules_keywords = [
-            "YOUR TURN",
-            "TAKE",
-            "DRAW MYTHOS",
-            "INVESTIGATE",
-            "FIGHT",
-            "RESOLVE",
-            "OR FIGHT!",
-            "INVESTIGATE OR FIGHT!",
-        ]
-        return any(keyword in line_upper for keyword in game_rules_keywords)
+        return is_game_rules_line(line)
 
     @staticmethod
     def _detect_fueled_by_madness(lines: List[str], i: int) -> Optional[str]:
@@ -813,7 +578,7 @@ class BackCardData(BaseModel):
             continuation_count = 0
             for j in range(i + 1, min(i + 4, len(lines))):
                 next_line = lines[j].lower() if j < len(lines) else ""
-                if any(pattern in next_line for pattern in action_patterns):
+                if any(pattern in next_line for pattern in POWER_ACTION_PATTERNS):
                     continuation_count += 1
                 if re.search(r"^(?:level\s*)?[1234][:\-]?\s*", next_line):
                     continuation_count += 1
@@ -920,7 +685,6 @@ class BackCardData(BaseModel):
         """
         import re
 
-        text_upper = text.upper()
         found_power_names = {cp.name for cp in data.common_powers}
         lines = [line.strip() for line in text.split("\n") if line.strip()]
 
@@ -938,24 +702,8 @@ class BackCardData(BaseModel):
                 line_upper = line.upper().strip()
                 line_len = len(line.strip())
 
-                # Skip very long lines (likely descriptions, not power names)
-                if line_len > 60:
-                    continue
-
-                # Skip lines that look like descriptions (contain common description words)
-                description_keywords = [
-                    "LEVEL",
-                    "DESCRIPTION",
-                    "GAIN",
-                    "ADD",
-                    "WHEN",
-                    "YOU",
-                    "MAY",
-                    "INSTEAD",
-                    "DICE",
-                    "SUCCESS",
-                ]
-                if any(keyword in line_upper for keyword in description_keywords):
+                # Skip lines that look like descriptions
+                if is_common_power_description_line(line):
                     continue
 
                 # Check for exact match on short lines
@@ -981,7 +729,7 @@ class BackCardData(BaseModel):
                     from rapidfuzz import fuzz
 
                     ratio = fuzz.ratio(line_upper, power_upper)
-                    if ratio >= 85.0 and line_len <= len(power_upper) + 10:
+                    if ratio >= COMMON_POWER_FUZZY_THRESHOLD and line_len <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE:
                         # High similarity and similar length
                         if not any(cp.name == power_name for cp in data.common_powers):
                             data.common_powers.append(
@@ -1018,7 +766,7 @@ class BackCardData(BaseModel):
             if re.search(pattern, line_upper):
                 return power_name
             # Power name is contained in line (for OCR errors)
-            if power_upper in line_upper and len(line_upper) <= len(power_upper) + 5:
+            if power_upper in line_upper and len(line_upper) <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE:
                 # Line is close to power name length (allow small OCR errors)
                 return power_name
 
@@ -1068,16 +816,16 @@ class BackCardData(BaseModel):
 
         # Save previous level if we have accumulated content
         if power_content_lines:
-            level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+            level_num = min(len(current_power.levels) + 1, MAX_POWER_LEVELS)
             description = " ".join(power_content_lines).strip()
-            if description and len(description.split()) > 2:
+            if description and len(description.split()) > MIN_POWER_DESCRIPTION_WORDS:
                 # Only add if we don't already have this level and haven't exceeded max
-                if level_num not in [lev.level for lev in current_power.levels] and len(current_power.levels) < 4:
+                if level_num not in [lev.level for lev in current_power.levels] and len(current_power.levels) < MAX_POWER_LEVELS:
                     current_power.add_level_from_text(level_num, description)
 
-        # Start new level (cap at 4, OCR might extract invalid numbers)
+        # Start new level (cap at max, OCR might extract invalid numbers)
         extracted_level = int(level_match.group(1))
-        level_num = min(max(extracted_level, 1), 4)  # Ensure between 1 and 4
+        level_num = min(max(extracted_level, 1), MAX_POWER_LEVELS)
         description = re.sub(r"^(?:level\s*)?\d+[:\-]?\s*", "", line, flags=re.I).strip()
         if description:
             return [description], True
@@ -1104,7 +852,7 @@ class BackCardData(BaseModel):
 
         # Save previous level if we have accumulated content
         if power_content_lines and current_power.levels:
-            prev_level_num = min(len(current_power.levels), 4)  # Cap at level 4
+            prev_level_num = min(len(current_power.levels), MAX_POWER_LEVELS)
             description = " ".join(power_content_lines).strip()
             if description and len(description.split()) > 2:
                 # Only add if we don't already have this level
@@ -1184,7 +932,7 @@ class BackCardData(BaseModel):
             # Save accumulated level if we have enough content
             max_levels = 4
             if len(current_power.levels) < max_levels and not next_is_power:
-                level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+                level_num = min(len(current_power.levels) + 1, MAX_POWER_LEVELS)
                 description = " ".join(power_content_lines).strip()
                 if description and len(description.split()) > 2:
                     # Only add if we don't already have this level
@@ -1215,7 +963,7 @@ class BackCardData(BaseModel):
             line_upper = line.upper()
 
             # Skip game rules sections
-            if cls._is_game_rules_line(line):
+            if is_game_rules_line(line):
                 i += 1
                 continue
 
@@ -1363,17 +1111,16 @@ class BackCardData(BaseModel):
             return
 
         # Save any remaining accumulated level content
-        max_levels = 4
-        if power_content_lines and len(current_power.levels) < max_levels:
-            level_num = min(len(current_power.levels) + 1, 4)  # Cap at level 4
+        if power_content_lines and len(current_power.levels) < MAX_POWER_LEVELS:
+            level_num = min(len(current_power.levels) + 1, MAX_POWER_LEVELS)
             description = " ".join(power_content_lines).strip()
-            if description and len(description.split()) > 2:
+            if description and len(description.split()) > MIN_POWER_DESCRIPTION_WORDS:
                 # Only add if we don't already have this level
                 if level_num not in [lev.level for lev in current_power.levels]:
                     current_power.add_level_from_text(level_num, description)
 
         # For special powers, ensure we have 4 levels by checking if descriptions contain "Instead"
-        if current_power.is_special and len(current_power.levels) < 4:
+        if current_power.is_special and len(current_power.levels) < MAX_POWER_LEVELS:
             # Strategy 1: Check if any level description contains multiple "Instead" markers
             for level in current_power.levels:
                 desc = level.description
@@ -1388,7 +1135,7 @@ class BackCardData(BaseModel):
                 for pattern in instead_patterns:
                     instead_count += len(re.findall(pattern, desc, re.I))
 
-                if instead_count > 1 and len(current_power.levels) < 4:
+                if instead_count > 1 and len(current_power.levels) < MAX_POWER_LEVELS:
                     # Try to split on "Instead" (and variants) to create additional levels
                     split_patterns = [
                         r"\s+instead[,\s]+",
@@ -1411,17 +1158,17 @@ class BackCardData(BaseModel):
                             if (
                                 part_clean
                                 and len(part_clean.split()) > 2
-                                and len(current_power.levels) < 4
+                                and len(current_power.levels) < MAX_POWER_LEVELS
                             ):
-                                # Ensure we don't exceed level 4
-                                new_level_num = min(len(current_power.levels) + 1, 4)
+                                # Ensure we don't exceed max levels
+                                new_level_num = min(len(current_power.levels) + 1, MAX_POWER_LEVELS)
                                 # Only add if we don't already have this level
                                 if new_level_num not in [lev.level for lev in current_power.levels]:
                                     current_power.add_level_from_text(new_level_num, part_clean)
 
             # Strategy 2: If still missing levels, try to extract from the full text
             # Look for patterns like "Level 1:", "Level 2:", etc. in the original text
-            if len(current_power.levels) < 4:
+            if len(current_power.levels) < MAX_POWER_LEVELS:
                 # Re-scan the cleaned text for explicit level markers
                 level_markers = re.finditer(
                     r"(?:level\s*)?([1234])[:\-]?\s*([^0-9]+?)(?=(?:level\s*)?[1234][:\-]|\Z)",
@@ -1441,7 +1188,7 @@ class BackCardData(BaseModel):
                         found_levels[level_num] = level_desc
 
                 # Add missing levels if we found them
-                for level_num in range(1, 5):
+                for level_num in range(1, MAX_POWER_LEVELS + 1):
                     if (
                         level_num not in [level.level for level in current_power.levels]
                         and level_num in found_levels
@@ -1449,7 +1196,7 @@ class BackCardData(BaseModel):
                         current_power.add_level_from_text(level_num, found_levels[level_num])
 
             # Strategy 3: If still missing, try to infer from "Instead" patterns in full text
-            if len(current_power.levels) < 4:
+            if len(current_power.levels) < MAX_POWER_LEVELS:
                 # Find all "Instead" occurrences in the text after the power name
                 instead_matches = list(
                     re.finditer(
@@ -1460,18 +1207,18 @@ class BackCardData(BaseModel):
                 )
 
                 # If we found multiple "Instead" patterns, they might be separate levels
-                # Only process up to 4 levels total
-                if len(instead_matches) >= len(current_power.levels):
-                    # Try to map them to levels (max 4 levels)
-                    for idx, match in enumerate(instead_matches):
-                        level_num = min(idx + 1, 4)  # Cap at level 4
-                        if (
-                            level_num not in [level.level for level in current_power.levels]
-                            and len(current_power.levels) < 4
-                        ):
-                            desc = match.group(1).strip()
-                            if desc and len(desc.split()) > 2:
-                                current_power.add_level_from_text(level_num, desc)
+            # Only process up to MAX_POWER_LEVELS total
+            if len(instead_matches) >= len(current_power.levels):
+                # Try to map them to levels
+                for idx, match in enumerate(instead_matches):
+                    level_num = min(idx + 1, MAX_POWER_LEVELS)
+                    if (
+                        level_num not in [level.level for level in current_power.levels]
+                        and len(current_power.levels) < MAX_POWER_LEVELS
+                    ):
+                        desc = match.group(1).strip()
+                        if desc and len(desc.split()) > MIN_POWER_DESCRIPTION_WORDS:
+                            current_power.add_level_from_text(level_num, desc)
 
         if current_power:
             if current_power.is_special:
@@ -1635,8 +1382,8 @@ class CharacterData(BaseModel):
 
         if not self.common_powers:
             issues.append("Missing common powers")
-        elif len(self.common_powers) < 2:
-            issues.append(f"Only found {len(self.common_powers)} common power(s), expected 2")
+        elif len(self.common_powers) != 2:
+            issues.append(f"Found {len(self.common_powers)} common power(s), expected exactly 2")
 
         return issues
 

@@ -14,6 +14,30 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, Final, List, Optional, Tuple
 
+from scripts.cli.parse.parsing_constants import (
+    COMMON_POWER_CLOSE_MATCH_LENGTH_DIFF,
+    COMMON_POWER_DESCRIPTION_KEYWORDS,
+    COMMON_POWER_FUZZY_MATCH_THRESHOLD,
+    COMMON_POWER_LINE_KEYWORDS,
+    COMMON_POWER_MAX_LENGTH_DIFF,
+    COMMON_POWER_MAX_LINE_LENGTH,
+    COMMON_POWER_MAX_WORDS,
+    COMMON_POWER_MULTIWORD_START_CHARS,
+    COMMON_POWER_PARTIAL_FUZZY_THRESHOLD,
+    COMMON_POWER_PARTIAL_LENGTH_DIFF_THRESHOLD,
+    COMMON_POWER_PARTIAL_MATCH_THRESHOLD,
+    COMMON_POWER_PREV_LINE_ENDINGS,
+    COMMON_POWER_PREV_LINE_LENGTH_THRESHOLD,
+    COMMON_POWER_REGIONS,
+    COMMON_POWER_SINGLEWORD_START_CHARS,
+    COMMON_POWER_WITHOUT_FUZZY_LENGTH_DIFF,
+    FRONT_CARD_MOTTO_END_PERCENT,
+    FRONT_CARD_MOTTO_START_PERCENT,
+    FRONT_CARD_STORY_HEIGHT_PERCENT,
+    FRONT_CARD_STORY_START_PERCENT,
+    FRONT_CARD_TOP_PERCENT,
+    PUNCTUATION_CONTINUATION_CHARS,
+)
 from scripts.cli.parse.parsing_models import FieldStrategies, FrontCardFields, ImageRegions
 
 # Motto extraction constants
@@ -261,17 +285,17 @@ def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
     Returns:
         ImageRegions model with region coordinates for each field
     """
-    top_height = int(img_height * 0.25)
+    top_height = int(img_height * FRONT_CARD_TOP_PERCENT)
+    motto_start = int(img_height * FRONT_CARD_MOTTO_START_PERCENT)
+    motto_height = int(img_height * FRONT_CARD_MOTTO_END_PERCENT) - motto_start
+    story_start = int(img_height * FRONT_CARD_STORY_START_PERCENT)
+    story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
+
     return ImageRegions(
         name=(0, 0, img_width, top_height // 2),
         location=(0, top_height // 2, img_width, top_height // 2),
-        motto=(
-            0,
-            int(img_height * 0.25),  # Start slightly higher to catch motto
-            img_width,
-            int(img_height * 0.50) - int(img_height * 0.25),  # Narrower region focused on motto area
-        ),
-        story=(0, int(img_height * 0.60), img_width, int(img_height * 0.40)),
+        motto=(0, motto_start, img_width, motto_height),
+        story=(0, story_start, img_width, story_height),
     )
 
 
@@ -334,11 +358,15 @@ def _filter_motto_lines(lines: List[str]) -> List[str]:
         if len(line_stripped) < MOTTO_MIN_LINE_LENGTH:
             continue
         # Skip lines that are mostly symbols/numbers (less than threshold alphanumeric)
-        alnum_ratio = sum(c.isalnum() for c in line_stripped) / len(line_stripped) if line_stripped else 0
+        alnum_ratio = (
+            sum(c.isalnum() for c in line_stripped) / len(line_stripped) if line_stripped else 0
+        )
         if alnum_ratio < MOTTO_MIN_ALNUM_RATIO:
             continue
         # Skip lines that look like OCR garbage (too many special chars)
-        special_char_count = sum(1 for c in line_stripped if not c.isalnum() and c not in " .,!?\"'-")
+        special_char_count = sum(
+            1 for c in line_stripped if not c.isalnum() and c not in " .,!?\"'-"
+        )
         if special_char_count > len(line_stripped) * 0.3:  # More than 30% special chars
             continue
         filtered.append(line_stripped)
@@ -493,6 +521,21 @@ def _clean_motto_text(motto: str) -> str:
     motto = motto.replace("wriften", "written")
     motto = motto.replace("writen", "written")
     motto = motto.replace("writtn", "written")
+    # Fix "4" -> "I" (common OCR error, can appear at start or middle)
+    # Handle both straight and curly quotes, and both quoted and unquoted cases
+    motto = motto.replace('"4 ', '"I ').replace("'4 ", "'I ")
+    # Handle curly quotes (Unicode U+201C and U+201D)
+    motto = motto.replace("\u201c4 ", "\u201cI ")  # Left double quotation mark
+    motto = motto.replace("\u201d4 ", "\u201dI ")  # Right double quotation mark
+    motto = re.sub(r"\s+4\s+", r" I ", motto)  # In middle of text
+    motto = re.sub(r"^4\s+", r"I ", motto)  # At very start (no quote)
+    # Fix "|" -> "I" (common OCR error)
+    motto = motto.replace(" | ", " I ")
+    motto = motto.replace("| ", "I ")
+    # Fix "Instead." -> "Instead," (common OCR error where comma is read as period)
+    motto = re.sub(r"\bInstead\.\s+", r"Instead, ", motto)
+    # Fix missing "I" before "make" (common OCR error: "Instead, make" -> "Instead, I make")
+    motto = re.sub(r"\bInstead,?\s+make\b", r"Instead, I make", motto, flags=re.IGNORECASE)
     # Fix duplicate words (common OCR error: "is is" -> "is")
     motto = re.sub(r"\b(\w+)\s+\1\b", r"\1", motto)
     # Clean up multiple spaces
@@ -545,7 +588,9 @@ def _extract_story_text(
 
     # If story extraction failed, try with optimal strategy on bottom region
     if not story_text or len(story_text) < STORY_MIN_LENGTH:
-        bottom_region = (0, int(img_height * 0.60), img_width, int(img_height * 0.40))
+        story_start = int(img_height * FRONT_CARD_STORY_START_PERCENT)
+        story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
+        bottom_region = (0, story_start, img_width, story_height)
         story_text = extract_text_from_region_with_strategy(
             image_path, bottom_region, story_strategy
         )
@@ -571,10 +616,22 @@ def extract_text_from_region_with_strategy(
     if cv2 is None or np is None:
         raise ImportError("cv2 and numpy required for region extraction")
 
+    # Convert to PNG if lossy format (improves OCR accuracy)
+    # PNG files are saved alongside originals for reuse (not auto-deleted)
+    # They're gitignored so won't be committed
+    optimized_path = image_path
+    try:
+        from scripts.utils.image_conversion import get_ocr_optimized_path
+
+        optimized_path = get_ocr_optimized_path(image_path, use_temp=False)
+    except ImportError:
+        # Fallback if conversion utility not available
+        pass
+
     # Load image
-    img = cv2.imread(str(image_path))
+    img = cv2.imread(str(optimized_path))
     if img is None:
-        raise ValueError(f"Could not read image: {image_path}")
+        raise ValueError(f"Could not read image: {optimized_path}")
 
     # Crop region
     x, y, w, h = region
@@ -599,9 +656,171 @@ def extract_text_from_region_with_strategy(
         text = _extract_with_strategy(tmp_path, strategy_name)
         return text
     finally:
-        # Clean up temp file
+        # Clean up temp file (cropped region)
         if tmp_path.exists():
             tmp_path.unlink()
+        # Note: optimized_path PNG files are kept for reuse (not deleted)
+
+
+def _is_line_likely_description(line: str) -> bool:
+    """Check if a line looks like a description rather than a power header.
+
+    Args:
+        line: Line to check
+
+    Returns:
+        True if line looks like a description, False otherwise
+    """
+    line_stripped = line.strip()
+    line_len = len(line_stripped)
+    line_upper = line_stripped.upper()
+
+    # Skip very long lines (likely descriptions)
+    if line_len > COMMON_POWER_MAX_LINE_LENGTH:
+        return True
+
+    # Skip lines that look like descriptions (contain common description words)
+    if any(keyword in line_upper for keyword in COMMON_POWER_DESCRIPTION_KEYWORDS):
+        return True
+
+    # Skip lines that contain multiple words (power names are usually 1-2 words)
+    word_count = len(line_stripped.split())
+    if word_count > COMMON_POWER_MAX_WORDS:
+        return True
+
+    # Skip lines that start with lowercase (likely continuation of description)
+    if line_stripped and line_stripped[0].islower():
+        return True
+
+    # Skip lines that start with punctuation (likely continuation of previous line)
+    if line_stripped:
+        first_char = line_stripped[0]
+        if first_char in PUNCTUATION_CONTINUATION_CHARS:
+            return True
+        # Also skip if second character is punctuation
+        if len(line_stripped) > 1 and line_stripped[1] in PUNCTUATION_CONTINUATION_CHARS:
+            return True
+
+    return False
+
+
+def _reject_partial_match(line: str, power_name: str, rapidfuzz_fuzz: Optional[Any]) -> bool:
+    """Check if a power match should be rejected as a partial match.
+
+    Args:
+        line: Line that matched the power name
+        power_name: Detected power name
+        rapidfuzz_fuzz: Optional rapidfuzz.fuzz module
+
+    Returns:
+        True if match should be rejected, False otherwise
+    """
+    line_len = len(line)
+    line_upper = line.upper()
+    power_upper = power_name.upper()
+
+    # Skip if line is much longer than power name (likely has extra text)
+    if line_len > len(power_name) + COMMON_POWER_MAX_LENGTH_DIFF:
+        return True
+
+    # Reject partial matches where the power name is much longer than the line
+    if len(power_name) > line_len + COMMON_POWER_PARTIAL_MATCH_THRESHOLD:
+        return True
+
+    # Reject if line appears to be missing the beginning of the power name
+    if rapidfuzz_fuzz:
+        if " " in power_name:
+            # Multi-word power name: check if line starts with first word
+            power_words = power_upper.split()
+            line_words = line_upper.split()
+            if line_words and power_words:
+                power_start = power_words[0][:COMMON_POWER_MULTIWORD_START_CHARS]
+                if not line_words[0].startswith(power_start) and power_start not in line_upper:
+                    return True
+        else:
+            # Single-word power name: check if line is missing significant beginning
+            if len(line_upper) < len(power_upper) - 1:  # Line is at least 2 chars shorter
+                power_start = power_upper[:COMMON_POWER_SINGLEWORD_START_CHARS]
+                if power_start not in line_upper:
+                    # Additional check: verify with fuzzy ratio and length difference
+                    ratio = rapidfuzz_fuzz.ratio(line_upper, power_upper)
+                    length_diff = len(power_upper) - len(line_upper)
+                    if (
+                        ratio < COMMON_POWER_PARTIAL_FUZZY_THRESHOLD
+                        and length_diff >= COMMON_POWER_PARTIAL_LENGTH_DIFF_THRESHOLD
+                    ):
+                        return True
+
+    return False
+
+
+def _validate_power_match_quality(
+    line: str, power_name: str, rapidfuzz_fuzz: Optional[Any]
+) -> bool:
+    """Validate if a detected power match is of good quality.
+
+    Args:
+        line: Line that matched the power name
+        power_name: Detected power name
+        rapidfuzz_fuzz: Optional rapidfuzz.fuzz module
+
+    Returns:
+        True if match is good quality, False otherwise
+    """
+    line_len = len(line)
+    line_upper = line.upper()
+    power_upper = power_name.upper()
+
+    # Exact match - always accept
+    if power_upper == line_upper:
+        return True
+
+    # Close match - verify with fuzzy matching if available
+    if line_len <= len(power_name) + COMMON_POWER_CLOSE_MATCH_LENGTH_DIFF:
+        if rapidfuzz_fuzz:
+            ratio = rapidfuzz_fuzz.ratio(line_upper, power_upper)
+            if ratio >= COMMON_POWER_FUZZY_MATCH_THRESHOLD:
+                return True
+        else:
+            # Without fuzzy matching, accept if lengths are very close
+            if abs(line_len - len(power_name)) <= COMMON_POWER_WITHOUT_FUZZY_LENGTH_DIFF:
+                return True
+
+    return False
+
+
+def _check_line_has_description_keywords(line: str) -> bool:
+    """Check if line contains description keywords.
+
+    Args:
+        line: Line to check
+
+    Returns:
+        True if line contains description keywords, False otherwise
+    """
+    line_upper = line.upper()
+    return any(kw in line_upper for kw in COMMON_POWER_LINE_KEYWORDS)
+
+
+def _check_previous_line_suggests_description(
+    prev_line: str, lines: List[str], current_index: int
+) -> bool:
+    """Check if previous line suggests current line is part of a description.
+
+    Args:
+        prev_line: Previous line text
+        lines: All lines
+        current_index: Current line index
+
+    Returns:
+        True if previous line suggests description, False otherwise
+    """
+    if not prev_line or len(prev_line) <= COMMON_POWER_PREV_LINE_LENGTH_THRESHOLD:
+        return False
+
+    prev_line_upper = prev_line.upper()
+    # If previous line is very long AND ends with description keywords, current line might be continuation
+    return any(prev_line_upper.endswith(kw) for kw in COMMON_POWER_PREV_LINE_ENDINGS)
 
 
 def _extract_common_powers_from_region(
@@ -629,42 +848,48 @@ def _extract_common_powers_from_region(
     # Import the detection function from character.py
     from scripts.models.character import BackCardData
 
+    # Import fuzzy matching if available
+    try:
+        from rapidfuzz import fuzz as rapidfuzz_fuzz
+    except ImportError:
+        rapidfuzz_fuzz = None
+
     # Filter lines to only consider short lines that look like power headers
-    # Power names are typically standalone or very short lines
-    for line in lines:
-        line_len = len(line.strip())
-        line_upper = line.upper()
+    for i, line in enumerate(lines):
+        line_stripped = line.strip()
+        line_upper = line_stripped.upper()
 
-        # Skip very long lines (likely descriptions)
-        if line_len > 60:
-            continue
-
-        # Skip lines that look like descriptions (contain common description words)
-        description_keywords = [
-            "LEVEL",
-            "DESCRIPTION",
-            "GAIN",
-            "ADD",
-            "WHEN",
-            "YOU",
-            "MAY",
-            "INSTEAD",
-            "DICE",
-            "SUCCESS",
-            "ATTACK",
-            "MOVE",
-            "HEAL",
-        ]
-        if any(keyword in line_upper for keyword in description_keywords):
+        # Skip lines that look like descriptions
+        if _is_line_likely_description(line_stripped):
             continue
 
         # Check if this line matches a common power name
-        power_name = BackCardData._detect_common_power(line)
+        power_name = BackCardData._detect_common_power(line_stripped)
         if power_name and power_name not in found_powers:
-            found_powers.append(power_name)
-            # Limit to 2 common powers (typical for characters)
-            if len(found_powers) >= 2:
-                break
+            # Reject partial matches
+            if _reject_partial_match(line_stripped, power_name, rapidfuzz_fuzz):
+                continue
+
+            # Validate match quality
+            is_good_match = _validate_power_match_quality(line_stripped, power_name, rapidfuzz_fuzz)
+
+            # Additional validation for non-exact matches
+            if is_good_match and power_name.upper() != line_upper:
+                # Check if line contains description keywords
+                if _check_line_has_description_keywords(line_stripped):
+                    is_good_match = False
+
+                # Check if previous line suggests this is part of a description
+                if i > 0:
+                    prev_line = lines[i - 1].strip()
+                    if _check_previous_line_suggests_description(prev_line, lines, i):
+                        is_good_match = False
+
+            if is_good_match:
+                found_powers.append(power_name)
+                # Limit to 2 common powers (characters always have exactly 2)
+                if len(found_powers) >= 2:
+                    break
 
     return found_powers
 
@@ -722,32 +947,15 @@ def extract_common_powers_from_back_card(
         image = extractor.preprocess_image(image_path, invert_for_white_text=False)
         img_height, img_width = image.shape[:2]
 
-        # Common powers region: right side, middle section
-        # Based on card layout: common powers are typically in the right 30-40% of the card,
-        # starting around 15-25% from top, covering about 50-60% of the height
-        # Try multiple regions to catch different card layouts
+        # Convert region percentages to pixel coordinates
         regions_to_try = [
-            # Region 1: Right side, upper-middle (most common layout)
             (
-                int(img_width * 0.55),  # Start 55% from left
-                int(img_height * 0.20),  # Start 20% from top
-                int(img_width * 0.40),  # Width: 40% of image
-                int(img_height * 0.55),  # Height: 55% of image
-            ),
-            # Region 2: Middle-right, slightly lower
-            (
-                int(img_width * 0.50),
-                int(img_height * 0.25),
-                int(img_width * 0.45),
-                int(img_height * 0.60),
-            ),
-            # Region 3: Right side, broader coverage
-            (
-                int(img_width * 0.60),
-                int(img_height * 0.15),
-                int(img_width * 0.35),
-                int(img_height * 0.65),
-            ),
+                int(img_width * x_percent),
+                int(img_height * y_percent),
+                int(img_width * width_percent),
+                int(img_height * height_percent),
+            )
+            for x_percent, y_percent, width_percent, height_percent in COMMON_POWER_REGIONS
         ]
 
         # Use special_power strategy (similar text characteristics)
@@ -755,20 +963,15 @@ def extract_common_powers_from_back_card(
         if not power_strategy:
             power_strategy = "tesseract_bilateral_psm3"
 
-        # Try each region and collect unique powers
+        # Try each region and use the first one that finds powers
+        # Don't combine from multiple regions as that can cause false positives
+        # Characters always have exactly 2 common powers
         found_powers: List[str] = []
         for region in regions_to_try:
-            region_powers = _extract_common_powers_from_region(
-                image_path, region, power_strategy
-            )
-            # Add unique powers
-            for power in region_powers:
-                if power not in found_powers:
-                    found_powers.append(power)
-                    # Stop if we found 2 powers (typical for characters)
-                    if len(found_powers) >= 2:
-                        break
-            if len(found_powers) >= 2:
+            region_powers = _extract_common_powers_from_region(image_path, region, power_strategy)
+            # Use powers from first region that finds any powers
+            if region_powers:
+                found_powers = region_powers[:2]  # Ensure max 2 powers
                 break
 
         return found_powers

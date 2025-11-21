@@ -7,6 +7,7 @@ and powers/abilities from back.jpg.
 
 import json
 import sys
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Final, List, Optional, Tuple
 
@@ -64,6 +65,53 @@ OUTPUT_FORMAT_YAML: Final[str] = "yaml"
 
 # Get common power names as list for backward compatibility
 COMMON_POWERS: Final[List[str]] = [power.value for power in CommonPower]
+
+
+@dataclass
+class ParsingResult:
+    """Stores parsing quality metrics for a character."""
+
+    character_name: str
+    char_dir: Path
+    front_path: Optional[Path]
+    back_path: Optional[Path]
+    extracted_data: CharacterData
+    issues: List[str] = field(default_factory=list)
+    score: float = 0.0  # Quality score (0-100, higher is better)
+
+    def calculate_score(self) -> float:
+        """Calculate parsing quality score based on extracted fields and issues.
+
+        Returns:
+            Score from 0-100 (higher is better)
+        """
+        score = 100.0
+        penalty_per_issue = 15.0  # Penalty per parsing issue
+
+        # Check each field
+        if not self.extracted_data.name or self.extracted_data.name == "Unknown":
+            score -= 20.0
+        if not self.extracted_data.location:
+            score -= 15.0
+        if not self.extracted_data.motto:
+            score -= 15.0
+        if not self.extracted_data.story:
+            score -= 20.0
+        if not self.extracted_data.special_power:
+            score -= 15.0
+        elif (
+            self.extracted_data.special_power and not self.extracted_data.special_power.is_complete
+        ):
+            score -= 10.0
+        if not self.extracted_data.common_powers:
+            score -= 15.0
+        elif len(self.extracted_data.common_powers) != 2:
+            score -= 10.0
+
+        # Additional penalty for issues
+        score -= len(self.issues) * penalty_per_issue
+
+        return max(0.0, score)
 
 
 # OCR functions now imported from utils/ocr.py
@@ -196,6 +244,85 @@ def _display_extraction_report(
             console.print(f"  • {issue}")
     else:
         console.print("\n[green]✓ No parsing issues detected[/green]")
+
+    console.print()
+
+
+def _display_parsing_ranking(results: List[ParsingResult]) -> None:
+    """Display ranked list of parsing results from best to worst.
+
+    Args:
+        results: List of parsing results to rank and display
+    """
+    # Sort by score (best first)
+    sorted_results = sorted(results, key=lambda r: r.score, reverse=True)
+
+    console.print("\n[bold cyan]{:=^80}[/bold cyan]".format(""))
+    console.print("[bold cyan]Parsing Quality Ranking[/bold cyan]")
+    console.print("[bold cyan]{:=^80}[/bold cyan]\n".format(""))
+
+    # Create ranking table
+    ranking_table = Table(show_header=True, header_style="bold magenta", show_lines=True)
+    ranking_table.add_column("Rank", style="cyan", width=6, justify="right")
+    ranking_table.add_column("Character", style="green", width=18)
+    ranking_table.add_column("Score", style="yellow", width=10, justify="right")
+    ranking_table.add_column("File Paths", style="dim", width=25)
+    ranking_table.add_column("Issues", style="red", width=45)
+
+    for idx, result in enumerate(sorted_results, 1):
+        # Determine color based on score
+        if result.score >= 80:
+            rank_style = "green"
+        elif result.score >= 50:
+            rank_style = "yellow"
+        else:
+            rank_style = "red"
+
+        # Format file paths
+        front_file = result.front_path.name if result.front_path else "N/A"
+        back_file = result.back_path.name if result.back_path else "N/A"
+        file_info = f"Front: {front_file}\nBack: {back_file}"
+
+        # Format issues (limit to 3 most important)
+        issues_display = ", ".join(result.issues[:3])
+        if len(result.issues) > 3:
+            issues_display += f" (+{len(result.issues) - 3} more)"
+
+        ranking_table.add_row(
+            f"[{rank_style}]{idx}[/{rank_style}]",
+            f"[{rank_style}]{result.character_name}[/{rank_style}]",
+            f"[{rank_style}]{result.score:.1f}[/{rank_style}]",
+            f"[dim]{file_info}[/dim]",
+            issues_display if result.issues else "[green]None[/green]",
+        )
+
+    console.print(ranking_table)
+
+    # Show detailed summary for worst character
+    if sorted_results:
+        worst = sorted_results[-1]
+        console.print("\n[bold red]Worst Parsing Quality:[/bold red]")
+        console.print(f"[red]Character: {worst.character_name}[/red]")
+        console.print(f"[red]Score: {worst.score:.1f}/100[/red]")
+        console.print(f"[dim]Front card: {worst.front_path}[/dim]")
+        if worst.back_path:
+            console.print(f"[dim]Back card: {worst.back_path}[/dim]")
+        console.print(f"[red]Issues ({len(worst.issues)}):[/red]")
+        for issue in worst.issues:
+            console.print(f"  • {issue}")
+
+        # Show best character for comparison
+        best = sorted_results[0]
+        if best.score > worst.score:
+            console.print("\n[bold green]Best Parsing Quality:[/bold green]")
+            console.print(f"[green]Character: {best.character_name}[/green]")
+            console.print(f"[green]Score: {best.score:.1f}/100[/green]")
+            if best.issues:
+                console.print(f"[green]Issues ({len(best.issues)}):[/green]")
+                for issue in best.issues:
+                    console.print(f"  • {issue}")
+            else:
+                console.print("[green]No issues detected[/green]")
 
     console.print()
 
@@ -359,12 +486,16 @@ def _parse_character_data(
         back_data = BackCardData.parse_from_text(back_text)
 
         # Extract common powers from region-specific extraction if available
+        # Only use region extraction if it finds at least one power
+        # Otherwise, fall back to whole-card parsing (but be aware it may have false positives)
         common_power_names: List[str] = []
+        region_extraction_used = False
         if use_optimal_strategies and back_path and back_path.exists():
             try:
                 region_powers = extract_common_powers_from_back_card(back_path)
-                if region_powers:
+                if region_powers and len(region_powers) > 0:
                     common_power_names = region_powers
+                    region_extraction_used = True
                     if not quiet:
                         console.print(
                             f"  Found {len(common_power_names)} common powers via region extraction: {', '.join(common_power_names)}"
@@ -374,11 +505,14 @@ def _parse_character_data(
                     console.print(
                         f"[yellow]Warning: Region-specific common power extraction failed ({e}), using parsed powers[/yellow]"
                     )
-                # Fall back to parsed powers
-                common_power_names = [cp.name for cp in back_data.common_powers]
-        else:
-            # Use parsed powers from whole-card text
+
+        # Fall back to parsed powers from whole-card text if region extraction didn't find any
+        if not region_extraction_used:
             common_power_names = [cp.name for cp in back_data.common_powers]
+            if not quiet and common_power_names:
+                console.print(
+                    f"  Using common powers from whole-card parsing: {', '.join(common_power_names)}"
+                )
 
         parsed_data = CharacterData(
             name=front_data.name or "Unknown",
@@ -394,11 +528,12 @@ def _parse_character_data(
         parsed_data = CharacterData.from_images(front_text, back_text, story_to_use)
 
         # Try region-specific common power extraction even in fallback mode
+        # Only use if it finds at least one power (prefer region extraction over whole-card parsing)
         if use_optimal_strategies and back_path and back_path.exists():
             try:
                 region_powers = extract_common_powers_from_back_card(back_path)
-                if region_powers and len(region_powers) >= 2:
-                    # Prefer region-extracted powers if we found at least 2
+                if region_powers and len(region_powers) > 0:
+                    # Prefer region-extracted powers if we found any
                     parsed_data.common_powers = region_powers
                     if not quiet:
                         console.print(
@@ -626,7 +761,7 @@ def _process_character_verify(
     front_path: Path,
     back_path: Optional[Path],
     use_optimal_strategies: bool,
-) -> None:
+) -> ParsingResult:
     """Process a character in verification mode (show extracted fields without saving).
 
     Args:
@@ -634,6 +769,9 @@ def _process_character_verify(
         front_path: Path to front card image
         back_path: Optional path to back card image
         use_optimal_strategies: Whether to use optimal OCR strategies
+
+    Returns:
+        ParsingResult with quality metrics
     """
     existing_data = load_existing_character_json(char_dir)
     story_file = char_dir / Filename.STORY_TXT
@@ -649,10 +787,20 @@ def _process_character_verify(
     )
     _display_extraction_report(char_dir, character_data, existing_data, issues)
 
+    # Create parsing result
+    result = ParsingResult(
+        character_name=char_dir.name,
+        char_dir=char_dir,
+        front_path=front_path,
+        back_path=back_path,
+        extracted_data=character_data,
+        issues=issues,
+    )
+    result.score = result.calculate_score()
+    return result
 
-def _save_character_data(
-    char_dir: Path, character_data: CharacterData, output_format: str
-) -> None:
+
+def _save_character_data(char_dir: Path, character_data: CharacterData, output_format: str) -> None:
     """Save character data to file.
 
     Args:
@@ -772,11 +920,12 @@ def main(
     _display_header(verify)
     _validate_season(data_dir, season)
 
-    characters_to_process = _find_characters_to_process(
-        character_dir, data_dir, character, season
-    )
+    characters_to_process = _find_characters_to_process(character_dir, data_dir, character, season)
 
     console.print(f"\n[green]Found {len(characters_to_process)} characters to process[/green]\n")
+
+    # Store parsing results for ranking (only in verify mode)
+    parsing_results: List[ParsingResult] = []
 
     # Process each character
     with Progress(
@@ -792,15 +941,21 @@ def main(
             front_path, back_path = _find_image_files(char_dir)
 
             if not front_path:
-                console.print(f"[yellow]Skipping {char_dir.name}: missing front image[/yellow]")
+                console.print(
+                    f"[yellow]⚠ Skipping {char_dir.name}: Character does not have a front card image[/yellow]"
+                )
+                console.print(
+                    f"[dim]   Please fill in the character data manually in {char_dir / Filename.CHARACTER_JSON}[/dim]"
+                )
                 progress.update(task, advance=1)
                 continue
 
             try:
                 if verify:
-                    _process_character_verify(
+                    result = _process_character_verify(
                         char_dir, front_path, back_path, use_optimal_strategies
                     )
+                    parsing_results.append(result)
                 else:
                     _process_character_normal(
                         char_dir, front_path, back_path, use_optimal_strategies, output_format
@@ -808,11 +963,28 @@ def main(
                 progress.update(task, advance=1)
             except Exception as e:
                 import traceback
+
                 console.print(f"[red]Error processing {char_dir.name}:[/red] {e}")
                 console.print(f"[red]Traceback:[/red]\n{traceback.format_exc()}")
+                # Create a failed result
+                if verify:
+                    failed_result = ParsingResult(
+                        character_name=char_dir.name,
+                        char_dir=char_dir,
+                        front_path=front_path,
+                        back_path=back_path,
+                        extracted_data=CharacterData(name="Unknown"),
+                        issues=[f"Processing error: {str(e)}"],
+                    )
+                    failed_result.score = 0.0
+                    parsing_results.append(failed_result)
                 progress.update(task, advance=1)
 
     console.print("\n[green]✓ Parsing complete![/green]")
+
+    # Display ranking summary if in verify mode
+    if verify and parsing_results:
+        _display_parsing_ranking(parsing_results)
 
 
 if __name__ == "__main__":
