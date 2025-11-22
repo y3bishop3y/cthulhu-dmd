@@ -1,10 +1,34 @@
 {
-  "name": "Ian",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "name": "SERGEANT IAN WELLES",
+  "location": "JONESBORO, MAINE",
+  "motto": "“They have us surrounded,",
+  "story": "Sergeant: Welles has many stress about his missing beat a he arm. For his brother-in-arms in the Great War, if ; g wa; a German artillery shell. For civilians, st was ge en a sniper. But for follow investigator, ba need spin i 2 me no tall tales: it was some God-damned cult-borne nn ISS heal beastie what swallowed my hand, green dice and a PSS all. Sergeant Welles is a manchester of giving hack-(Pe twice as much as he gets. gain sharpens his aim, he l : 9 p r E says, and if the scars and burns tthat cros his body HI ih WN , are any indicator, his aim is perfectly lethal. f Z ere a LJ-we. q so ee SS Se ee g pa ne Pul et BY atenn bl erat re oy i a ni) alk ui iy it rile i os a ian Hy ely ne ae G a t H iy ie tl Li i ra i : ea i ii ale 7 el fl ce il 4 et i a uy e A bil. a Us i ite i es si a ay ia ai if ne i! rea ee : : i secg ee Jee aie 7 a i a (EAH it i N pea A i f IF ae i es eatt : iy uh ie il i ie : ert an af c u need i L hi eh ah A ts i e S Tandy ss ea",
+  "special_power": {
+    "name": "Bid Yexceance OBSESSION - bee",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fa venceance fe When attack, if you are dealt any wounds, heal 1 wound to that enemy and heal 1 stress. o Y"
+      },
+      {
+        "level": 2,
+        "description": "Instead, heal 1 wound to each enemy in the atfackers space and heal 1 stress, -_wv"
+      },
+      {
+        "level": 3,
+        "description": "instead, heal 1 wound to each enemy in the attack space and heal 2 stress. ee"
+      },
+      {
+        "level": 4,
+        "description": "-f Nv ES Instead, heal 2 wounds to each enemy in the attack space and heal 2 stress, t"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
-    "Brawling",
-    "Swiftness"
+    "Swiftness",
+    "Arcane Mastery"
   ]
 }

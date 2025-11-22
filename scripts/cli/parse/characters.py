@@ -843,6 +843,14 @@ def _process_character_verify(
     )
     _display_extraction_report(char_dir, character_data, existing_data, issues)
 
+    # Save JSON file during verification so user can review cleaned results
+    output_file = char_dir / Filename.CHARACTER_JSON
+    output_file.write_text(
+        json.dumps(character_data.model_dump(), indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    console.print(f"[dim]  Saved cleaned results to {output_file}[/dim]")
+
     # Create parsing result
     result = ParsingResult(
         character_name=char_dir.name,

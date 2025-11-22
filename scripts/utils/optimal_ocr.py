@@ -37,13 +37,13 @@ from scripts.cli.parse.parsing_constants import (
     FRONT_CARD_MOTTO_START_PERCENT,
     FRONT_CARD_STORY_HEIGHT_PERCENT,
     FRONT_CARD_STORY_START_PERCENT,
-    FRONT_CARD_TOP_PERCENT,
     PUNCTUATION_CONTINUATION_CHARS,
     QUOTE_CHARACTERS,
     SPECIAL_POWER_LEVEL_WIDTHS,
     SPECIAL_POWER_REGION,
 )
 from scripts.cli.parse.parsing_models import FieldStrategies, FrontCardFields, ImageRegions
+from scripts.models.character import Power
 from scripts.models.character_constants import (
     LOCATION_MAX_LENGTH,
     NAME_MAX_LENGTH,
@@ -294,7 +294,6 @@ def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
     Returns:
         ImageRegions model with region coordinates for each field
     """
-    top_height = int(img_height * FRONT_CARD_TOP_PERCENT)
     location_start = int(img_height * 0.32)  # 32% from top
     location_end = int(img_height * FRONT_CARD_LOCATION_END_PERCENT)  # Currently 30%, but should be > 35%
     # If end < start, use a default height (will be adjusted by user)
@@ -308,13 +307,13 @@ def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
     story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
 
     name_start = int(img_height * 0.26)  # Name region starts at 26%
-    name_height = int(img_height * 0.06)  # Name region height is 6%
+    name_height = int(img_height * 0.068)  # Name region height is 6.8%
     name_width = int(img_width * 0.45)  # Name region width is 45% (same as other regions)
-    
+
     # All regions use 45% width starting at 5% X
     region_x_start = int(img_width * 0.05)  # Start at 5% from left
     region_width = int(img_width * 0.45)  # Width is 45%
-    
+
     return ImageRegions(
         name=(region_x_start, name_start, name_width, name_height),
         location=(region_x_start, location_start, region_width, location_height),
@@ -336,8 +335,18 @@ def _parse_name_from_text(text: str) -> str:
     # Sort by length descending to prefer longer matches
     sorted_lines = sorted(name_lines, key=len, reverse=True)
     for line in sorted_lines:
+        # Remove leading digits/numbers and OCR artifacts (like "5", "7", "p", etc.)
+        cleaned_line = re.sub(r"^[\d\s\-_|~pP]+", "", line)
+        cleaned_line = cleaned_line.strip()
+        # Check if cleaned line is all uppercase (name should be uppercase)
+        if cleaned_line.isupper() and len(cleaned_line) >= 3:
+            return cleaned_line
+        # Also check original line if it's mostly uppercase (handles cases like "5 LORD ADAM")
         if line.isupper() and len(line) >= 3:
             return line
+        # Handle cases like "p LORD ADAM BENCHLEY" - remove leading single lowercase letter
+        if len(line) > 3 and line[0].islower() and line[1:].isupper():
+            return line[1:].strip()
     return ""
 
 
@@ -420,11 +429,16 @@ def _extract_quoted_motto(filtered_lines: List[str]) -> str:
         has_quotes = any(quote_char in line for quote_char in QUOTE_CHARACTERS)
 
         if has_quotes:
-            # Try each quote pattern
+            # Try each quote pattern - but handle multi-line quoted mottos
+            # First, try to find the full quoted text across multiple lines
+            full_line = " ".join(filtered_lines)  # Combine all lines to catch multi-line quotes
             for pattern in quote_patterns:
-                quoted_match = re.search(pattern, line)
-                if quoted_match:
-                    motto = quoted_match.group(1).strip()
+                # Find all matches (might span multiple lines)
+                matches = list(re.finditer(pattern, full_line))
+                if matches:
+                    # Use the longest match (likely the full motto)
+                    longest_match = max(matches, key=lambda m: len(m.group(1)))
+                    motto = longest_match.group(1).strip()
                     # For quoted mottos, be more lenient:
                     # - Allow single-word mottos (like "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!")
                     # - Allow all-caps mottos if they're in quotes
@@ -432,6 +446,17 @@ def _extract_quoted_motto(filtered_lines: List[str]) -> str:
                     if (
                         len(motto) >= MOTTO_MIN_LINE_LENGTH  # At least 2 chars
                         and len(motto) <= MOTTO_MAX_CHARS_QUOTED * 2  # Allow up to 300 chars for quoted
+                    ):
+                        return motto
+
+            # If no pattern match, try individual line
+            for pattern in quote_patterns:
+                quoted_match = re.search(pattern, line)
+                if quoted_match:
+                    motto = quoted_match.group(1).strip()
+                    if (
+                        len(motto) >= MOTTO_MIN_LINE_LENGTH
+                        and len(motto) <= MOTTO_MAX_CHARS_QUOTED * 2
                     ):
                         return motto
 
@@ -639,6 +664,22 @@ def _extract_story_text(
         story_text = extract_text_from_region_with_strategy(
             image_path, bottom_region, story_strategy
         )
+
+    # Clean story text with advanced NLP post-processing
+    if story_text:
+        from scripts.core.parsing.text import clean_ocr_text
+        from scripts.models.character_parsing_helpers import fix_story_ocr_errors
+
+        story_text = clean_ocr_text(story_text, preserve_newlines=True)
+        story_text = fix_story_ocr_errors(story_text)
+        # Try advanced NLP post-processing for better correction
+        try:
+            from scripts.core.parsing.nlp_postprocessing import advanced_nlp_postprocess
+
+            story_text = advanced_nlp_postprocess(story_text)
+        except ImportError:
+            # Fallback if NLP post-processing not available
+            pass
 
     return story_text or ""
 
@@ -902,6 +943,17 @@ def _extract_common_powers_from_region(
     Returns:
         List of common power names found in the region
     """
+    from scripts.models.character import BackCardData
+    from scripts.models.constants import get_common_power_names
+    from scripts.utils.power_extraction_helpers import (
+        check_fuzzy_match_quality,
+        extract_power_candidate_from_words,
+        find_power_via_fuzzy_matching,
+        validate_power_length,
+        validate_power_partial_match,
+        validate_power_quality,
+    )
+
     # Extract text from region
     region_text = extract_text_from_region_with_strategy(image_path, region, strategy_name)
     if not region_text:
@@ -910,10 +962,6 @@ def _extract_common_powers_from_region(
     # Split into lines and match common power names
     lines = [line.strip() for line in region_text.split("\n") if line.strip()]
     found_powers: List[str] = []
-
-    # Import the detection function from character.py
-    from scripts.models.character import BackCardData
-    from scripts.models.constants import get_common_power_names
 
     # Get all known common power names
     all_common_powers = get_common_power_names()
@@ -924,250 +972,63 @@ def _extract_common_powers_from_region(
     except ImportError:
         rapidfuzz_fuzz = None
 
-    # Filter lines to only consider short lines that look like power headers
-    # Also check individual words in longer lines (OCR might extract power name with garbage)
+    # Process each line to find power names
     for i, line in enumerate(lines):
         line_stripped = line.strip()
-        line_upper = line_stripped.upper()
-        
-        # If line is SHORT (<=15 chars) and contains multiple words, try extracting just the power name part
-        # This handles cases like "ps sss" where "sss" is part of "Swiftness"
-        # But DON'T do this for long description lines (too many false positives from common words)
-        words = line_stripped.split()
-        power_candidate_line = None
-        if len(words) > 1 and len(line_stripped) <= 15:  # SHORT line with multiple words/characters
-            # First check if the full line matches (prefer exact matches)
-            full_line_power = BackCardData._detect_common_power(line_stripped)
-            if not full_line_power:
-                # Try to find a word or word combination that matches a power name
-                # Prefer longer words (more likely to be power names)
-                words_by_length = sorted(words, key=lambda w: len(w.rstrip(';:.,!?|~-_').strip()), reverse=True)
-                for word in words_by_length:
-                    word_clean = word.rstrip(';:.,!?|~-_').strip()
-                    if len(word_clean) >= 3:  # At least 3 chars (reject 2-char words entirely)
-                        detected = BackCardData._detect_common_power(word_clean)
-                        if detected:
-                            # Found a power name in this word, use just this word
-                            power_candidate_line = word_clean
-                            break
-                # If no single word matched, try 2-word combinations (for "Arcane Mastery" etc)
-                if not power_candidate_line and len(words) >= 2:
-                    for j in range(len(words) - 1):
-                        two_words = f"{words[j]} {words[j+1]}"
-                        two_words_clean = two_words.rstrip(';:.,!?|~-_').strip()
-                        detected = BackCardData._detect_common_power(two_words_clean)
-                        if detected:
-                            power_candidate_line = two_words_clean
-                            break
-        
-        # Use the extracted power candidate if found, otherwise use full line
-        if power_candidate_line:
-            line_stripped = power_candidate_line
-            line_upper = line_stripped.upper()
+
+        # Try extracting power candidate from short multi-word lines
+        power_candidate = extract_power_candidate_from_words(line_stripped, all_common_powers)
+        if power_candidate:
+            line_stripped = power_candidate
 
         # First try the detection function (handles exact matches and common patterns)
         power_name = BackCardData._detect_common_power(line_stripped)
 
-        # If not detected, actively search all known power names using fuzzy matching
-        # This helps catch OCR errors like "sea:" -> "Stealth" or "i steetsess" -> "Swiftness"
-        if not power_name and rapidfuzz_fuzz:
-            best_match = None
-            best_score = 0.0
-            best_partial_score = 0.0  # Track partial ratio separately
-            best_power = None
-
-            # Clean the line for better matching
-            line_clean = line_stripped.rstrip(';:.,!?|~-_').strip()
-            
-            # Determine threshold based on line length
-            # Very short lines (3-5 chars) might be OCR errors, so be more lenient
-            is_very_short = len(line_clean) <= 5
-            is_short = len(line_clean) <= 10
-            is_long = len(line_clean) > 30
-            
-            for known_power in all_common_powers:
-                # Try exact match first
-                if known_power.upper() == line_clean.upper():
-                    best_match = known_power
-                    best_score = 100.0
-                    best_partial_score = 100.0
-                    break
-                
-                # Try fuzzy matching
-                ratio = rapidfuzz_fuzz.ratio(line_clean.upper(), known_power.upper())
-                partial_ratio = rapidfuzz_fuzz.partial_ratio(line_clean.upper(), known_power.upper())
-                
-                # Use the better of the two ratios
-                score = max(ratio, partial_ratio)
-                
-                # Adjust threshold based on line length
-                if is_very_short:
-                    # Very short lines: 60% threshold, but allow 75%+ partial matches even if short
-                    threshold = 60.0
-                    max_length_multiplier = 2.0  # Allow up to 2x the power name length
-                elif is_short:
-                    # Short lines: 65% threshold
-                    threshold = 65.0
-                    max_length_multiplier = 1.8
-                elif is_long:
-                    # Long lines: 75% threshold and must be close to power name length
-                    threshold = 75.0
-                    max_length_multiplier = 1.3
-                else:
-                    # Medium lines: 70% threshold
-                    threshold = 70.0
-                    max_length_multiplier = 1.5
-                
-                # Check if score meets threshold and length is reasonable
-                # For very short lines with high partial match (>=75%), be more lenient
-                if score > best_score and (
-                    score >= threshold or 
-                    (is_very_short and partial_ratio >= 75.0)  # High partial match for short lines
-                ):
-                    # Additional validation: reject if line is too long (likely description)
-                    if len(line_clean) <= len(known_power) * max_length_multiplier:
-                        best_score = score
-                        best_partial_score = partial_ratio
-                        best_match = known_power
-            
-            # Accept the best match if it's good enough
-            # Require stronger matches to reduce false positives
-            if best_match:
-                if is_very_short:
-                    # Very short lines: require at least 65% OR 75%+ partial match
-                    if best_score >= 65.0 or best_partial_score >= 75.0:
-                        power_name = best_match
-                elif is_short:
-                    # Short lines: require at least 70% (was 65%)
-                    if best_score >= 70.0:
-                        power_name = best_match
-                else:
-                    # Medium/long lines: require at least 75% (was 70%)
-                    if best_score >= 75.0:
-                        power_name = best_match
-
-        # If it's detected as a power, skip description check (OCR errors might cause false positives)
-        # But still reject if line is too long (likely description text with accidental match)
+        # If not detected, try fuzzy matching
         if not power_name:
-            # Skip lines that look like descriptions (only if not detected as power)
+            power_name = find_power_via_fuzzy_matching(line_stripped, all_common_powers, rapidfuzz_fuzz)
+
+        # Skip lines that look like descriptions (only if not detected as power)
+        if not power_name:
             if _is_line_likely_description(line_stripped):
                 continue
         else:
-            # Even if detected as power, reject if line is too long (likely description with false positive)
-            # Power headers are typically short (<=20 chars)
-            if len(line_stripped) > 20:
-                # Long line detected as power - likely false positive from description text
-                # Exception: allow if it's a multi-word power name like "Arcane Mastery"
-                if power_name not in ["Arcane Mastery"]:  # Known multi-word powers
-                    continue
+            # Reject long lines detected as power (likely false positives)
+            # Exception: allow multi-word power names like "Arcane Mastery"
+            if len(line_stripped) > 20 and power_name not in ["Arcane Mastery"]:
+                continue
 
+        # Validate and process detected power
         if power_name and power_name not in found_powers:
-            # Track if this power was found via fuzzy matching (more lenient validation)
-            # Also check if it has a high partial match score (even if detected by function)
-            found_via_fuzzy = False
-            has_high_partial_match = False
-            if rapidfuzz_fuzz:
-                # Check if this was found via our active fuzzy search (not the detection function)
-                line_clean = line_stripped.rstrip(';:.,!?|~-_').strip()
-                ratio = rapidfuzz_fuzz.ratio(line_clean.upper(), power_name.upper())
-                partial = rapidfuzz_fuzz.partial_ratio(line_clean.upper(), power_name.upper())
-                score = max(ratio, partial)
-                # If fuzzy match score is high enough, it was likely found via fuzzy search
-                found_via_fuzzy = score >= 60.0 and power_name.upper() != line_clean.upper()
-                # Also check if partial match is high (>=75%) - indicates good match despite OCR errors
-                has_high_partial_match = partial >= 75.0
+            # Check fuzzy match quality
+            found_via_fuzzy, has_high_partial_match = check_fuzzy_match_quality(
+                line_stripped, power_name, rapidfuzz_fuzz
+            )
 
-            # Reject very short lines that are likely OCR garbage (unless exact match or fuzzy match)
-            # e.g., "Ye" matching "Arcane Mastery" or "AAN" matching "Marksman"
-            # Reject 2-character lines entirely unless exact match (too many false positives)
-            if len(line_stripped) == 2 and power_name.upper() != line_stripped.upper():
-                # 2-character lines are almost always false positives
-                continue
-            elif len(line_stripped) < 4 and power_name.upper() != line_stripped.upper() and not found_via_fuzzy:
-                # Very short line that's not an exact match - likely OCR garbage
+            # Validate length
+            is_valid_length, line_stripped = validate_power_length(
+                line_stripped, power_name, found_via_fuzzy, has_high_partial_match, rapidfuzz_fuzz
+            )
+            if not is_valid_length:
                 continue
 
-            # Reject lines that are too short compared to power name (missing too much)
-            # But be lenient for OCR errors - allow if at least 50% of power name length
-            # Also allow very short lines (3-4 chars) if they're detected as power names
-            # (e.g., "sea:" for "Stealth" - OCR might extract just part of the word)
-            min_length_threshold = len(power_name) * 0.5  # Reduced from 0.6 to 0.5
-            if len(line_stripped) < min_length_threshold:
-                # Exception: Allow very short lines if found via fuzzy matching OR has high partial match
-                if found_via_fuzzy or has_high_partial_match:
-                    # Check if partial match was high (>=75%) - indicates good match despite short length
-                    if rapidfuzz_fuzz:
-                        partial = rapidfuzz_fuzz.partial_ratio(line_stripped.upper(), power_name.upper())
-                        if partial >= 75.0:
-                            # High partial match, trust it even if short (e.g., "sss" -> "Swiftness")
-                            pass
-                        elif len(line_stripped) >= 3:
-                            # Lower partial match but at least 3 chars, allow it
-                            pass
-                        else:
-                            continue
-                    elif len(line_stripped) >= 3:
-                        # Fuzzy match found it, trust it even if short
-                        pass
-                    else:
-                        continue
-                elif len(line_stripped) >= 3:
-                    # Check if removing punctuation makes it match better
-                    line_no_punct = line_stripped.rstrip(';:.,!?|~-_').strip()
-                    if line_no_punct and BackCardData._detect_common_power(line_no_punct) == power_name:
-                        # If removing punctuation still matches, allow it (OCR error with punctuation)
-                        line_stripped = line_no_punct
-                    elif len(line_stripped) >= 3:
-                        # Very short line (3-4 chars) that's detected as a power - likely OCR partial extraction
-                        # Allow it if fuzzy matching confirms it's close
-                        if rapidfuzz_fuzz:
-                            ratio = rapidfuzz_fuzz.ratio(line_stripped.upper(), power_name.upper())
-                            if ratio >= 60.0:  # At least 60% similarity
-                                pass  # Allow it
-                            else:
-                                continue
-                        else:
-                            continue
-                    else:
-                        continue
-                else:
-                    continue
+            # Validate partial matches
+            is_valid_partial, line_stripped = validate_power_partial_match(
+                line_stripped, power_name, found_via_fuzzy, rapidfuzz_fuzz
+            )
+            if not is_valid_partial:
+                continue
 
-            # Reject partial matches, but be more lenient for detected power names
-            # (OCR errors like ";CANE MASTERY" for "ARCANE MASTERY" should be allowed)
-            # Skip this check if found via fuzzy matching (we already validated it)
-            if not found_via_fuzzy and _reject_partial_match(line_stripped, power_name, rapidfuzz_fuzz):
-                # If the line was detected as a power name, be more lenient
-                # Check if removing leading punctuation makes it a better match
-                line_no_punct = line_stripped.lstrip(';:.,!?|~-_').strip()
-                if line_no_punct and BackCardData._detect_common_power(line_no_punct) == power_name:
-                    # If removing punctuation still matches, use the cleaned version
-                    line_stripped = line_no_punct
-                else:
-                    continue
-
-            # Validate match quality - skip if found via fuzzy matching (already validated)
-            if found_via_fuzzy:
-                is_good_match = True  # Trust fuzzy match
-            else:
-                is_good_match = _validate_power_match_quality(line_stripped, power_name, rapidfuzz_fuzz)
-
-            # Additional validation for non-exact matches
-            if is_good_match and power_name.upper() != line_upper:
-                # Check if line contains description keywords
-                if _check_line_has_description_keywords(line_stripped):
-                    is_good_match = False
-
-                # Check if previous line suggests this is part of a description
-                if i > 0:
-                    prev_line = lines[i - 1].strip()
-                    if _check_previous_line_suggests_description(prev_line, lines, i):
-                        is_good_match = False
+            # Validate overall quality
+            prev_line = lines[i - 1].strip() if i > 0 else None
+            is_good_match = validate_power_quality(
+                line_stripped, power_name, found_via_fuzzy, rapidfuzz_fuzz, prev_line
+            )
 
             if is_good_match:
                 found_powers.append(power_name)
                 # Limit to 2 common powers (characters always have exactly 2)
-                if len(found_powers) >= 2:
+                if len(found_powers) >= COMMON_POWER_MAX_POWERS:
                     break
 
     return found_powers
@@ -1254,7 +1115,7 @@ def extract_common_powers_from_back_card(
         # Otherwise, collect one power from each region (Region 1 = first power, Region 2 = second power)
         found_powers: List[str] = []
         region_powers: List[List[str]] = []  # Powers found in each region
-        
+
         for region in regions_to_try:
             # Try each strategy for this region until we find at least one power
             region_powers_this_region: List[str] = []
@@ -1264,12 +1125,12 @@ def extract_common_powers_from_back_card(
                     # If this strategy found exactly 2 powers, use it immediately (perfect match)
                     if len(region_powers_found) == 2:
                         return region_powers_found[:COMMON_POWER_MAX_POWERS]
-                    
+
                     # Collect unique powers from this region
                     for power in region_powers_found:
                         if power not in region_powers_this_region:
                             region_powers_this_region.append(power)
-                    
+
                     # If we found at least one power with this strategy, prefer it
                     # (don't try other strategies for this region to avoid false positives)
                     if region_powers_this_region:
@@ -1277,10 +1138,10 @@ def extract_common_powers_from_back_card(
                 except Exception:
                     # If a strategy fails, continue with next strategy
                     continue
-            
+
             # Store powers found in this region
             region_powers.append(region_powers_this_region)
-        
+
         # Now combine results: prefer one power from each region
         # Region 1 should have the first power, Region 2 should have the second power
         if len(region_powers) >= 2:
@@ -1294,7 +1155,7 @@ def extract_common_powers_from_back_card(
         elif region_powers and region_powers[0]:
             # Only one region defined, take up to 2 powers from it
             found_powers = region_powers[0][:COMMON_POWER_MAX_POWERS]
-        
+
         return found_powers
 
     except Exception as e:
@@ -1309,7 +1170,7 @@ def extract_common_powers_from_back_card(
 
 def extract_special_power_from_back_card(
     image_path: Path, config: Optional[Dict[str, Dict]] = None
-) -> Optional["Power"]:
+) -> Optional[Power]:
     """Extract special power from back card using region-specific extraction.
 
     Special powers appear in a consistent region on the back card (typically
@@ -1380,30 +1241,100 @@ def extract_special_power_from_back_card(
             return None
 
         # Extract power name from the full region text
-        from scripts.models.character import BackCardData, Power, PowerLevel
-        import re
         from scripts.core.parsing.text import clean_ocr_text
+        from scripts.models.character import BackCardData
 
         cleaned_text = clean_ocr_text(region_text, preserve_newlines=True)
         lines = [line.strip() for line in cleaned_text.split("\n") if line.strip()]
 
         power_name = None
-        for line in lines[:10]:  # Check first 10 lines for power name
-            # Skip single digits/numbers (level indicators)
-            if line.isdigit() and len(line) == 1:
-                continue
-            # Look for all-caps line (power name)
-            if line.isupper() and len(line) > 3 and not any(char.isdigit() for char in line):
-                power_name = line
-                break
+        # Skip OCR garbage patterns (like "5 pe BY MADNESS", random characters, etc.)
+        garbage_patterns = [
+            r"^[\d\s]+$",  # Just digits and spaces
+            r"^[a-z]{1,2}\s+[a-z]{1,2}",  # Very short lowercase words
+            r"^[A-Z]{1,2}\s+[A-Z]{1,2}\s+[A-Z]{1,2}",  # Very short uppercase words (likely OCR garbage)
+            r"Instead, gain",  # Common phrase that's not a power name
+            r"Gain @",  # Common phrase
+        ]
 
-        # If no all-caps line found, try to extract from first substantial line
+        # Common power name patterns to look for (handle OCR errors)
+        # Look for "BY MADNESS" pattern and reconstruct "FUELED BY MADNESS"
+        full_text = " ".join(lines[:15])
+
+        # Check for "BY MADNESS" pattern
+        by_madness_match = re.search(r"BY\s+MADNESS", full_text, re.I)
+        if by_madness_match:
+            # Look for "FUELED" before "BY MADNESS"
+            before_match = full_text[:by_madness_match.start()]
+            fueled_match = re.search(r"FUELED|FUEL|FUELE", before_match, re.I)
+            if fueled_match:
+                # Found "FUELED BY MADNESS"
+                power_name = "FUELED BY MADNESS"
+            else:
+                # Just "BY MADNESS" - reconstruct as "FUELED BY MADNESS"
+                power_name = "FUELED BY MADNESS"
+
+        # If not found, look for other power name patterns
         if not power_name:
-            for line in lines[:10]:
-                if len(line) > 3 and not line.isdigit():
-                    words = line.split()
-                    if len(words) >= 2 and words[0][0].isupper():
-                        power_name = line
+            power_name_patterns = [
+                r"FUELED\s+BY\s+MADNESS",  # Full match
+                r"FUELED\s+BY",  # Partial
+                r"MADNESS",  # Just "MADNESS" if preceded by "BY"
+            ]
+
+            for pattern in power_name_patterns:
+                match = re.search(pattern, full_text, re.I)
+                if match:
+                    # Extract surrounding context to get full power name
+                    start = max(0, match.start() - 20)
+                    end = min(len(full_text), match.end() + 20)
+                    context = full_text[start:end]
+                    # Look for all-caps words around the match
+                    words = context.split()
+                    caps_words = [w for w in words if w.isupper() and len(w) > 2 and w not in ["INSTEAD", "GAIN", "WHILE", "YOUR", "SANITY", "SPACE", "BACK"]]
+                    if caps_words:
+                        # Try to reconstruct power name (e.g., "FUELED BY MADNESS")
+                        power_name = " ".join(caps_words[-3:])  # Take up to 3 words
+                        if len(power_name) > 5:
+                            break
+
+        # If no pattern match, look for all-caps lines
+        if not power_name:
+            for line in lines[:15]:
+                line_clean = line.strip()
+                # Skip empty lines
+                if not line_clean:
+                    continue
+                # Skip single digits/numbers (level indicators)
+                if line_clean.isdigit() and len(line_clean) == 1:
+                    continue
+                # Skip garbage patterns
+                if any(re.match(pattern, line_clean, re.I) for pattern in garbage_patterns):
+                    continue
+                # Skip lines that are mostly punctuation or special characters
+                if sum(1 for c in line_clean if c.isalnum()) < len(line_clean) * 0.5:
+                    continue
+                # Look for all-caps line (power name) - must be substantial
+                if line_clean.isupper() and len(line_clean) > 5 and not any(char.isdigit() for char in line_clean):
+                    # Make sure it's not just common words
+                    if line_clean not in ["INSTEAD", "GAIN", "WHILE", "YOUR", "SANITY", "SPACE", "BACK"]:
+                        power_name = line_clean
+                        break
+
+        # If still no power name, try to extract from first substantial line
+        if not power_name:
+            for line in lines[:15]:
+                line_clean = line.strip()
+                if not line_clean or len(line_clean) <= 3 or line_clean.isdigit():
+                    continue
+                # Skip garbage patterns
+                if any(re.match(pattern, line_clean, re.I) for pattern in garbage_patterns):
+                    continue
+                words = line_clean.split()
+                if len(words) >= 2 and words[0][0].isupper():
+                    # Make sure it's not just common phrases
+                    if line_clean.upper() not in ["INSTEAD, GAIN", "GAIN @", "WHILE YOUR"]:
+                        power_name = line_clean
                         break
 
         if not power_name:
@@ -1422,20 +1353,26 @@ def extract_special_power_from_back_card(
                 int(img_width * level_width_pct),
                 int(img_height * sp_height_pct),
             )
-            
+
             level_text = extract_text_from_region_with_strategy(image_path, level_region, power_strategy)
             if level_text:
-                # Clean the text
+                # Clean the text with advanced NLP post-processing
                 cleaned_level_text = clean_ocr_text(level_text, preserve_newlines=False)
                 cleaned_level_text = cleaned_level_text.strip()
-                
+
+                # Apply advanced NLP post-processing for better OCR error correction
+                try:
+                    from scripts.core.parsing.nlp_postprocessing import advanced_nlp_postprocess
+
+                    cleaned_level_text = advanced_nlp_postprocess(cleaned_level_text)
+                except ImportError:
+                    # Fallback if NLP post-processing not available
+                    pass
+
                 # Remove power name if it appears in the level text (handle partial matches)
-                power_name_upper = power_name.upper()
-                cleaned_level_text_upper = cleaned_level_text.upper()
-                
                 # Remove full power name
                 cleaned_level_text = re.sub(rf"\b{re.escape(power_name)}\b", "", cleaned_level_text, flags=re.I)
-                
+
                 # Remove partial power name matches (e.g., "GATE MANIPUI" or "ATION")
                 # Split power name into words and remove each word if it appears alone
                 power_words = power_name.split()
@@ -1443,7 +1380,7 @@ def extract_special_power_from_back_card(
                     if len(word) > 3:  # Only remove substantial words
                         # Remove word if it appears as a standalone word
                         cleaned_level_text = re.sub(rf"\b{re.escape(word)}\b", "", cleaned_level_text, flags=re.I)
-                
+
                 # Remove partial matches at the start (e.g., "MANIPUI" for "MANIPULATION", "ATION" for "MANIPULATION")
                 # Check if text starts with a partial match of power name words
                 cleaned_words = cleaned_level_text.split()
@@ -1455,13 +1392,13 @@ def extract_special_power_from_back_card(
                         # If first word starts with or is contained in a power name word (or vice versa)
                         # Also check if first word starts with same letters as power name word (for OCR errors)
                         if (
-                            (first_word in word_upper or word_upper in first_word) 
+                            (first_word in word_upper or word_upper in first_word)
                             or (len(first_word) >= 4 and len(word_upper) >= 4 and first_word[:4] == word_upper[:4])
                         ) and len(first_word) >= 3:
                             cleaned_words = cleaned_words[1:]  # Remove first word
                             cleaned_level_text = " ".join(cleaned_words)
                             break
-                    
+
                     # Also check if first word looks like OCR error of power name (e.g., "MANIPUI" for "MANIPULATION")
                     # Check if first 4-5 characters match any power name word
                     if cleaned_words and len(first_word) >= 4:
@@ -1472,12 +1409,12 @@ def extract_special_power_from_back_card(
                                 cleaned_words = cleaned_words[1:]
                                 cleaned_level_text = " ".join(cleaned_words)
                                 break
-                
+
                 # Remove leading digits and clean up
                 cleaned_level_text = re.sub(r"^\d+\s*", "", cleaned_level_text)  # Remove leading digits
                 cleaned_level_text = re.sub(r"\s+", " ", cleaned_level_text)  # Normalize whitespace
                 cleaned_level_text = cleaned_level_text.strip()
-                
+
                 # Only add if it has substantial content (at least 3 words) and doesn't look like just OCR garbage
                 if cleaned_level_text and len(cleaned_level_text.split()) >= 3:
                     # Check if it's mostly letters (not just symbols/garbage)
@@ -1485,7 +1422,7 @@ def extract_special_power_from_back_card(
                     if letter_count >= len(cleaned_level_text) * 0.3:  # At least 30% letters
                         level_num = level_idx + 1
                         power.add_level_from_text(level_num, cleaned_level_text)
-            
+
             # Move to next level's X position
             current_x_pct += level_width_pct
 
@@ -1616,6 +1553,21 @@ def extract_front_card_fields_with_optimal_strategies(
                     location = line_stripped
 
         story = _extract_story_text(image_path, extractor, img_height, img_width, strategies.story)
+        # Clean story text with advanced NLP post-processing
+        if story:
+            from scripts.core.parsing.text import clean_ocr_text
+            from scripts.models.character_parsing_helpers import fix_story_ocr_errors
+
+            story = clean_ocr_text(story, preserve_newlines=True)
+            story = fix_story_ocr_errors(story)
+            # Try advanced NLP post-processing for better correction
+            try:
+                from scripts.core.parsing.nlp_postprocessing import advanced_nlp_postprocess
+
+                story = advanced_nlp_postprocess(story)
+            except ImportError:
+                # Fallback if NLP post-processing not available
+                pass
 
         return FrontCardFields(
             name=name or None,

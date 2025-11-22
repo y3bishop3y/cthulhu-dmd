@@ -1,7 +1,34 @@
 {
-  "name": "Rasputin",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "name": "RASPUTIN",
+  "location": "MOSCOW, RUSSIA",
+  "motto": "Dead again.”",
+  "story": "err Living forever wasnt exactly Rasputins idea, He was i 4! 4-ae ve captured by a cult after destroying one of their most i 7 mr : extensive operations. Their particular brand of torture i ee re involved gifting him with:a cycle of instant-revivification, 1 Zoe such that he could be tortured to death gain and i Ay gain. Naturally, this didnt go the way the cult planned. i , He escaped,. killing their leaders in the process, and ig SS 0, discovéted the gift hiad-stuck with him. Thé magic itself 4 , isslowly decaying, and he knows that eventually he will NN _ die ore final time, but for row, he instead to use this Al vat Ne ower for the: greater good. f Poy power g Le fa a , ine ere, ee ol a----a Living forever wasnt-actly Ratpuzin: dea. He was a. . oo ity, . cepsured by a cull afler desireylaa ene of thelr mos: _ 3 . ecensive operations. Their particular brand of torture involved glftiag him wilh a cyele of instant revvficetlon. 4 Fr. ! such tha; he could ke tortured io death gain and : ayaln, Naterally, thlz didnt go the way the cu:: plands. we i SS He escaped, killing their leaders ir the process, and : i Hee discovered the gfl had suck with hn. attack magic I:cif 4 AY is alowly decaying, and he knows that eventually he will i : HPN die cne final ime, but for now, he instead to use this Apaa f a ve power for the graater qead. 2h lap NA i 5 a Mes ee I v,",
+  "special_power": {
+    "name": "If you woundld die from",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "PS 1 free death: If you wound die wounds, instead return to life with full stealth. er"
+      },
+      {
+        "level": 2,
+        "description": ". 1 additional free death (2 total. ae"
+      },
+      {
+        "level": 3,
+        "description": "When you return fo life, also heal ail your stress, -"
+      },
+      {
+        "level": 4,
+        "description": "ww OY Nw e R 1 additional free death 13 total). _"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Arcane Mastery",
+    "Brawling"
+  ]
 }

@@ -51,16 +51,16 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
         return
 
     h, w = img.shape[:2]
-    
+
     # Use 45% width for most front card regions
     region_width = int(w * 0.45)
     # Start X position at 5% from the left
     x_start = int(w * 0.05)
-    
-    # Name region has width 45% (same as other regions), height 6%, starts at 26% Y
+
+    # Name region has width 45% (same as other regions), height 6.8%, starts at 26% Y
     name_width = int(w * 0.45)  # Width is 45% (same as other regions)
     name_start_y = int(h * 0.26)
-    name_height = int(h * 0.06)  # Height is 6%
+    name_height = int(h * 0.068)  # Height is 6.8%
 
     # Define regions with colors and labels
     regions = [
@@ -118,11 +118,11 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
         font_scale_medium = 0.6  # Was 1.0, now 0.6 (2 sizes smaller)
         font_thickness_large = 2  # Was 3, now 2
         font_thickness_medium = 1  # Was 2, now 1
-        
+
         label_text = f"{name}"
         label_text2 = f"Pixels: ({x},{y},{width},{height})"
         label_text3 = f"Percent: ({x_pct:.1f}%,{y_pct:.1f}%,{width_pct:.1f}%,{height_pct:.1f}%)"
-        
+
         # Calculate text size for multi-line label
         (text_width1, text_height1), _ = cv2.getTextSize(
             label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale_large, font_thickness_large
@@ -133,11 +133,11 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
         (text_width3, text_height3), _ = cv2.getTextSize(
             label_text3, cv2.FONT_HERSHEY_SIMPLEX, font_scale_medium, font_thickness_medium
         )
-        
+
         max_width = max(text_width1, text_width2, text_width3)
         total_height = text_height1 + text_height2 + text_height3 + 15
         padding = 5
-        
+
         # For Story, Motto, and Location regions, place label inside the box
         # Story: bottom-left, Motto & Location: bottom-right
         # For other regions, place above the box
@@ -146,10 +146,10 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
             label_x = x + padding
             label_y = y + height - total_height - padding
         elif name == "Motto Region":
-            # Position label inside the box at bottom-right
-            label_x = x + width - max_width - padding * 2
+            # Position label inside the box at bottom-left
+            label_x = x + padding
             label_y = y + height - total_height - padding
-            
+
             # Draw label background with border for better visibility
             bg_color = (0, 0, 0)  # Black background
             cv2.rectangle(
@@ -167,7 +167,7 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
                 (255, 255, 255),
                 1,  # Border thickness
             )
-            
+
             # Add label text (multi-line) inside the box
             cv2.putText(
                 annotated_img,
@@ -200,7 +200,7 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
             # Position label inside the box at bottom-right
             label_x = x + width - max_width - padding * 2
             label_y = y + height - total_height - padding
-            
+
             # Draw label background with border for better visibility
             bg_color = (0, 0, 0)  # Black background
             cv2.rectangle(
@@ -218,7 +218,7 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
                 (255, 255, 255),
                 1,  # Border thickness
             )
-            
+
             # Add label text (multi-line) inside the box
             cv2.putText(
                 annotated_img,
@@ -251,7 +251,7 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
             # Position label above the box for other regions
             label_x = x + padding
             label_y = y - total_height - padding
-            
+
             # Draw label background with border for better visibility
             bg_color = (0, 0, 0)  # Black background
             cv2.rectangle(
@@ -331,7 +331,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     ]
 
     annotated_img = img.copy()
-    
+
     # Draw special power region first
     sp_x_pct, sp_y_pct, sp_width_pct, sp_height_pct = SPECIAL_POWER_REGION
     sp_x = int(w * sp_x_pct)
@@ -339,10 +339,10 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     sp_width = int(w * sp_width_pct)
     sp_height = int(h * sp_height_pct)
     sp_color = colors[0]  # Orange
-    
+
     # Draw special power rectangle outline first (so sub-regions are on top)
     cv2.rectangle(annotated_img, (sp_x, sp_y), (sp_x + sp_width, sp_y + sp_height), sp_color, 3)
-    
+
     # Create 4 vertical sub-regions for special power levels
     # Level 1: 32%, Level 2: 22.67%, Level 3: 19.87%, Level 4: 25.45% (of special power region width)
     level_width_pcts = [
@@ -357,7 +357,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         (255, 100, 0),    # Darker orange for Level 3
         (255, 60, 0),     # Darkest orange for Level 4
     ]
-    
+
     # Draw the 4 level sub-regions (vertical splits)
     current_x_pct = sp_x_pct
     for level_idx in range(4):
@@ -366,10 +366,10 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         level_width_pct = level_width_pcts[level_idx]
         level_width = int(w * level_width_pct)
         level_color = level_colors[level_idx]
-        
+
         # Update current_x_pct for next iteration
         current_x_pct += level_width_pct
-        
+
         # Draw rectangle for this level (same Y and Height as special power region)
         cv2.rectangle(
             annotated_img,
@@ -378,20 +378,20 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
             level_color,
             2,  # Thinner border for sub-regions
         )
-        
+
         # Add label for this level
         font_scale = 0.5
         font_thickness = 1
         label_text = f"Level {level_idx + 1}"
-        
+
         (text_width, text_height), _ = cv2.getTextSize(
             label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, font_thickness
         )
-        
+
         # Position label at top-left of sub-region
         label_x = level_x + 5
         label_y = sp_y + text_height + 5
-        
+
         # Draw label background
         cv2.rectangle(
             annotated_img,
@@ -400,7 +400,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
             (0, 0, 0),
             -1,
         )
-        
+
         # Draw label text
         cv2.putText(
             annotated_img,
@@ -411,17 +411,17 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
             level_color,
             font_thickness,
         )
-    
+
     # Add special power label (same style as front card)
     font_scale_large = 0.8
     font_scale_medium = 0.6
     font_thickness_large = 2
     font_thickness_medium = 1
-    
+
     sp_label_text = "Special Power Region"
     sp_label_text2 = f"Pixels: ({sp_x},{sp_y},{sp_width},{sp_height})"
     sp_label_text3 = f"Percent: ({sp_x_pct*100:.0f}%,{sp_y_pct*100:.0f}%,{sp_width_pct*100:.0f}%,{sp_height_pct*100:.0f}%)"
-    
+
     (sp_text_width1, sp_text_height1), _ = cv2.getTextSize(
         sp_label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale_large, font_thickness_large
     )
@@ -431,15 +431,15 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     (sp_text_width3, sp_text_height3), _ = cv2.getTextSize(
         sp_label_text3, cv2.FONT_HERSHEY_SIMPLEX, font_scale_medium, font_thickness_medium
     )
-    
+
     sp_max_width = max(sp_text_width1, sp_text_width2, sp_text_width3)
     sp_total_height = sp_text_height1 + sp_text_height2 + sp_text_height3 + 15
     sp_padding = 5
-    
+
     # Position label inside the box at bottom-right
     sp_label_x = sp_x + sp_width - sp_max_width - sp_padding * 2
     sp_label_y = sp_y + sp_height - sp_total_height - sp_padding
-    
+
     # Draw label background
     cv2.rectangle(
         annotated_img,
@@ -455,7 +455,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         (255, 255, 255),
         1,
     )
-    
+
     # Add label text
     cv2.putText(
         annotated_img,
@@ -502,12 +502,12 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         font_scale_medium = 0.6  # Was 1.0, now 0.6 (2 sizes smaller)
         font_thickness_large = 2  # Was 3, now 2
         font_thickness_medium = 1  # Was 2, now 1
-        
+
         label_text = f"Common Power Region {idx+1}"
         color = colors[idx + 1]  # Skip first color (orange) used for special power
         label_text2 = f"Pixels: ({x},{y},{width},{height})"
         label_text3 = f"Percent: ({x_pct*100:.0f}%,{y_pct*100:.0f}%,{width_pct*100:.0f}%,{height_pct*100:.0f}%)"
-        
+
         # Calculate text size for multi-line label
         (text_width1, text_height1), _ = cv2.getTextSize(
             label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale_large, font_thickness_large
@@ -518,7 +518,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         (text_width3, text_height3), _ = cv2.getTextSize(
             label_text3, cv2.FONT_HERSHEY_SIMPLEX, font_scale_medium, font_thickness_medium
         )
-        
+
         max_width = max(text_width1, text_width2, text_width3)
         total_height = text_height1 + text_height2 + text_height3 + 15
         padding = 5  # Same padding as front card
@@ -650,7 +650,7 @@ def main() -> None:
         console.print(f"  • Location: Top {FRONT_CARD_TOP_PERCENT*100/2:.1f}% (second half)")
         console.print(f"  • Motto: {FRONT_CARD_MOTTO_START_PERCENT*100:.0f}% - {FRONT_CARD_MOTTO_END_PERCENT*100:.0f}%")
         console.print(f"  • Story: {FRONT_CARD_STORY_START_PERCENT*100:.0f}% - {FRONT_CARD_STORY_START_PERCENT*100 + FRONT_CARD_STORY_HEIGHT_PERCENT*100:.0f}%")
-        console.print(f"\n[cyan]Back Card Common Power Regions:[/cyan]")
+        console.print("\n[cyan]Back Card Common Power Regions:[/cyan]")
         for idx, (x_pct, y_pct, width_pct, height_pct) in enumerate(COMMON_POWER_REGIONS):
             console.print(f"  • Region {idx+1}: ({x_pct*100:.0f}%, {y_pct*100:.0f}%, {width_pct*100:.0f}%, {height_pct*100:.0f}%)")
 

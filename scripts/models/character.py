@@ -1336,10 +1336,20 @@ class CharacterData(BaseModel):
 
     def merge_with(self, other: "CharacterData", prefer_html: bool = True) -> "CharacterData":
         """Merge with another CharacterData instance, preferring HTML-extracted data if prefer_html is True."""
+        # For motto, prefer the longer/more complete one (likely the extracted one)
+        motto_to_use = None
+        if prefer_html and other.motto:
+            motto_to_use = other.motto
+        elif self.motto and other.motto:
+            # Prefer the longer motto (more complete)
+            motto_to_use = other.motto if len(other.motto) > len(self.motto) else self.motto
+        else:
+            motto_to_use = self.motto or other.motto
+
         merged = CharacterData(
             name=other.name if prefer_html else (self.name or other.name),
             location=self.location or other.location,
-            motto=self.motto or other.motto,
+            motto=motto_to_use,
             story=other.story if prefer_html else (self.story or other.story),
         )
 

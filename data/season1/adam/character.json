@@ -1,100 +1,34 @@
 {
-  "name": "Lord Adam Benchley",
-  "location": "Manchester, England",
-  "motto": "“Shoot first. Never ask.”",
-  "story": "Lord Benchleys signature eye-twitch is both word and warning of the roiling thoughts beneath his calm, British demeanor. The man holds himself together admirably, but most investigators know to keep some reserve around the poor fellow, lest the twitch settle into a steely glare. Lord",
+  "name": "LORD ADAM BENCHLEY",
+  "location": "MANCHESTER, ENGLAND",
+  "motto": "Shoot first. Never ask,",
+  "story": "ol Lord Benchleys signature eye-twitch is both wound and i if pth--warning of the toiling toughness beneath his calm, British Yea i : a demeanor. The man holds himself together admirably, but j i f it SZ, most investigator know to keep some reserve around the ii . 4 B poor fellow, lest the twitch settle into a steely glare. Lord i ay i. SS Fog, Benchley i quite mad of course, heal battled the cults i A at q (om for decades and always maintaining the upper hand, if eae Y m R Uy, only barelyely. Lord. Benchley himself relies on a stiff upper ! A ti 4 IN lip, stoic resolve, and indulging his psychotic tendencies i AME f against cultists and their foul minions at every opportunity.",
   "special_power": {
-    "name": "Instead,",
+    "name": "FUELED BY MADNESS",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "Instead, you may",
-        "statistics": {
-          "green_dice_added": 0,
-          "black_dice_added": 0,
-          "base_expected_successes": 1.5,
-          "enhanced_expected_successes": 1.5,
-          "expected_successes_increase": 0.0,
-          "expected_successes_percent_increase": 0.0,
-          "max_successes_increase": 0,
-          "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5,
-          "is_conditional": false,
-          "conditions": [],
-          "rerolls_added": 0,
-          "reroll_type": null,
-          "has_reroll": false,
-          "wounds_healed": 0,
-          "stress_healed": 0,
-          "has_healing": false,
-          "wound_reduction": 0,
-          "sanity_reduction": 0,
-          "has_defensive": false,
-          "has_any_improvements": false
-        },
-        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+        "description": "iy es BY MA Gain while your sanity is ona ea"
       },
       {
         "level": 2,
-        "description": "ANY SOURCE. ANY SOURCE.",
-        "statistics": {
-          "green_dice_added": 0,
-          "black_dice_added": 0,
-          "base_expected_successes": 1.5,
-          "enhanced_expected_successes": 1.5,
-          "expected_successes_increase": 0.0,
-          "expected_successes_percent_increase": 0.0,
-          "max_successes_increase": 0,
-          "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5,
-          "is_conditional": false,
-          "conditions": [],
-          "rerolls_added": 0,
-          "reroll_type": null,
-          "has_reroll": false,
-          "wounds_healed": 0,
-          "stress_healed": 0,
-          "has_healing": false,
-          "wound_reduction": 0,
-          "sanity_reduction": 0,
-          "has_defensive": false,
-          "has_any_improvements": false
-        },
-        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+        "description": "Instead, gain while your sanity is on a or 1 space back. oo. (Y"
       },
       {
         "level": 3,
-        "description": "you may reduce woundndnds reduce woundndnds",
-        "statistics": {
-          "green_dice_added": 0,
-          "black_dice_added": 0,
-          "base_expected_successes": 1.5,
-          "enhanced_expected_successes": 1.5,
-          "expected_successes_increase": 0.0,
-          "expected_successes_percent_increase": 0.0,
-          "max_successes_increase": 0,
-          "tentacle_risk": 1.5,
-          "base_tentacle_risk": 1.5,
-          "is_conditional": false,
-          "conditions": [],
-          "rerolls_added": 0,
-          "reroll_type": null,
-          "has_reroll": false,
-          "wounds_healed": 0,
-          "stress_healed": 0,
-          "has_healing": false,
-          "wound_reduction": 0,
-          "sanity_reduction": 0,
-          "has_defensive": false,
-          "has_any_improvements": false
-        },
-        "effect": "Other effect (no dice, elder sign conversion, or actions)"
+        "description": "Instead, gain eer your sanity is ona OR 1 space back. . - :"
+      },
+      {
+        "level": 4,
+        "description": "SF ON Nd vmnmaenmeenn ad Instead, gain eee while your sanity is on r OR 1 space buck, a"
       }
-    ]
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
   "common_powers": [
-    "Marksman",
-    "Toughness"
+    "Swiftness",
+    "Arcane Mastery"
   ]
 }

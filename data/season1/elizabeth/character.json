@@ -1,7 +1,34 @@
 {
-  "name": "Elizabeth",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "name": "ELIZABETH IVES",
+  "location": "LONDON, ENGLAND",
+  "motto": "“Heads! win again.",
+  "story": "-The saying thet fuck is etver than ski, rarely proves true, 1 Pr onzilose meets biizabels Ives. Theresno may csurrounding i po inet, no blessing from the stress, and cerainly no saint of a if-me, the Old Ones. She is simply, frank!y, svaremely lucky. She I fi mi. A has no idea how she does 4, bul three investigator can ye E. Te ge, search a room for hours and find no-hing whercas shell P ee E wath, in wound step right on the bution fer the secre: deor. ae : OY For i: all, shes lad of the talen:, Lut secrelly dread: the i fi 1 doy her luck runs aut. , i RS ry 2 pa i er. rr 9 ee ae ee a 1 rm] The saying that luck is better than skill rarely proves true, i TV gain q : until one meets Elizabeth Ives. Theres no magic surraunding E a : nk Poe Loo) het, no blessing from the stress, and certainly no taint of aia ik-zz the Old Ones. Shes simply, frankly, supremely lucky. She iq a gy . at has no idea how she dogs it, but three investigator can d Bee--sédrch room for hours and find nothing whereas shell i ey a3 7 bay walk. in and step right on the bution for the secret door. i a EY For it all, shes england. of the talent, but secretly dreads the i a f SN J, day her luck runs out, i ai r Wan N",
+  "special_power": {
+    "name": "LUCKY Y SZ WS ww",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fees pt You have 1 free reroll per turn. . )"
+      },
+      {
+        "level": 2,
+        "description": "have 1 additional reroll per turn 2 total. -_-"
+      },
+      {
+        "level": 3,
+        "description": "have 1 additional reroll per turn (3 total). (Cs)"
+      },
+      {
+        "level": 4,
+        "description": "NS ew ee Instead, you have 3 free rerolllllls PER reroll, _"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Marksman",
+    "Stealth"
+  ]
 }

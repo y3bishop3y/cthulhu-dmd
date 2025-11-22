@@ -1,34 +1,34 @@
 {
-  "name": "Ahmed Yasin",
-  "location": "Mersin, Turkey",
-  "motto": null,
-  "story": "While Ahmeds medical qualifications might not earn him any formal degrees, investigators can rely on his unshakable calm, steady hands, and vast arcane knowledge to stitch cuts, soothe burns, and reattach severed limbs. Ahmeds fascination with ancient occult",
+  "name": "AHMED YASIN",
+  "location": "MERSIN, TURKEY",
+  "motto": "What is written is written.",
+  "story": "or. TN, Whic Ahireds medical qualifications mghl nol carn ie . : him any formal decraes, investigator can rely on-a his unshokoble calm, instead hands, wound vast arcone De knowledge se stitch cuts, soothe burn, and reattach i 4 ie A sovered limbs. Ahmecs fascinavion wih ancien! ecceli i Pet. ZS healing led where most arcand studies do, hring:ng him in 4 ae IS contact with the variouz cults. He even [oined a few in his ate pre i f time, the better te lecira thar ways and destroy sham from med within, All magic comes with a cost to the soul, yet he pays a. am 4 italadly, viewing his sacrifice with both faith and fatalisr:. . i x Nh a _-_-e S e ope pe ee eel 4 a and oe settle ry ae rr Se ie a ee. So f--While Ahmeds medical qualifications might not earn H 7 a . _. hifi any formal degrees; investigator can rely on H gs , . his unshakable :calm, instead hands, and vast arcand i iit 4 oe en, knowledge. to stitch cuts, soothe burns, and reattach , te: severed: limbs. Ahmeds fascination. with ancient occult ue ae A healing led where-most arcand studies do, bringing Him in a ihe yg hes by f sontast with the various cults. He even joined a few in his iy tee A lex y time, thebetter te learn thelr ways and destroy them from b er ie 4 WN within. All magic cotties with a cost to the soul, yet he priys. 4 ami e A f i alls it. gladly; viewing his sacrifice with both faith and fatalism. ee i a i",
   "special_power": {
-    "name": "Healing Prayer",
+    "name": "Fay eau PRAYER bad Vw VN",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "At the end of your turn, you may heal 1 stress OR wound on an investigator in your space (it may be yourself)"
+        "description": "je pee PRAY ---_arnann At the end of your turn, you may heal 1 stress OR wound on an investigator in your space (it may be yourself). a"
       },
       {
         "level": 2,
-        "description": "Instead, heal 2 in any combination of stress and wounds"
+        "description": "ER 4 Instead, heal 2 in any combination of stress and wounds, ae"
       },
       {
         "level": 3,
-        "description": "Instead, heal 2 stress AND 2 wounds"
+        "description": "Instead, heal 2 stress AND 2 wounds. n S"
       },
       {
         "level": 4,
-        "description": "Heal 2 stress AND 2 wounds on EACH investigator in your space"
+        "description": "w T OS NY a D instead, heal 2 stress AND 2 wounds on EACH investigator in your space. -_-"
       }
     ],
     "has_levels": true,
     "is_complete": true
   },
   "common_powers": [
-    "Arcane Mastery",
-    "Stealth"
+    "Stealth",
+    "Arcane Mastery"
   ]
 }

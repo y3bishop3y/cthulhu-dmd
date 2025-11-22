@@ -1,9 +1,34 @@
 {
-  "name": "The Kid",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "name": "THE KID",
+  "location": "UNKNOWN",
+  "motto": "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!",
+  "story": "i known, maxes no omer wound, wnes something OF G slog e G OF a Ne _ am and mystery to investigator, and her knowing gaze and Wa Le ON a N thousand-yard stress speak-to a potential age far beyond : fy s Ht 4 i her diniinutive stature. Shé has tio apparent need of Cra fa x ase gn LE guardians.or guidance in her one-child campaign against : ced os A the cults and their otherworldly allies. She shows a q .-spécial offiriity for inierdimensional gateways, gaining i ae i ter obvious. strength and acumen from the proximity. This H : ai q QQ could hint ot supernatural otigiti for The Kid, ut her i N and i a N glee in-destroying said.gates and the beings they summon co ps Ni ON , speaks to ho allegiatice. : me fy i XS aa ee known, mc Gkes no clier scund, shes something o F a y-fi vy oe ON-niveary ro investigator, and her snowny gcze and ae i LL A oe thoysand-yard stress sp euk Ic a potential age far haycnd py f, o. ry ea oo her dimlautve stature. She has no apparen need cf r) oe a B, Ly n M i S Zs gvardians or guidurce in her one-child campaign agass! i e ; , i ee the celts and their otherworldly allics. She shew: a SS spectal offinity for inerdimenzional goveways, gaining : i obvious strength and acumer. from Ihe proximil;. This N could hist ai a superrattral origin for The Kid, but her i ce : glee in destroyng said gates and the beings they summon 5 A, speaks ra no allegiaacc. YN Mee. i ee es ee-,.",
+  "special_power": {
+    "name": "GATE MANIPULATION",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "you are in 1 the same space as , monsters and Cultists- summoned there take wounds equal to heal thelr stealth rounded up). - os"
+      },
+      {
+        "level": 2,
+        "description": "This skill works if you are within 7 space of a ."
+      },
+      {
+        "level": 3,
+        "description": "If you are within 1 space of a , you are always considered safe to Rest. e C"
+      },
+      {
+        "level": 4,
+        "description": "J EY eemaerewrerenerean Gili S: If you are within 1 space of a , you gain and hove 1 free Rest action. --"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
+    "Marksman",
     "Arcane Mastery"
   ]
 }

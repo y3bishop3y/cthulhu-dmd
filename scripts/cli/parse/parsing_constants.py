@@ -170,7 +170,7 @@ FRONT_CARD_TOP_PERCENT: Final[float] = 0.25
 FRONT_CARD_LOCATION_END_PERCENT: Final[float] = 0.30  # Location region ends at 30%
 FRONT_CARD_MOTTO_START_PERCENT: Final[float] = 0.39  # Start slightly below name/location (25%)
 FRONT_CARD_MOTTO_END_PERCENT: Final[float] = (
-    0.49  # End before story starts (50%), allows for multi-line mottos (height = 10%)
+    0.50  # End before story starts (50%), allows for multi-line mottos (height = 11%)
 )
 FRONT_CARD_STORY_START_PERCENT: Final[float] = 0.50
 FRONT_CARD_STORY_HEIGHT_PERCENT: Final[float] = 0.45

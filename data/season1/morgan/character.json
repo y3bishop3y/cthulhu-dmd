@@ -1,7 +1,34 @@
 {
-  "name": "Morgan",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "name": "JOHN MORGAN",
+  "location": "FORT WAYNE, INDIANA",
+  "motto": "“Ive got a bad feeling",
+  "story": "Brel his U Noriar ea icles ahha Ds ua Vet ag oe a ae Ge i a oie e EERE SDA e HDA SO Pan ea ah peat ast z f oe a oe i oe Te code Ss taal ees PO ea as Se Sea Mere UC rs eaee wenn ee a Se a Sa es a Zi So-a oe : : Doe ae-oes SNe e S Gal ae ee ge ee he ts] NPAT a La tp Yao aa fs a erat oe 9 aes He oe i ae a as sey Hace ae Clonee oe) s aes he a : a o : i Hie Co el co. es a IN A Se Ae: oe lo. Ges ae oe ee aa Ae fa e ayes HC ENN He a N ira attack Ae cie Woy rater ee ne ce te a ae oe i oe dal poe Te :-a : ce-ileal t. John Morgan was a professional animal handler, and Y ey safari manchester who had the misfortune of being hired to i ha a lead a cult expedition, into the heart of the Congo: He ae pe--had no idea who these weirdos were with their strange , onl, we , tattoos and ways, but he brought them to the ruin they Ri bi i--og _ sotight, then pulled that ruin down on their heads when he ii 3 eth A wound out what they were up to. Since then, hes done his _ whe, ., best to battle their kind across the globe, heal fellow ers) Bh os SN 7 investigator in the secret war to end all wars f .",
+  "special_power": {
+    "name": "Big szorecron",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fay Pzotecto R ----ne If an investigator in your space is attack, you may redirect the attack to you (before the reroll). o Y"
+      },
+      {
+        "level": 2,
+        "description": "wo esmmemnienaare You may redirect to you an attack made against on investigator up to 7 space away. Lo )"
+      },
+      {
+        "level": 3,
+        "description": ". You have 2 free rerolllllls when being attack by a redirected attack, 7"
+      },
+      {
+        "level": 4,
+        "description": "- NY Nee namunnunnaneee neat After resolving redirected attack, heal all your stress. -_"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Swiftness",
+    "Brawling"
+  ]
 }
