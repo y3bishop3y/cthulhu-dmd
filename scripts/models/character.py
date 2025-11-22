@@ -317,7 +317,6 @@ class FrontCardData(BaseModel):
                 scored_paragraphs.append((score, p_stripped))
 
         if scored_paragraphs:
-
             # Sort by score and take the best
             scored_paragraphs.sort(reverse=True, key=lambda x: x[0])
 
@@ -483,7 +482,9 @@ class BackCardData(BaseModel):
         return None
 
     @staticmethod
-    def _detect_gain_sanity_pattern(lines: List[str], i: int, found_common_power: bool) -> Optional[str]:
+    def _detect_gain_sanity_pattern(
+        lines: List[str], i: int, found_common_power: bool
+    ) -> Optional[str]:
         """Detect 'Fueled by Madness' pattern via gain/sanity keywords.
 
         Args:
@@ -634,9 +635,7 @@ class BackCardData(BaseModel):
                 word_count >= 1
                 and word_count <= 4
                 and prev_line[0].isupper()
-                and not any(
-                    cp.value.upper() in prev_line.upper() for cp in CommonPowerEnum
-                )
+                and not any(cp.value.upper() in prev_line.upper() for cp in CommonPowerEnum)
                 and not prev_line.endswith(".")
                 and not prev_line.endswith(",")
                 and not prev_line.endswith(":")
@@ -729,7 +728,10 @@ class BackCardData(BaseModel):
                     from rapidfuzz import fuzz
 
                     ratio = fuzz.ratio(line_upper, power_upper)
-                    if ratio >= COMMON_POWER_FUZZY_THRESHOLD and line_len <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE:
+                    if (
+                        ratio >= COMMON_POWER_FUZZY_THRESHOLD
+                        and line_len <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE
+                    ):
                         # High similarity and similar length
                         if not any(cp.name == power_name for cp in data.common_powers):
                             data.common_powers.append(
@@ -766,7 +768,10 @@ class BackCardData(BaseModel):
             if re.search(pattern, line_upper):
                 return power_name
             # Power name is contained in line (for OCR errors)
-            if power_upper in line_upper and len(line_upper) <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE:
+            if (
+                power_upper in line_upper
+                and len(line_upper) <= len(power_upper) + COMMON_POWER_LENGTH_TOLERANCE
+            ):
                 # Line is close to power name length (allow small OCR errors)
                 return power_name
 
@@ -820,7 +825,10 @@ class BackCardData(BaseModel):
             description = " ".join(power_content_lines).strip()
             if description and len(description.split()) > MIN_POWER_DESCRIPTION_WORDS:
                 # Only add if we don't already have this level and haven't exceeded max
-                if level_num not in [lev.level for lev in current_power.levels] and len(current_power.levels) < MAX_POWER_LEVELS:
+                if (
+                    level_num not in [lev.level for lev in current_power.levels]
+                    and len(current_power.levels) < MAX_POWER_LEVELS
+                ):
                     current_power.add_level_from_text(level_num, description)
 
         # Start new level (cap at max, OCR might extract invalid numbers)
@@ -990,7 +998,9 @@ class BackCardData(BaseModel):
 
             # Strategy 4: Extract from context (action-based patterns)
             if not is_special_power:
-                special_power_name = cls._extract_power_name_from_context(lines, i, found_common_power)
+                special_power_name = cls._extract_power_name_from_context(
+                    lines, i, found_common_power
+                )
                 if special_power_name:
                     is_special_power = True
 
@@ -1070,9 +1080,7 @@ class BackCardData(BaseModel):
                                 current_power.add_level_from_text(prev_level_num, description)
                             power_content_lines = []
 
-                        description = re.sub(
-                            r"^[^a-z]*instead[,\s]+", "", line, flags=re.I
-                        ).strip()
+                        description = re.sub(r"^[^a-z]*instead[,\s]+", "", line, flags=re.I).strip()
                         if description:
                             power_content_lines = [description]
                         i += 1
@@ -1181,9 +1189,7 @@ class BackCardData(BaseModel):
                     level_num = int(match.group(1))
                     level_desc = match.group(2).strip()
                     # Clean up the description
-                    level_desc = re.sub(
-                        r"^\s*instead[,\s]+", "", level_desc, flags=re.I
-                    ).strip()
+                    level_desc = re.sub(r"^\s*instead[,\s]+", "", level_desc, flags=re.I).strip()
                     if level_desc and len(level_desc.split()) > 2:
                         found_levels[level_num] = level_desc
 
