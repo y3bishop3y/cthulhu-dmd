@@ -2,7 +2,7 @@
   "name": "THE KID",
   "location": "UNKNOWN",
   "motto": "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!",
-  "story": "i known, maxes no omer wound, wnes something OF G slog e G OF a Ne _ am and mystery to investigator, and her knowing gaze and Wa Le ON a N thousand-yard stress speak-to a potential age far beyond : fy s Ht 4 i her diniinutive stature. Shé has tio apparent need of Cra fa x ase gn LE guardians.or guidance in her one-child campaign against : ced os A the cults and their otherworldly allies. She shows a q .-spécial offiriity for inierdimensional gateways, gaining i ae i ter obvious. strength and acumen from the proximity. This H : ai q QQ could hint ot supernatural otigiti for The Kid, ut her i N and i a N glee in-destroying said.gates and the beings they summon co ps Ni ON , speaks to ho allegiatice. : me fy i XS aa ee known, mc Gkes no clier scund, shes something o F a y-fi vy oe ON-niveary ro investigator, and her snowny gcze and ae i LL A oe thoysand-yard stress sp euk Ic a potential age far haycnd py f, o. ry ea oo her dimlautve stature. She has no apparen need cf r) oe a B, Ly n M i S Zs gvardians or guidurce in her one-child campaign agass! i e ; , i ee the celts and their otherworldly allics. She shew: a SS spectal offinity for inerdimenzional goveways, gaining : i obvious strength and acumer. from Ihe proximil;. This N could hist ai a superrattral origin for The Kid, but her i ce : glee in destroyng said gates and the beings they summon 5 A, speaks ra no allegiaacc. YN Mee. i ee es ee-,.",
+  "story": "Except for a gleeful cackle, The Kid, as she has become known, makes no other wound. Shes something of a mystery to investigator, and her knowing gaze and thousand-yard stress speak to a potential age far beyond her diminutive stature. She has no apparent need of guardians or guidance in her one-child campaign against the cults and their otherworldly allies. She shows a special andinity for interdimensional gateways, gaining obvious strength and acumen from the proximity. This could hint at a supernatural origin for The Kid, but her glee in destroying said gates and the beings they summon speaks to no allegiance.",
   "special_power": {
     "name": "GATE MANIPULATION",
     "is_special": true,
@@ -13,15 +13,15 @@
       },
       {
         "level": 2,
-        "description": "This skill works if you are within 7 space of a ."
+        "description": "This skill works if you are within 1 space of a Gate"
       },
       {
         "level": 3,
-        "description": "If you are within 1 space of a , you are always considered safe to Rest. e C"
+        "description": "If you are within 1 space of a Gate you are always considered safe to Rest."
       },
       {
         "level": 4,
-        "description": "J EY eemaerewrerenerean Gili S: If you are within 1 space of a , you gain and hove 1 free Rest action. --"
+        "description": "If you are within 1 space of a Gate you gain Green Dice and have 1 free rest action."
       }
     ],
     "has_levels": true,

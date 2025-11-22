@@ -1346,11 +1346,22 @@ class CharacterData(BaseModel):
         else:
             motto_to_use = self.motto or other.motto
 
+        # For story, prefer extracted story (other.story) if it exists and prefer_html is True
+        # Otherwise prefer existing story if it exists, then extracted story
+        story_to_use = None
+        if prefer_html and other.story:
+            story_to_use = other.story
+        elif self.story and other.story:
+            # If both exist, prefer the longer/more complete one (likely the extracted one with corrections)
+            story_to_use = other.story if len(other.story) > len(self.story) else self.story
+        else:
+            story_to_use = self.story or other.story
+
         merged = CharacterData(
             name=other.name if prefer_html else (self.name or other.name),
             location=self.location or other.location,
             motto=motto_to_use,
-            story=other.story if prefer_html else (self.story or other.story),
+            story=story_to_use,
         )
 
         # Merge powers - prefer existing if they exist and are complete

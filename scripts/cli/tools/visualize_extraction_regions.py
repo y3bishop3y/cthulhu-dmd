@@ -16,12 +16,11 @@ sys.path.insert(0, str(project_root))
 
 try:
     import cv2
-    import numpy as np
     from rich.console import Console
     from rich.progress import Progress, SpinnerColumn, TextColumn
 except ImportError as e:
     print(f"Error: Missing required dependency: {e}")
-    print("Please install: pip install opencv-python rich numpy")
+    print("Please install: pip install opencv-python rich")
     sys.exit(1)
 
 from scripts.cli.parse.parsing_constants import (
@@ -71,7 +70,12 @@ def draw_front_card_regions(image_path: Path, output_path: Path) -> None:
         },
         {
             "name": "Location Region",
-            "coords": (x_start, int(h * 0.32), region_width, int(h * 0.05)),  # Start at 32%, height 5% for now
+            "coords": (
+                x_start,
+                int(h * 0.32),
+                region_width,
+                int(h * 0.05),
+            ),  # Start at 32%, height 5% for now
             "color": (255, 0, 0),  # Blue
         },
         {
@@ -322,9 +326,9 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     # Define colors for different regions
     colors = [
         (255, 165, 0),  # Orange for special power
-        (0, 255, 0),    # Green
-        (255, 0, 0),    # Blue
-        (0, 0, 255),    # Red
+        (0, 255, 0),  # Green
+        (255, 0, 0),  # Blue
+        (0, 0, 255),  # Red
         (255, 255, 0),  # Cyan
         (255, 0, 255),  # Magenta
         (0, 255, 255),  # Yellow
@@ -346,16 +350,16 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     # Create 4 vertical sub-regions for special power levels
     # Level 1: 32%, Level 2: 22.67%, Level 3: 19.87%, Level 4: 25.45% (of special power region width)
     level_width_pcts = [
-        sp_width_pct * 0.32,      # Level 1: 32%
-        sp_width_pct * 0.2267,     # Level 2: 22.67%
-        sp_width_pct * 0.1987,     # Level 3: 19.87%
-        sp_width_pct * 0.2545,     # Level 4: 25.45%
+        sp_width_pct * 0.32,  # Level 1: 32%
+        sp_width_pct * 0.2267,  # Level 2: 22.67%
+        sp_width_pct * 0.1987,  # Level 3: 19.87%
+        sp_width_pct * 0.2545,  # Level 4: 25.45%
     ]
     level_colors = [
-        (255, 200, 0),    # Gold for Level 1
-        (255, 140, 0),    # Dark orange for Level 2
-        (255, 100, 0),    # Darker orange for Level 3
-        (255, 60, 0),     # Darkest orange for Level 4
+        (255, 200, 0),  # Gold for Level 1
+        (255, 140, 0),  # Dark orange for Level 2
+        (255, 100, 0),  # Darker orange for Level 3
+        (255, 60, 0),  # Darkest orange for Level 4
     ]
 
     # Draw the 4 level sub-regions (vertical splits)
@@ -420,7 +424,7 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
 
     sp_label_text = "Special Power Region"
     sp_label_text2 = f"Pixels: ({sp_x},{sp_y},{sp_width},{sp_height})"
-    sp_label_text3 = f"Percent: ({sp_x_pct*100:.0f}%,{sp_y_pct*100:.0f}%,{sp_width_pct*100:.0f}%,{sp_height_pct*100:.0f}%)"
+    sp_label_text3 = f"Percent: ({sp_x_pct * 100:.0f}%,{sp_y_pct * 100:.0f}%,{sp_width_pct * 100:.0f}%,{sp_height_pct * 100:.0f}%)"
 
     (sp_text_width1, sp_text_height1), _ = cv2.getTextSize(
         sp_label_text, cv2.FONT_HERSHEY_SIMPLEX, font_scale_large, font_thickness_large
@@ -436,9 +440,9 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
     sp_total_height = sp_text_height1 + sp_text_height2 + sp_text_height3 + 15
     sp_padding = 5
 
-    # Position label inside the box at bottom-right
-    sp_label_x = sp_x + sp_width - sp_max_width - sp_padding * 2
-    sp_label_y = sp_y + sp_height - sp_total_height - sp_padding
+    # Position label outside the box at upper-left (on top of the region box)
+    sp_label_x = sp_x + sp_padding
+    sp_label_y = sp_y - sp_total_height - sp_padding
 
     # Draw label background
     cv2.rectangle(
@@ -503,10 +507,10 @@ def draw_back_card_regions(image_path: Path, output_path: Path) -> None:
         font_thickness_large = 2  # Was 3, now 2
         font_thickness_medium = 1  # Was 2, now 1
 
-        label_text = f"Common Power Region {idx+1}"
+        label_text = f"Common Power Region {idx + 1}"
         color = colors[idx + 1]  # Skip first color (orange) used for special power
         label_text2 = f"Pixels: ({x},{y},{width},{height})"
-        label_text3 = f"Percent: ({x_pct*100:.0f}%,{y_pct*100:.0f}%,{width_pct*100:.0f}%,{height_pct*100:.0f}%)"
+        label_text3 = f"Percent: ({x_pct * 100:.0f}%,{y_pct * 100:.0f}%,{width_pct * 100:.0f}%,{height_pct * 100:.0f}%)"
 
         # Calculate text size for multi-line label
         (text_width1, text_height1), _ = cv2.getTextSize(
@@ -646,17 +650,22 @@ def main() -> None:
         console.print(f"\nAnnotated images saved to: {output_dir}")
         console.print("\n[bold]Region Summary:[/bold]")
         console.print("\n[cyan]Front Card Regions:[/cyan]")
-        console.print(f"  • Name: Top {FRONT_CARD_TOP_PERCENT*100/2:.1f}% (first half)")
-        console.print(f"  • Location: Top {FRONT_CARD_TOP_PERCENT*100/2:.1f}% (second half)")
-        console.print(f"  • Motto: {FRONT_CARD_MOTTO_START_PERCENT*100:.0f}% - {FRONT_CARD_MOTTO_END_PERCENT*100:.0f}%")
-        console.print(f"  • Story: {FRONT_CARD_STORY_START_PERCENT*100:.0f}% - {FRONT_CARD_STORY_START_PERCENT*100 + FRONT_CARD_STORY_HEIGHT_PERCENT*100:.0f}%")
+        console.print(f"  • Name: Top {FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}% (first half)")
+        console.print(f"  • Location: Top {FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}% (second half)")
+        console.print(
+            f"  • Motto: {FRONT_CARD_MOTTO_START_PERCENT * 100:.0f}% - {FRONT_CARD_MOTTO_END_PERCENT * 100:.0f}%"
+        )
+        console.print(
+            f"  • Story: {FRONT_CARD_STORY_START_PERCENT * 100:.0f}% - {FRONT_CARD_STORY_START_PERCENT * 100 + FRONT_CARD_STORY_HEIGHT_PERCENT * 100:.0f}%"
+        )
         console.print("\n[cyan]Back Card Common Power Regions:[/cyan]")
         for idx, (x_pct, y_pct, width_pct, height_pct) in enumerate(COMMON_POWER_REGIONS):
-            console.print(f"  • Region {idx+1}: ({x_pct*100:.0f}%, {y_pct*100:.0f}%, {width_pct*100:.0f}%, {height_pct*100:.0f}%)")
+            console.print(
+                f"  • Region {idx + 1}: ({x_pct * 100:.0f}%, {y_pct * 100:.0f}%, {width_pct * 100:.0f}%, {height_pct * 100:.0f}%)"
+            )
 
     visualize()
 
 
 if __name__ == "__main__":
     main()
-

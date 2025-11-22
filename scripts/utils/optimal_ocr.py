@@ -295,7 +295,9 @@ def _get_image_regions(img_height: int, img_width: int) -> ImageRegions:
         ImageRegions model with region coordinates for each field
     """
     location_start = int(img_height * 0.32)  # 32% from top
-    location_end = int(img_height * FRONT_CARD_LOCATION_END_PERCENT)  # Currently 30%, but should be > 35%
+    location_end = int(
+        img_height * FRONT_CARD_LOCATION_END_PERCENT
+    )  # Currently 30%, but should be > 35%
     # If end < start, use a default height (will be adjusted by user)
     if location_end <= location_start:
         location_height = int(img_height * 0.05)  # Default 5% height
@@ -387,7 +389,11 @@ def _filter_motto_lines(lines: List[str]) -> List[str]:
         # BUT allow all-caps lines if they're in quotes (could be a motto like "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!")
         # Check for both straight and curly quotes
         is_quoted = any(quote_char in line_stripped for quote_char in QUOTE_CHARACTERS)
-        if line_stripped.isupper() and len(line_stripped) > MOTTO_MAX_ALL_CAPS_LENGTH and not is_quoted:
+        if (
+            line_stripped.isupper()
+            and len(line_stripped) > MOTTO_MAX_ALL_CAPS_LENGTH
+            and not is_quoted
+        ):
             continue
         # Skip very short lines (but allow 2-char lines if they're part of a phrase)
         if len(line_stripped) < MOTTO_MIN_LINE_LENGTH:
@@ -420,8 +426,8 @@ def _extract_quoted_motto(filtered_lines: List[str]) -> str:
     # Pattern to match both straight and curly quotes
     quote_patterns = [
         r'["\']([^"\']+)["\']',  # Straight quotes
-        r'[\u201c\u201d]([^\u201c\u201d]+)[\u201c\u201d]',  # Curly double quotes
-        r'[\u2018\u2019]([^\u2018\u2019]+)[\u2018\u2019]',  # Curly single quotes
+        r"[\u201c\u201d]([^\u201c\u201d]+)[\u201c\u201d]",  # Curly double quotes
+        r"[\u2018\u2019]([^\u2018\u2019]+)[\u2018\u2019]",  # Curly single quotes
     ]
 
     for line in filtered_lines:
@@ -445,7 +451,8 @@ def _extract_quoted_motto(filtered_lines: List[str]) -> str:
                     # - Allow longer mottos if they're in quotes (up to reasonable limit)
                     if (
                         len(motto) >= MOTTO_MIN_LINE_LENGTH  # At least 2 chars
-                        and len(motto) <= MOTTO_MAX_CHARS_QUOTED * 2  # Allow up to 300 chars for quoted
+                        and len(motto)
+                        <= MOTTO_MAX_CHARS_QUOTED * 2  # Allow up to 300 chars for quoted
                     ):
                         return motto
 
@@ -616,6 +623,59 @@ def _clean_motto_text(motto: str) -> str:
     return motto
 
 
+def _fix_power_description_ocr_errors(text: str) -> str:
+    """Fix common OCR errors in power level descriptions.
+
+    Args:
+        text: Power description text with potential OCR errors
+
+    Returns:
+        Corrected text
+    """
+    fixed = text
+
+    # Fix "7 space" -> "1 space" when in context of "within X space of"
+    fixed = re.sub(r"\b7\s+space\s+of\s+a\b", "1 space of a", fixed, flags=re.I)
+    fixed = re.sub(r"\bwithin\s+7\s+space\s+of\s+a\b", "within 1 space of a", fixed, flags=re.I)
+
+    # Fix "." -> "Gate" when in context of "space of a ." (period at end of sentence)
+    # Match "space of a ." - try multiple patterns to catch all variations
+    # Use word boundary before "space" and match period with optional trailing space
+    fixed = re.sub(r"\bspace\s+of\s+a\s*\.", "space of a Gate", fixed, flags=re.I)
+    # Handle comma case - "space of a ," -> "space of a Gate"
+    fixed = re.sub(r"\bspace\s+of\s+a\s*,", "space of a Gate", fixed, flags=re.I)
+    # Also try without word boundary (in case there's punctuation before "space")
+    fixed = re.sub(r"space\s+of\s+a\s*\.", "space of a Gate", fixed, flags=re.I)
+    fixed = re.sub(r"space\s+of\s+a\s*,", "space of a Gate", fixed, flags=re.I)
+
+    # Fix "guidemce" -> "guidance"
+    fixed = re.sub(r"\bguidemce\b", "guidance", fixed, flags=re.I)
+
+    # Fix level 4 description OCR errors
+    # "J EY eemaerewrerenerean Gili S:" -> remove (OCR garbage at start)
+    fixed = re.sub(r"^J\s+EY\s+eemaerewrerenerean\s+Gili\s+S:\s*", "", fixed, flags=re.I)
+    # "hove" -> "have"
+    fixed = re.sub(r"\bhove\b", "have", fixed, flags=re.I)
+    # "gain and have" -> "gain Green Dice and have" (if "Green Dice" is missing)
+    fixed = re.sub(r"\bgain\s+and\s+have\b", "gain Green Dice and have", fixed, flags=re.I)
+    # "gain green dice" -> "gain Green Dice" (capitalize)
+    fixed = re.sub(r"\bgain\s+green\s+dice\b", "gain Green Dice", fixed, flags=re.I)
+    # "with 1 space" -> "within 1 space" (if "in" is missing)
+    fixed = re.sub(
+        r"\bwith\s+1\s+space\s+of\s+a\s+gate\b", "within 1 space of a Gate", fixed, flags=re.I
+    )
+    # "Rest" -> "rest" (lowercase for consistency)
+    fixed = re.sub(r"\bRest\s+action\b", "rest action", fixed, flags=re.I)
+    # Remove trailing OCR garbage like "--", "-", "e C", etc.
+    fixed = re.sub(r"\s+--\s*$", "", fixed)
+    fixed = re.sub(r"\s+-\s*$", "", fixed)
+    # Remove "e C" at end (common OCR garbage)
+    fixed = re.sub(r"\s+e\s+C\s*$", "", fixed, flags=re.I)
+    fixed = re.sub(r"\s+e\s+C\.\s*$", "", fixed, flags=re.I)
+
+    return fixed
+
+
 def _parse_motto_from_text(text: str) -> str:
     """Parse character motto from extracted text.
 
@@ -653,17 +713,15 @@ def _extract_story_text(
     Returns:
         Extracted story text
     """
-    # Use specialized extraction for white-on-black text
-    story_text = extractor.extract_description_region(image_path)
+    # Prioritize region-based extraction using carefully calibrated coordinates
+    story_start = int(img_height * FRONT_CARD_STORY_START_PERCENT)
+    story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
+    bottom_region = (0, story_start, img_width, story_height)
+    story_text = extract_text_from_region_with_strategy(image_path, bottom_region, story_strategy)
 
-    # If story extraction failed, try with optimal strategy on bottom region
+    # Only fall back to extract_description_region if region-based extraction failed
     if not story_text or len(story_text) < STORY_MIN_LENGTH:
-        story_start = int(img_height * FRONT_CARD_STORY_START_PERCENT)
-        story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
-        bottom_region = (0, story_start, img_width, story_height)
-        story_text = extract_text_from_region_with_strategy(
-            image_path, bottom_region, story_strategy
-        )
+        story_text = extractor.extract_description_region(image_path)
 
     # Clean story text with advanced NLP post-processing
     if story_text:
@@ -883,7 +941,10 @@ def _validate_power_match_quality(
                 return True
             # But if power was already detected by _detect_common_power, be more lenient
             # Accept matches with >= 60% similarity if length is close (OCR errors)
-            if ratio >= 60.0 and abs(line_len - len(power_name)) <= COMMON_POWER_CLOSE_MATCH_LENGTH_DIFF:
+            if (
+                ratio >= 60.0
+                and abs(line_len - len(power_name)) <= COMMON_POWER_CLOSE_MATCH_LENGTH_DIFF
+            ):
                 return True
         else:
             # Without fuzzy matching, accept if lengths are very close
@@ -986,7 +1047,9 @@ def _extract_common_powers_from_region(
 
         # If not detected, try fuzzy matching
         if not power_name:
-            power_name = find_power_via_fuzzy_matching(line_stripped, all_common_powers, rapidfuzz_fuzz)
+            power_name = find_power_via_fuzzy_matching(
+                line_stripped, all_common_powers, rapidfuzz_fuzz
+            )
 
         # Skip lines that look like descriptions (only if not detected as power)
         if not power_name:
@@ -1101,7 +1164,8 @@ def extract_common_powers_from_back_card(
         # Try multiple OCR strategies for common powers
         # Some strategies work better for different power names (e.g., psm6/psm11 for "Brawling")
         strategies_to_try = [
-            get_optimal_strategy_for_category("special_power", config) or "tesseract_bilateral_psm3",
+            get_optimal_strategy_for_category("special_power", config)
+            or "tesseract_bilateral_psm3",
             "tesseract_psm6",  # Better for single words like "Brawling"
             "tesseract_psm11",  # Alternative for single words
         ]
@@ -1121,7 +1185,9 @@ def extract_common_powers_from_back_card(
             region_powers_this_region: List[str] = []
             for power_strategy in strategies_to_try:
                 try:
-                    region_powers_found = _extract_common_powers_from_region(image_path, region, power_strategy)
+                    region_powers_found = _extract_common_powers_from_region(
+                        image_path, region, power_strategy
+                    )
                     # If this strategy found exactly 2 powers, use it immediately (perfect match)
                     if len(region_powers_found) == 2:
                         return region_powers_found[:COMMON_POWER_MAX_POWERS]
@@ -1265,7 +1331,7 @@ def extract_special_power_from_back_card(
         by_madness_match = re.search(r"BY\s+MADNESS", full_text, re.I)
         if by_madness_match:
             # Look for "FUELED" before "BY MADNESS"
-            before_match = full_text[:by_madness_match.start()]
+            before_match = full_text[: by_madness_match.start()]
             fueled_match = re.search(r"FUELED|FUEL|FUELE", before_match, re.I)
             if fueled_match:
                 # Found "FUELED BY MADNESS"
@@ -1291,7 +1357,13 @@ def extract_special_power_from_back_card(
                     context = full_text[start:end]
                     # Look for all-caps words around the match
                     words = context.split()
-                    caps_words = [w for w in words if w.isupper() and len(w) > 2 and w not in ["INSTEAD", "GAIN", "WHILE", "YOUR", "SANITY", "SPACE", "BACK"]]
+                    caps_words = [
+                        w
+                        for w in words
+                        if w.isupper()
+                        and len(w) > 2
+                        and w not in ["INSTEAD", "GAIN", "WHILE", "YOUR", "SANITY", "SPACE", "BACK"]
+                    ]
                     if caps_words:
                         # Try to reconstruct power name (e.g., "FUELED BY MADNESS")
                         power_name = " ".join(caps_words[-3:])  # Take up to 3 words
@@ -1315,9 +1387,21 @@ def extract_special_power_from_back_card(
                 if sum(1 for c in line_clean if c.isalnum()) < len(line_clean) * 0.5:
                     continue
                 # Look for all-caps line (power name) - must be substantial
-                if line_clean.isupper() and len(line_clean) > 5 and not any(char.isdigit() for char in line_clean):
+                if (
+                    line_clean.isupper()
+                    and len(line_clean) > 5
+                    and not any(char.isdigit() for char in line_clean)
+                ):
                     # Make sure it's not just common words
-                    if line_clean not in ["INSTEAD", "GAIN", "WHILE", "YOUR", "SANITY", "SPACE", "BACK"]:
+                    if line_clean not in [
+                        "INSTEAD",
+                        "GAIN",
+                        "WHILE",
+                        "YOUR",
+                        "SANITY",
+                        "SPACE",
+                        "BACK",
+                    ]:
                         power_name = line_clean
                         break
 
@@ -1354,11 +1438,16 @@ def extract_special_power_from_back_card(
                 int(img_height * sp_height_pct),
             )
 
-            level_text = extract_text_from_region_with_strategy(image_path, level_region, power_strategy)
+            level_text = extract_text_from_region_with_strategy(
+                image_path, level_region, power_strategy
+            )
             if level_text:
                 # Clean the text with advanced NLP post-processing
                 cleaned_level_text = clean_ocr_text(level_text, preserve_newlines=False)
                 cleaned_level_text = cleaned_level_text.strip()
+
+                # Apply OCR corrections for common power description errors
+                cleaned_level_text = _fix_power_description_ocr_errors(cleaned_level_text)
 
                 # Apply advanced NLP post-processing for better OCR error correction
                 try:
@@ -1369,9 +1458,14 @@ def extract_special_power_from_back_card(
                     # Fallback if NLP post-processing not available
                     pass
 
+                # Apply OCR corrections again AFTER NLP post-processing (in case NLP undid them)
+                cleaned_level_text = _fix_power_description_ocr_errors(cleaned_level_text)
+
                 # Remove power name if it appears in the level text (handle partial matches)
                 # Remove full power name
-                cleaned_level_text = re.sub(rf"\b{re.escape(power_name)}\b", "", cleaned_level_text, flags=re.I)
+                cleaned_level_text = re.sub(
+                    rf"\b{re.escape(power_name)}\b", "", cleaned_level_text, flags=re.I
+                )
 
                 # Remove partial power name matches (e.g., "GATE MANIPUI" or "ATION")
                 # Split power name into words and remove each word if it appears alone
@@ -1379,7 +1473,9 @@ def extract_special_power_from_back_card(
                 for word in power_words:
                     if len(word) > 3:  # Only remove substantial words
                         # Remove word if it appears as a standalone word
-                        cleaned_level_text = re.sub(rf"\b{re.escape(word)}\b", "", cleaned_level_text, flags=re.I)
+                        cleaned_level_text = re.sub(
+                            rf"\b{re.escape(word)}\b", "", cleaned_level_text, flags=re.I
+                        )
 
                 # Remove partial matches at the start (e.g., "MANIPUI" for "MANIPULATION", "ATION" for "MANIPULATION")
                 # Check if text starts with a partial match of power name words
@@ -1393,7 +1489,11 @@ def extract_special_power_from_back_card(
                         # Also check if first word starts with same letters as power name word (for OCR errors)
                         if (
                             (first_word in word_upper or word_upper in first_word)
-                            or (len(first_word) >= 4 and len(word_upper) >= 4 and first_word[:4] == word_upper[:4])
+                            or (
+                                len(first_word) >= 4
+                                and len(word_upper) >= 4
+                                and first_word[:4] == word_upper[:4]
+                            )
                         ) and len(first_word) >= 3:
                             cleaned_words = cleaned_words[1:]  # Remove first word
                             cleaned_level_text = " ".join(cleaned_words)
@@ -1411,9 +1511,15 @@ def extract_special_power_from_back_card(
                                 break
 
                 # Remove leading digits and clean up
-                cleaned_level_text = re.sub(r"^\d+\s*", "", cleaned_level_text)  # Remove leading digits
+                cleaned_level_text = re.sub(
+                    r"^\d+\s*", "", cleaned_level_text
+                )  # Remove leading digits
                 cleaned_level_text = re.sub(r"\s+", " ", cleaned_level_text)  # Normalize whitespace
                 cleaned_level_text = cleaned_level_text.strip()
+
+                # Final fix for "space of a ." -> "space of a Gate" (apply one more time after all cleaning)
+                cleaned_level_text = cleaned_level_text.replace("space of a .", "space of a Gate")
+                cleaned_level_text = cleaned_level_text.replace("space of a ,", "space of a Gate")
 
                 # Only add if it has substantial content (at least 3 words) and doesn't look like just OCR garbage
                 if cleaned_level_text and len(cleaned_level_text.split()) >= 3:
