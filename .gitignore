@@ -215,3 +215,14 @@ data/**/*.png
 
 # Generated files (benchmark results, etc.)
 .generated/
+
+# Audio files (TTS generated)
+*.wav
+*.mp3
+data/**/*_audio*.wav
+data/**/*_audio*.mp3
+
+# Animation files (GIFs)
+*.gif
+data/**/animation/**/*.gif
+data/**/animation/**/*.mp4

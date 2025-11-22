@@ -1,19 +1,19 @@
 {
   "name": "BORDEN",
   "location": "FALL RIVER, MASSACHUSETTS",
-  "motto": "“Two things are certain in life:",
-  "story": "ZE ACT BHAI Misi Borden lovee kilnges Nudes atof Bali precise are aleatation I raul three ed ORS En L Ne. (N US Be A TRACT Rntar Lat fy At e AN ie oe se a ee ie a ee nes aa ARUN Gate te e Ze . ie a oe ee Ue oe a ye ONE mili Soce cisely os Mies Periect eu bonili atiss ghp ay ae aera Nbibess Paste was SAO stress Ay perdi a S Ree e S Ls all i at ey, ee CER Satie oo his coy 3 ee SA e Re FHA ED ee ao e ota SALE CHINA syeeneetiee sa yu eetene eieoene rece Relat onal Wierd uate Siete A Craeke AGERE Tet Cie Nese ii : 8 Wipe oo o F Ly o F IN aoe, LO He ne a oe Hl ara a i and a Se a Seana Ae heal te e eet as i D ime ee ae me Ms. Borden loves killing. Murder, to be precise. The _ guilty must be punished for the horrors they inflict on the i AOE innocent, arid these cultists and their horrific allies wound : : s LE, consume the world for their own selfish ends. Ms. Borden q 4 m Y LAGS stress herself as the pérfect weapon in this fight. Even E . ss ee, ordinary. investigator suffer il! psychological effects from : as . i (ime the dedth they must visit on their foes. Not Ms: Borden. _ . a N Y/, In fet, she considers sorting out the guilty a soothing, 5. WN exereigé, Hersis.a disturbing form of psychopathy, but one q i ais thotsuité het self-appoliited rote of execufloniar perfectly, ot a. .",
+  "motto": "Two things are certain in life: Death and Axes.",
+  "story": "Ms. Borden loves killing. Murder, to be precise, The guilty must be punished for the horrors they inflict on the innocent, arid these cultists and their horrific allies wound consume the world for their own selfish ends. Ms. Borden stress herself as the pérfect weapon in this fight. Even ordinary investigator suffer ill psychological effects from the death they must visit on their foes. Not Ms. Borden. In fact, she considers sorting out the guilty a soothing exercise, Hers-is a disturbing form of psychopathy, but one that suits her self-appointed role of executioner perfectly.",
   "special_power": {
     "name": "SAVAGE",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "fad SAv Ac 4 When attack, you may heal 1 additional wound to your target if there are no other enemies in its space, a f"
+        "description": "fad SAv Ac 4 When attack, you may heal 1 additional wound to your target if there are no other enemies in its space"
       },
       {
         "level": 2,
-        "description": "You may deat 1 additional wound (2 total). wt"
+        "description": "You may deat 1 additional wound (2 total)"
       },
       {
         "level": 3,
@@ -21,7 +21,7 @@
       },
       {
         "level": 4,
-        "description": "i - You may heal 3 additional wounds (5 total). an"
+        "description": "- You may heal 3 additional wounds (5 total)"
       }
     ],
     "has_levels": true,

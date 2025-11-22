@@ -9,7 +9,7 @@
     "levels": [
       {
         "level": 1,
-        "description": "you are in 1 the same space as , monsters and Cultists- summoned there take wounds equal to heal thelr stealth rounded up). - os"
+        "description": "you are in 1 the same space as , monsters and Cultists- summoned there take wounds equal to heal thelr stealth rounded up)"
       },
       {
         "level": 2,
@@ -17,11 +17,11 @@
       },
       {
         "level": 3,
-        "description": "If you are within 1 space of a Gate you are always considered safe to Rest."
+        "description": "are within 1 space of a Gate you are always considered safe to Rest."
       },
       {
         "level": 4,
-        "description": "If you are within 1 space of a Gate you gain Green Dice and have 1 free rest action."
+        "description": "are within 1 space of a Gate you gain Green Dice and have 1 free rest action."
       }
     ],
     "has_levels": true,

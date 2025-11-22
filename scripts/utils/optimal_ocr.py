@@ -673,6 +673,48 @@ def _fix_power_description_ocr_errors(text: str) -> str:
     fixed = re.sub(r"\s+e\s+C\s*$", "", fixed, flags=re.I)
     fixed = re.sub(r"\s+e\s+C\.\s*$", "", fixed, flags=re.I)
 
+    # Fix "wound" -> "would" when followed by "die" or "not"
+    fixed = re.sub(r"\bwound\s+(die|not)\b", r"would \1", fixed, flags=re.I)
+    # Fix "fo" -> "to" when followed by "life"
+    fixed = re.sub(r"\bfo\s+life\b", "to life", fixed, flags=re.I)
+    # Fix "ail" -> "all" when followed by "your"
+    fixed = re.sub(r"\bail\s+your\b", "all your", fixed, flags=re.I)
+    # Fix "and" -> "die" when in context of "count X and as"
+    fixed = re.sub(r"\bcount\s+(\d+)\s+and\s+as\b", r"count \1 die as", fixed, flags=re.I)
+    # Fix "aso" -> "as a"
+    fixed = re.sub(r"\baso\b", "as a", fixed, flags=re.I)
+    # Fix "os" -> "as"
+    fixed = re.sub(r"\bos\s+a\b", "as a", fixed, flags=re.I)
+    # Fix "I" -> "1" when followed by "of your wounds"
+    fixed = re.sub(r"\bI\s+of\s+your\s+wounds\b", "1 of your wounds", fixed, flags=re.I)
+    # Fix "13" -> "3" when followed by "total"
+    fixed = re.sub(r"\b13\s+total\b", "3 total", fixed, flags=re.I)
+    # Fix "Bb" -> "BB" (likely dice reference)
+    fixed = re.sub(r"\bBb\b", "BB", fixed)
+    # Remove leading "." followed by space or number
+    fixed = re.sub(r"^\.\s+", "", fixed)
+    # Remove trailing "ee a", "a )", "i )"
+    fixed = re.sub(r"\s+ee\s+a\s*$", "", fixed, flags=re.I)
+    fixed = re.sub(r"\s+[a-z]\s*\)\s*$", "", fixed, flags=re.I)
+    # Remove trailing single letter + space
+    fixed = re.sub(r"\s+[a-zA-Z]\s*$", "", fixed)
+    # Remove trailing ")." or ")."
+    fixed = re.sub(r"\)\.\s*$", ")", fixed)
+    # Remove trailing comma if followed by nothing meaningful
+    fixed = re.sub(r",\s*$", "", fixed)
+    # Remove leading ";" or "; "
+    fixed = re.sub(r"^;\s*", "", fixed)
+    # Remove leading "d," or "d, "
+    fixed = re.sub(r"^d,\s*", "", fixed, flags=re.I)
+    # Remove leading "FON Nee a" or "FON Nee a "
+    fixed = re.sub(r"^FON\s+Nee\s+a\s+", "", fixed, flags=re.I)
+    # Remove "you:" -> "you"
+    fixed = re.sub(r"\byou:\b", "you", fixed, flags=re.I)
+    # Remove trailing "ee" (OCR garbage)
+    fixed = re.sub(r"\s+ee\s*$", "", fixed, flags=re.I)
+    # Remove leading "1 " if followed by "additional" (duplicate)
+    fixed = re.sub(r"^1\s+additional\s+", "additional ", fixed, flags=re.I)
+
     return fixed
 
 
@@ -1370,6 +1412,51 @@ def extract_special_power_from_back_card(
                         if len(power_name) > 5:
                             break
 
+        # Known special power names to look for (handle OCR errors)
+        known_power_names = {
+            "UNKILLABLE": ["UNKILLABLE", "UNKILLABL", "UNKILL", "UNKIL", "KILLABLE"],
+            "SAVAGE": ["SAVAGE", "SAVAG", "SAVA"],
+            "HEALING PRAYER": ["HEALING PRAYER", "HEALING PRAYE", "HEAL PRAYER", "PRAYER"],
+            "GATE MANIPULATION": ["GATE MANIPULATION", "GATE MANIPUL", "MANIPULATION"],
+            "VENGEANCE OBSESSION": ["VENGEANCE OBSESSION", "VENGEANCE", "OBSESSION", "VENGANCE"],
+            "LUCKY": ["LUCKY", "LUCK"],
+            "PROPHECY": ["PROPHECY", "PROPHEC"],
+            "STRONG": ["STRONG", "STRON"],
+        }
+
+        # Check for known power names in the text
+        if not power_name:
+            full_text_upper = full_text.upper()
+            for correct_name, variants in known_power_names.items():
+                for variant in variants:
+                    if variant in full_text_upper:
+                        # Check if it's not part of a longer description
+                        variant_pos = full_text_upper.find(variant)
+                        # Look for context around the variant
+                        context_start = max(0, variant_pos - 10)
+                        context_end = min(len(full_text_upper), variant_pos + len(variant) + 10)
+                        context = full_text_upper[context_start:context_end]
+                        # If variant appears as a standalone word or short phrase, use it
+                        if (
+                            variant_pos == 0
+                            or full_text_upper[variant_pos - 1] in [" ", "\n"]
+                            or context.startswith(variant)
+                        ):
+                            power_name = correct_name
+                            break
+                if power_name:
+                    break
+
+        # Check for "UNKILLABLE" pattern (Rasputin)
+        if not power_name:
+            if re.search(r"UNKILL|KILLABLE|free\s+death", full_text, re.I):
+                power_name = "UNKILLABLE"
+
+        # Check for "STRONG" pattern (Sister Beth - reroll related)
+        if not power_name:
+            if re.search(r"STRONG|reroll|count.*as.*success", full_text, re.I):
+                power_name = "STRONG"
+
         # If no pattern match, look for all-caps lines
         if not power_name:
             for line in lines[:15]:
@@ -1382,6 +1469,19 @@ def extract_special_power_from_back_card(
                     continue
                 # Skip garbage patterns
                 if any(re.match(pattern, line_clean, re.I) for pattern in garbage_patterns):
+                    continue
+                # Skip description phrases that are not power names
+                if any(
+                    phrase in line_clean.upper()
+                    for phrase in [
+                        "WHEN YOU RETURN",
+                        "INSTEAD, YOU MAY",
+                        "YOU MAY PUT",
+                        "INSTEAD,",
+                        "GAIN",
+                        "WHILE YOUR",
+                    ]
+                ):
                     continue
                 # Skip lines that are mostly punctuation or special characters
                 if sum(1 for c in line_clean if c.isalnum()) < len(line_clean) * 0.5:
@@ -1448,6 +1548,10 @@ def extract_special_power_from_back_card(
 
                 # Apply OCR corrections for common power description errors
                 cleaned_level_text = _fix_power_description_ocr_errors(cleaned_level_text)
+                # Fix "you:" -> "you" (apply here too for consistency)
+                cleaned_level_text = re.sub(r"\byou:\b", "you", cleaned_level_text, flags=re.I)
+                # Remove trailing "ee" (OCR garbage) - apply here too
+                cleaned_level_text = re.sub(r"\s+ee\s*$", "", cleaned_level_text, flags=re.I)
 
                 # Apply advanced NLP post-processing for better OCR error correction
                 try:
@@ -1520,6 +1624,61 @@ def extract_special_power_from_back_card(
                 # Final fix for "space of a ." -> "space of a Gate" (apply one more time after all cleaning)
                 cleaned_level_text = cleaned_level_text.replace("space of a .", "space of a Gate")
                 cleaned_level_text = cleaned_level_text.replace("space of a ,", "space of a Gate")
+
+                # Remove OCR garbage at the start of level descriptions
+                # Patterns like "PS 1", "po STRUNG", "iy es BY MA", "fa venceance fe", etc.
+                cleaned_level_text = re.sub(
+                    r"^[a-z]{1,2}\s+[A-Z]{1,6}\s*[:\-]?\s*", "", cleaned_level_text, flags=re.I
+                )
+                cleaned_level_text = re.sub(
+                    r"^[A-Z]{1,3}\s+[A-Z]{1,3}\s+[A-Z]{1,3}\s*[:\-]?\s*", "", cleaned_level_text
+                )
+                # Remove patterns like "PS 1", "fo", "ww", "ae", etc. at start
+                cleaned_level_text = re.sub(r"^[a-z]{1,2}\s+", "", cleaned_level_text, flags=re.I)
+                cleaned_level_text = re.sub(r"^[A-Z]{1,2}\s+", "", cleaned_level_text)
+                # Remove single/double letter + space at start
+                cleaned_level_text = re.sub(r"^[a-zA-Z]{1,2}\s+", "", cleaned_level_text)
+                # Remove patterns like "PS 1 free death:" -> "1 free death:"
+                cleaned_level_text = re.sub(r"^[A-Z]{1,2}\s+\d+\s+", "", cleaned_level_text)
+
+                # Remove OCR garbage at the end of level descriptions
+                # Patterns like "er", "ae", "wt", "oo. (Y", "t", etc.
+                cleaned_level_text = re.sub(r"\s+[a-z]{1,2}\s*$", "", cleaned_level_text, flags=re.I)
+                cleaned_level_text = re.sub(r"\s+[A-Z]{1,2}\s*$", "", cleaned_level_text)
+                # Remove trailing punctuation garbage like "._", "._.", "--", etc.
+                cleaned_level_text = re.sub(r"\s+[._\-]{1,3}\s*$", "", cleaned_level_text)
+                # Remove trailing single characters with punctuation
+                cleaned_level_text = re.sub(r"\s+[a-zA-Z][._\-)]\s*$", "", cleaned_level_text)
+                # Remove trailing patterns like "13 total). _" -> "13 total)."
+                cleaned_level_text = re.sub(r"\s+[._\-]\s*$", "", cleaned_level_text)
+                # Remove trailing ")." or ")."
+                cleaned_level_text = re.sub(r"\)\.\s*$", ")", cleaned_level_text)
+                # Remove trailing "." if it's not part of a sentence (like "(2 total.")
+                cleaned_level_text = re.sub(r"\((\d+)\s+total\)\.\s*$", r"(\1 total)", cleaned_level_text)
+                # Also handle cases without parentheses: "2 total." -> "2 total"
+                cleaned_level_text = re.sub(r"(\d+)\s+total\.\s*$", r"\1 total", cleaned_level_text)
+                # Fix missing closing parenthesis: "(2 total" -> "(2 total)"
+                cleaned_level_text = re.sub(r"\((\d+)\s+total\s*$", r"(\1 total)", cleaned_level_text)
+                # Remove trailing "ee" or similar single/double letter OCR garbage
+                cleaned_level_text = re.sub(r"\s+ee\s*$", "", cleaned_level_text, flags=re.I)
+                # Remove trailing single letter + space (like "a")
+                cleaned_level_text = re.sub(r"\s+[a-zA-Z]\s*$", "", cleaned_level_text)
+                # Remove trailing "ee a" or similar (two letters)
+                cleaned_level_text = re.sub(r"\s+[a-z]{1,2}\s+[a-z]\s*$", "", cleaned_level_text, flags=re.I)
+                # Remove trailing comma
+                cleaned_level_text = re.sub(r",\s*$", "", cleaned_level_text)
+                # Fix "and" -> "die" when in context of "count any number of and as"
+                cleaned_level_text = re.sub(r"\bcount\s+any\s+number\s+of\s+and\s+as\b", "count any number of die as", cleaned_level_text, flags=re.I)
+                # Remove leading ";"
+                cleaned_level_text = re.sub(r"^;\s*", "", cleaned_level_text)
+                # Remove leading "d,"
+                cleaned_level_text = re.sub(r"^d,\s*", "", cleaned_level_text, flags=re.I)
+                # Remove leading "."
+                cleaned_level_text = re.sub(r"^\.\s+", "", cleaned_level_text)
+
+                # Clean up any remaining whitespace
+                cleaned_level_text = re.sub(r"\s+", " ", cleaned_level_text)
+                cleaned_level_text = cleaned_level_text.strip()
 
                 # Only add if it has substantial content (at least 3 words) and doesn't look like just OCR garbage
                 if cleaned_level_text and len(cleaned_level_text.split()) >= 3:

@@ -2,14 +2,14 @@
   "name": "LORD ADAM BENCHLEY",
   "location": "MANCHESTER, ENGLAND",
   "motto": "Shoot first. Never ask,",
-  "story": "ol Lord Benchleys signature eye-twitch is both wound and i if pth--warning of the toiling toughness beneath his calm, British Yea i : a demeanor. The man holds himself together admirably, but j i f it SZ, most investigator know to keep some reserve around the ii . 4 B poor fellow, lest the twitch settle into a steely glare. Lord i ay i. SS Fog, Benchley i quite mad of course, heal battled the cults i A at q (om for decades and always maintaining the upper hand, if eae Y m R Uy, only barelyely. Lord. Benchley himself relies on a stiff upper ! A ti 4 IN lip, stoic resolve, and indulging his psychotic tendencies i AME f against cultists and their foul minions at every opportunity.",
+  "story": "Lord Benchleys signature eye-twitch is both wound and warning of the roiling toughness beneath his calm, British demeanor. The man holds himself together admirably, but most investigator know to keép some reserve around the poor fellow, lest the twitch settle instead a steely glare. Lord Benchley ts quite mad of course, heal battled the cults for decades and always maintaining the upper hand, if only barelyely. Lord. Benchley himself relies on a stiff upper lip, stoic resolve, and indulging his psychotic tendencies against cultists and their foul minions at every opportunity.",
   "special_power": {
     "name": "FUELED BY MADNESS",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "iy es BY MA Gain while your sanity is ona ea"
+        "description": "ain while your sanity is ona"
       },
       {
         "level": 2,
@@ -21,7 +21,7 @@
       },
       {
         "level": 4,
-        "description": "SF ON Nd vmnmaenmeenn ad Instead, gain eee while your sanity is on r OR 1 space buck, a"
+        "description": "vmnmaenmeenn ad Instead, gain eee while your sanity is on r OR 1 space buck"
       }
     ],
     "has_levels": true,

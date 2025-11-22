@@ -69,7 +69,9 @@ def diagnose_story_extraction(character_dir: Path) -> None:
     story_height = int(img_height * FRONT_CARD_STORY_HEIGHT_PERCENT)
     bottom_region = (0, story_start, img_width, story_height)
     print(f"Story region: X=0, Y={story_start}, Width={img_width}, Height={story_height}")
-    print(f"Story region percentages: Y={FRONT_CARD_STORY_START_PERCENT*100:.1f}%, Height={FRONT_CARD_STORY_HEIGHT_PERCENT*100:.1f}%")
+    print(
+        f"Story region percentages: Y={FRONT_CARD_STORY_START_PERCENT * 100:.1f}%, Height={FRONT_CARD_STORY_HEIGHT_PERCENT * 100:.1f}%"
+    )
     print()
 
     # Load optimal strategies
@@ -78,9 +80,7 @@ def diagnose_story_extraction(character_dir: Path) -> None:
     print(f"Using strategy: {story_strategy}")
     print()
 
-    story_text_2 = extract_text_from_region_with_strategy(
-        front_path, bottom_region, story_strategy
-    )
+    story_text_2 = extract_text_from_region_with_strategy(front_path, bottom_region, story_strategy)
     print(f"Raw text (length: {len(story_text_2)}):")
     print(repr(story_text_2))
     print()
@@ -92,6 +92,7 @@ def diagnose_story_extraction(character_dir: Path) -> None:
     json_path = character_dir / "character.json"
     if json_path.exists():
         import json
+
         with open(json_path) as f:
             data = json.load(f)
             current_story = data.get("story", "")
@@ -114,4 +115,3 @@ if __name__ == "__main__":
         sys.exit(1)
 
     diagnose_story_extraction(character_dir)
-

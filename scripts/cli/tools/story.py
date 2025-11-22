@@ -9,6 +9,10 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, Final, List, Optional, Tuple
 
+# Add project root to path
+project_root = Path(__file__).parent.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
 try:
     import click
     from rich.console import Console
@@ -19,10 +23,10 @@ except ImportError as e:
     print(
         f"Error: Missing required dependency: {e.name}\n\n"
         "To run this script, use one of:\n"
-        "  1. uv run ./scripts/read_story.py [options]\n"
-        "  2. source .venv/bin/activate && ./scripts/read_story.py [options]\n"
+        "  1. uv run python scripts/cli/tools/story.py [options]\n"
+        "  2. source .venv/bin/activate && python scripts/cli/tools/story.py [options]\n"
         "  3. make setup (to install dependencies) then run directly\n\n"
-        "Recommended: uv run ./scripts/read_story.py --help\n",
+        "Recommended: uv run python scripts/cli/tools/story.py --help\n",
         file=sys.stderr,
     )
     sys.exit(1)
@@ -43,6 +47,8 @@ DEFAULT_TTS_MODEL: Final[str] = (
 )
 OUTPUT_AUDIO_EXT: Final[str] = ".wav"
 SPEAKER_METADATA_FILE: Final[str] = "scripts/data/vctk_speakers.json"
+# Default English female speaker (p225 is a good choice - age 23, Southern England)
+DEFAULT_ENGLISH_FEMALE_SPEAKER: Final[str] = "p225"
 
 
 def find_character_directory(data_dir: Path, season: str, character: str) -> Optional[Path]:
@@ -64,6 +70,18 @@ def find_character_directory(data_dir: Path, season: str, character: str) -> Opt
     return None
 
 
+def get_character_name(char_dir: Path) -> Optional[str]:
+    """Get the character name from character.json."""
+    json_file = char_dir / FILENAME_CHARACTER_JSON
+    if json_file.exists():
+        try:
+            data = json.loads(json_file.read_text(encoding="utf-8"))
+            return data.get("name")
+        except (json.JSONDecodeError, Exception):
+            pass
+    return None
+
+
 def get_character_story(char_dir: Path) -> Optional[str]:
     """Get the character story from story.txt or character.json."""
     # Try story.txt first
@@ -74,8 +92,6 @@ def get_character_story(char_dir: Path) -> Optional[str]:
     # Fallback to character.json
     json_file = char_dir / FILENAME_CHARACTER_JSON
     if json_file.exists():
-        import json
-
         try:
             data = json.loads(json_file.read_text(encoding="utf-8"))
             return data.get("story")
@@ -175,7 +191,8 @@ def list_characters(data_dir: Path, season: str) -> List[str]:
 )
 @click.option(
     "--speaker",
-    help="Speaker ID to use (e.g., 'p225'). Use --list-speakers to see available options",
+    default=DEFAULT_ENGLISH_FEMALE_SPEAKER,
+    help=f"Speaker ID to use (e.g., 'p225'). Default: {DEFAULT_ENGLISH_FEMALE_SPEAKER} (English female). Use --list-speakers to see available options",
 )
 @click.option(
     "--list-seasons",
@@ -303,24 +320,34 @@ def main(
             )
         sys.exit(1)
 
-    # Get story text
+    # Get character name and story
+    character_name = get_character_name(char_dir)
     story_text = get_character_story(char_dir)
+    
     if not story_text:
         console.print(f"[red]No story found for {character}[/red]")
         console.print(f"Checked: {char_dir / FILENAME_STORY_TXT}")
         console.print(f"Checked: {char_dir / FILENAME_CHARACTER_JSON}")
         sys.exit(1)
 
-    console.print(f"\n[green]Found story for {character}[/green]")
-    console.print(f"[dim]Story length: {len(story_text)} characters[/dim]")
+    # Format text: "Character Name. Story text..."
+    if character_name:
+        full_text = f"{character_name}. {story_text}"
+        console.print(f"\n[green]Found character: {character_name}[/green]")
+    else:
+        full_text = story_text
+        console.print(f"\n[green]Found story for {character}[/green]")
+    
+    console.print(f"[dim]Text length: {len(full_text)} characters[/dim]")
 
     # Determine output directory
     output_path = output_dir if output_dir else char_dir
     output_path.mkdir(parents=True, exist_ok=True)
 
-    # Generate filename
+    # Generate filename (use character name if available, otherwise use directory name)
+    file_character_name = character_name.lower().replace(" ", "_") if character_name else character
     speaker_suffix = f"_{speaker}" if speaker else ""
-    output_file = output_path / f"{character}_story{speaker_suffix}{OUTPUT_AUDIO_EXT}"
+    output_file = output_path / f"{file_character_name}_audio{speaker_suffix}{OUTPUT_AUDIO_EXT}"
 
     # Get available speakers
     available_speakers = list_available_speakers(tts)
@@ -336,14 +363,18 @@ def main(
     try:
         console.print("\n[cyan]Generating audio...[/cyan]")
         if speaker:
-            console.print(f"  Using speaker: {speaker}")
-            tts.tts_to_file(text=story_text, speaker=speaker, file_path=str(output_file))
+            # Get speaker description
+            metadata = load_speaker_metadata()
+            speaker_name, speaker_desc = get_speaker_description(speaker, metadata)
+            console.print(f"  Using speaker: {speaker} ({speaker_desc})")
+            tts.tts_to_file(text=full_text, speaker=speaker, file_path=str(output_file))
         else:
             console.print("  Using default speaker")
-            tts.tts_to_file(text=story_text, file_path=str(output_file))
+            tts.tts_to_file(text=full_text, file_path=str(output_file))
 
         console.print(f"[green]✓ Audio saved to: {output_file}[/green]")
         console.print(f"[dim]File size: {output_file.stat().st_size / 1024:.1f} KB[/dim]")
+        console.print(f"[dim]Note: Audio files are not committed to git[/dim]")
 
     except Exception as e:
         console.print(f"[red]Error generating audio:[/red] {e}")

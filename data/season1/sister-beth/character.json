@@ -1,27 +1,27 @@
 {
   "name": "SISTER BETH",
   "location": "BOGOTA, COLOMBIA",
-  "motto": "“Their lack of faith",
-  "story": "ell Sister Beth knows not what Gods plan for her may be, : Ls tis--except that shell likely meet Him very soon. Afflicted at i , ie : as ah early age with nervous nature, young Beth made the q ; rounds through various hospitals and, sanitariums before i Be os 3 finding peace (and fatalism) inthe church. Were it not for i ii : A Zo the insulation her faith provides her psythe, she wound not it i ah SS have survived her first encounter with ihe Old Ones and i ; ee their cults: Since then, shes become an expert.on the occult ! is qi : ie NX and their horrific practices, justified in the belief that the 4 ee i day she finally falls will be the-day of her ultimate salvation. 2 Ys 7 pa fs his oy na OOS Sister Beh knows vor wha! Cod: plan for her ties 9c. : cecept thas shell [khely nes: Him vary soon. Ailicted a: iy ry an early age with ne-vout nature, young Sel made the l rounds through varices Lasptals wound sanvtariuiry Leflore-e A finding peace .and fatalien nthe church. were: it ao: for i J i S the insulation her faith provdes her uythe, she wound 0 ; , ESS have survived her firs: encounter with he Old Ones enc en ther cults. Since then, shes become cn eapar os, the occul-: 4M IN and thelr herrifle praczices, juzlified In he belle that the H j Le [om 4 day she Finally falls will Se re doy of her uifimare salvation.",
+  "motto": "Their lack of faith should disturb them.",
+  "story": "Sister Beth knows not what Gods plan for her may be, except that shell likely meet Him very soon. Afflicted at an early age with a nervous nature, young Beth made the rounds through various hospitals and sanitariums before finding peace (and fatalism) in the church. Were it not for the insulation her faith provides her psythe, she wound not have survived her first encounter with the Old Ones and their cults, Since then, Shes become an expert.on the occult and their horrific practices, justified in the belief that the day she finally faills will be the day of her ultimate salvation.",
   "special_power": {
-    "name": "Instead, you may",
+    "name": "STRONG",
     "is_special": true,
     "levels": [
       {
         "level": 1,
-        "description": "po STRUNG ; When making any reroll, you: may count 1 and as 1 success (it still also counts aso a). ee a we"
+        "description": "When making any reroll, you: may count 1 die as 1 success (it still also counts as a). ee"
       },
       {
         "level": 2,
-        "description": "we count any number of and as successes (they still also count os a) a st"
+        "description": "you may count any number of die as successes (they still also count as a)"
       },
       {
         "level": 3,
-        "description": "Heal I of your wounds for each you count as a success. i )"
+        "description": "Heal 1 of your wounds for each you count as a success."
       },
       {
         "level": 4,
-        "description": "FON Nee a Also, if you rolled at least Bb. you may add 3 successes to the reroll, _-"
+        "description": "Also, if you rolled at least BB. you may add 3 successes to the reroll"
       }
     ],
     "has_levels": true,
