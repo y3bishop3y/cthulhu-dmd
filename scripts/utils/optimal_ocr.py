@@ -715,6 +715,51 @@ def _fix_power_description_ocr_errors(text: str) -> str:
     # Remove leading "1 " if followed by "additional" (duplicate)
     fixed = re.sub(r"^1\s+additional\s+", "additional ", fixed, flags=re.I)
 
+    # Fix "Fueled By Madness" specific patterns
+    # "ain while your sanity" -> "Gain Green Dice while your sanity"
+    fixed = re.sub(r"^ain\s+while\s+your\s+sanity", "Gain Green Dice while your sanity", fixed, flags=re.I)
+    # "gain while your sanity" -> "gain Green Dice while your sanity" (if "Green Dice" missing)
+    fixed = re.sub(r"\bgain\s+while\s+your\s+sanity\b", "gain Green Dice while your sanity", fixed, flags=re.I)
+    # "gain eer" -> "gain Green Dice" (OCR error)
+    fixed = re.sub(r"\bgain\s+eer\b", "gain Green Dice", fixed, flags=re.I)
+    # "gain eee" -> "gain Green Dice" (OCR error)
+    fixed = re.sub(r"\bgain\s+eee\b", "gain Green Dice", fixed, flags=re.I)
+    # "ona" -> "on a Red Swirl" when followed by end or punctuation
+    fixed = re.sub(r"\bona\s*$", "on a Red Swirl", fixed, flags=re.I)
+    fixed = re.sub(r"\bona\s+OR\b", "on a Red Swirl OR", fixed, flags=re.I)
+    # "on a or" -> "on a Red Swirl OR"
+    fixed = re.sub(r"\bon\s+a\s+or\b", "on a Red Swirl OR", fixed, flags=re.I)
+    # "on r" -> "on a Red Swirl" (when at end or followed by OR)
+    fixed = re.sub(r"\bon\s+r\s+OR\b", "on a Red Swirl OR", fixed, flags=re.I)
+    fixed = re.sub(r"\bon\s+r\s*$", "on a Red Swirl", fixed, flags=re.I)
+    # "buck" -> "back" (OCR error)
+    fixed = re.sub(r"\bbuck\b", "back", fixed, flags=re.I)
+    # Remove leading OCR garbage patterns
+    fixed = re.sub(r"^vmnmaenmeenn\s+ad\s+", "", fixed, flags=re.I)
+    fixed = re.sub(r"^nce\s+fe\s+", "", fixed, flags=re.I)
+    fixed = re.sub(r"^-f\s+Nv\s+ES\s+", "", fixed, flags=re.I)
+    # Remove "oo. (Y" and similar trailing garbage
+    fixed = re.sub(r"\s+oo\.\s*\(Y\s*$", "", fixed, flags=re.I)
+    fixed = re.sub(r"\s+\.\s*-\s*:\s*$", "", fixed)
+    # Fix "atfackers" -> "attacker's"
+    fixed = re.sub(r"\batfackers\b", "attacker's", fixed, flags=re.I)
+    # Fix "for each you" -> "for each die you" (missing "die")
+    fixed = re.sub(r"\bfor\s+each\s+you\s+count\b", "for each die you count", fixed, flags=re.I)
+    # Fix "heal oll" -> "heal all"
+    fixed = re.sub(r"\bheal\s+oll\b", "heal all", fixed, flags=re.I)
+    # Fix "drow" -> "draw"
+    fixed = re.sub(r"\bdrow\b", "draw", fixed, flags=re.I)
+    # Fix "af the" -> "at the"
+    fixed = re.sub(r"\baf\s+the\b", "at the", fixed, flags=re.I)
+    # Fix "gain." -> "gain" (remove trailing period after gain)
+    fixed = re.sub(r"\bgain\.\s*$", "gain", fixed, flags=re.I)
+    # Fix "Yo. 6S" -> remove (OCR garbage)
+    fixed = re.sub(r"\s+Yo\.\s+6S\s*$", "", fixed, flags=re.I)
+    # Fix "ENS bas" -> remove (OCR garbage at start)
+    fixed = re.sub(r"^ENS\s+bas\s+", "", fixed, flags=re.I)
+    # Fix " - 1" -> remove (OCR garbage at end)
+    fixed = re.sub(r"\s+-\s+1\s*$", "", fixed)
+
     return fixed
 
 
