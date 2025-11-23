@@ -1,0 +1,13 @@
+{
+  "_comment": "Historical/fictional character links for Wikipedia and Grokpedia",
+  "borden": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Lizzie_Borden",
+    "grokpedia": "https://grokipedia.com/page/Lizzie_Borden",
+    "other": []
+  },
+  "rasputin": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Grigori_Rasputin",
+    "grokpedia": "https://grokipedia.com/page/Grigori_Rasputin",
+    "other": []
+  }
+}

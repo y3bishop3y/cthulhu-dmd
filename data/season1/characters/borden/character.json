@@ -1,8 +1,23 @@
 {
+  "id": "borden",
   "name": "BORDEN",
-  "location": "FALL RIVER, MASSACHUSETTS",
+  "season": "season1",
   "motto": "Two things are certain in life: Death and Axes.",
   "story": "Ms. Borden loves killing. Murder, to be precise, The guilty must be punished for the horrors they inflict on the innocent, arid these cultists and their horrific allies wound consume the world for their own selfish ends. Ms. Borden stress herself as the pérfect weapon in this fight. Even ordinary investigator suffer ill psychological effects from the death they must visit on their foes. Not Ms. Borden. In fact, she considers sorting out the guilty a soothing exercise, Hers-is a disturbing form of psychopathy, but one that suits her self-appointed role of executioner perfectly.",
+  "location": {
+    "original": "FALL RIVER, MASSACHUSETTS",
+    "parsed": {
+      "city": "Fall River",
+      "administrative_division": "Massachusetts",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 41.7015,
+      "lon": -71.155
+    }
+  },
   "special_power": {
     "name": "SAVAGE",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Toughness",
     "Brawling"
-  ]
+  ],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Lizzie_Borden",
+    "grokpedia": "https://grokipedia.com/page/Lizzie_Borden",
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "borden_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.95
+  }
 }

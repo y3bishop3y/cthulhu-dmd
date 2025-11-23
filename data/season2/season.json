@@ -1,0 +1,70 @@
+{
+  "id": "season2",
+  "name": "Season 2",
+  "display_name": "Season 2",
+  "description": "Season 2 expansion adding 10 new investigators to the Cthulhu: Death May Die universe.",
+  "year_published": 2020,
+  "release_date": "2020-06-01",
+  "box_type": "expansion",
+  "character_count": 10,
+  "images": {
+    "box_art": "season-2-expansion-box.jpg",
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": "https://www.amazon.com/Cthulu-Expansion-Mystery-Cooperative-Playtime/dp/B07Z7D443R/ref=sr_1_3?crid=UOJ1O5ZWZ8ZT&dib=eyJ2IjoiMSJ9.fz4MR9Iu7cP5_TLvVAgVs93ACJ45ErzfMjL_dW2-yPJ1-MGQguQjzN32jPYB5GxTPDA0lKX4xyFMcIcQ9wl_QLriD6yr7a-XeAFYGUlOgVU9ZHhJeoQA0YoUgVK2Ct3iN6zTDZFLMdFqS-F_dGjTQT6hbbRJf3Lfm_SqvG4Snf27KsD6FGonEKzzHvSkBdGcP6ljzzueUW2g2TPamLlEFtg_StF_Gn32MhmLhpoqOyMKfAiVSon5dElV0SbHeNGqQKGa8Ijy6EfWZ4eBhVNGxV4xHH9WANtsFRCrhUYlMiE.3Lq-9xGlIfi4yO3vAvOGdnK8RQwPcka2CqsiRNIHxC8&dib_tag=se&keywords=cthulhu+dead+may+die&qid=1763857033&sprefix=chathulu+dead+%2Caps%2C185&sr=8-3&ufe=app_do%3Aamzn1.fos.9fe8cbfa-bf43-43d1-a707-3f4e65a4b666",
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.27,
+    "characters_complete": false,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "adilah",
+      "name": "Adilah"
+    },
+    {
+      "id": "alex",
+      "name": "Alex"
+    },
+    {
+      "id": "ariele",
+      "name": "Ariele"
+    },
+    {
+      "id": "hailia",
+      "name": "Hailia"
+    },
+    {
+      "id": "luke",
+      "name": "Luke"
+    },
+    {
+      "id": "margarethe",
+      "name": "Margarethe"
+    },
+    {
+      "id": "mario",
+      "name": "Mario"
+    },
+    {
+      "id": "mary",
+      "name": "Mary"
+    },
+    {
+      "id": "sam",
+      "name": "Sam"
+    },
+    {
+      "id": "tony",
+      "name": "Tony"
+    }
+  ]
+}

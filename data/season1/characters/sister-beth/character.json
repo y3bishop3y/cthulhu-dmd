@@ -1,8 +1,23 @@
 {
+  "id": "sister-beth",
   "name": "SISTER BETH",
-  "location": "BOGOTA, COLOMBIA",
+  "season": "season1",
   "motto": "Their lack of faith should disturb them.",
   "story": "Sister Beth knows not what Gods plan for her may be, except that shell likely meet Him very soon. Afflicted at an early age with a nervous nature, young Beth made the rounds through various hospitals and sanitariums before finding peace (and fatalism) in the church. Were it not for the insulation her faith provides her psythe, she wound not have survived her first encounter with the Old Ones and their cults, Since then, Shes become an expert.on the occult and their horrific practices, justified in the belief that the day she finally faills will be the day of her ultimate salvation.",
+  "location": {
+    "original": "BOGOTA, COLOMBIA",
+    "parsed": {
+      "city": "Bogotá",
+      "administrative_division": null,
+      "administrative_division_type": "capital_district",
+      "country": "Colombia",
+      "region": "South America"
+    },
+    "coordinates": {
+      "lat": 4.711,
+      "lon": -74.0721
+    }
+  },
   "special_power": {
     "name": "STRONG",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Brawling",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "sister_beth_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

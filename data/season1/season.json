@@ -1,0 +1,70 @@
+{
+  "id": "season1",
+  "name": "Season 1",
+  "display_name": "Season 1",
+  "description": "The original Cthulhu: Death May Die base game featuring 10 investigators battling the Old Ones.",
+  "year_published": 2019,
+  "release_date": "2019-06-01",
+  "box_type": "base_game",
+  "character_count": 10,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": "https://cmon.com/product/cthulhu-death-may-die",
+    "boardgamegeek": "https://boardgamegeek.com/boardgame/266524/cthulhu-death-may-die",
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 1.0,
+    "characters_complete": true,
+    "audio_complete": true,
+    "images_complete": true
+  },
+  "characters": [
+    {
+      "id": "adam",
+      "name": "LORD ADAM BENCHLEY"
+    },
+    {
+      "id": "ahmed",
+      "name": "AHMED YASIN"
+    },
+    {
+      "id": "borden",
+      "name": "BORDEN"
+    },
+    {
+      "id": "elizabeth",
+      "name": "ELIZABETH IVES"
+    },
+    {
+      "id": "fatima",
+      "name": "FATIMA SAFAR"
+    },
+    {
+      "id": "ian",
+      "name": "SERGEANT IAN WELLES"
+    },
+    {
+      "id": "morgan",
+      "name": "JOHN MORGAN"
+    },
+    {
+      "id": "rasputin",
+      "name": "RASPUTIN"
+    },
+    {
+      "id": "sister-beth",
+      "name": "SISTER BETH"
+    },
+    {
+      "id": "the-kid",
+      "name": "THE KID"
+    }
+  ]
+}

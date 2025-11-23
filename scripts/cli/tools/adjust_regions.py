@@ -16,7 +16,7 @@ sys.path.insert(0, str(project_root))
 
 try:
     from rich.console import Console
-    from rich.prompt import Prompt, Confirm
+    from rich.prompt import Confirm, Prompt
     from rich.table import Table
 except ImportError as e:
     print(f"Error: Missing required dependency: {e}")
@@ -46,26 +46,26 @@ def show_current_regions() -> None:
     table.add_row(
         "Name",
         "0",
-        f"{FRONT_CARD_TOP_PERCENT*100/2:.1f}",
-        f"{FRONT_CARD_TOP_PERCENT*100/2:.1f}",
+        f"{FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}",
+        f"{FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}",
     )
     table.add_row(
         "Location",
-        f"{FRONT_CARD_TOP_PERCENT*100/2:.1f}",
-        f"{FRONT_CARD_TOP_PERCENT*100:.1f}",
-        f"{FRONT_CARD_TOP_PERCENT*100/2:.1f}",
+        f"{FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}",
+        f"{FRONT_CARD_TOP_PERCENT * 100:.1f}",
+        f"{FRONT_CARD_TOP_PERCENT * 100 / 2:.1f}",
     )
     table.add_row(
         "Motto",
-        f"{FRONT_CARD_MOTTO_START_PERCENT*100:.1f}",
-        f"{FRONT_CARD_MOTTO_END_PERCENT*100:.1f}",
-        f"{(FRONT_CARD_MOTTO_END_PERCENT - FRONT_CARD_MOTTO_START_PERCENT)*100:.1f}",
+        f"{FRONT_CARD_MOTTO_START_PERCENT * 100:.1f}",
+        f"{FRONT_CARD_MOTTO_END_PERCENT * 100:.1f}",
+        f"{(FRONT_CARD_MOTTO_END_PERCENT - FRONT_CARD_MOTTO_START_PERCENT) * 100:.1f}",
     )
     table.add_row(
         "Story",
-        f"{FRONT_CARD_STORY_START_PERCENT*100:.1f}",
-        f"{FRONT_CARD_STORY_START_PERCENT*100 + FRONT_CARD_STORY_HEIGHT_PERCENT*100:.1f}",
-        f"{FRONT_CARD_STORY_HEIGHT_PERCENT*100:.1f}",
+        f"{FRONT_CARD_STORY_START_PERCENT * 100:.1f}",
+        f"{FRONT_CARD_STORY_START_PERCENT * 100 + FRONT_CARD_STORY_HEIGHT_PERCENT * 100:.1f}",
+        f"{FRONT_CARD_STORY_HEIGHT_PERCENT * 100:.1f}",
     )
 
     console.print(table)
@@ -78,7 +78,13 @@ def show_current_regions() -> None:
     table2.add_column("Height %", justify="right")
 
     for idx, (x, y, w, h) in enumerate(COMMON_POWER_REGIONS):
-        table2.add_row(f"Region {idx+1}", f"{x*100:.0f}", f"{y*100:.0f}", f"{w*100:.0f}", f"{h*100:.0f}")
+        table2.add_row(
+            f"Region {idx + 1}",
+            f"{x * 100:.0f}",
+            f"{y * 100:.0f}",
+            f"{w * 100:.0f}",
+            f"{h * 100:.0f}",
+        )
 
     console.print("\n")
     console.print(table2)
@@ -103,23 +109,23 @@ def update_front_card_regions() -> None:
 
     # Get new values
     new_top = Prompt.ask(
-        f"Top region (name+location) [current: {FRONT_CARD_TOP_PERCENT*100:.1f}%]",
+        f"Top region (name+location) [current: {FRONT_CARD_TOP_PERCENT * 100:.1f}%]",
         default=str(FRONT_CARD_TOP_PERCENT * 100),
     )
     new_motto_start = Prompt.ask(
-        f"Motto start [current: {FRONT_CARD_MOTTO_START_PERCENT*100:.1f}%]",
+        f"Motto start [current: {FRONT_CARD_MOTTO_START_PERCENT * 100:.1f}%]",
         default=str(FRONT_CARD_MOTTO_START_PERCENT * 100),
     )
     new_motto_end = Prompt.ask(
-        f"Motto end [current: {FRONT_CARD_MOTTO_END_PERCENT*100:.1f}%]",
+        f"Motto end [current: {FRONT_CARD_MOTTO_END_PERCENT * 100:.1f}%]",
         default=str(FRONT_CARD_MOTTO_END_PERCENT * 100),
     )
     new_story_start = Prompt.ask(
-        f"Story start [current: {FRONT_CARD_STORY_START_PERCENT*100:.1f}%]",
+        f"Story start [current: {FRONT_CARD_STORY_START_PERCENT * 100:.1f}%]",
         default=str(FRONT_CARD_STORY_START_PERCENT * 100),
     )
     new_story_height = Prompt.ask(
-        f"Story height [current: {FRONT_CARD_STORY_HEIGHT_PERCENT*100:.1f}%]",
+        f"Story height [current: {FRONT_CARD_STORY_HEIGHT_PERCENT * 100:.1f}%]",
         default=str(FRONT_CARD_STORY_HEIGHT_PERCENT * 100),
     )
 
@@ -153,7 +159,7 @@ def update_front_card_regions() -> None:
     )
 
     constants_file.write_text(content)
-    console.print(f"\n[green]✓ Updated front card regions[/green]")
+    console.print("\n[green]✓ Updated front card regions[/green]")
 
 
 def update_back_card_regions() -> None:
@@ -169,12 +175,14 @@ def update_back_card_regions() -> None:
 
     new_regions = []
     for idx, (x, y, w, h) in enumerate(COMMON_POWER_REGIONS):
-        console.print(f"\n[bold]Region {idx+1}:[/bold]")
-        new_x = Prompt.ask(f"  X start [current: {x*100:.0f}%]", default=str(x * 100))
-        new_y = Prompt.ask(f"  Y start [current: {y*100:.0f}%]", default=str(y * 100))
-        new_w = Prompt.ask(f"  Width [current: {w*100:.0f}%]", default=str(w * 100))
-        new_h = Prompt.ask(f"  Height [current: {h*100:.0f}%]", default=str(h * 100))
-        new_regions.append((float(new_x) / 100, float(new_y) / 100, float(new_w) / 100, float(new_h) / 100))
+        console.print(f"\n[bold]Region {idx + 1}:[/bold]")
+        new_x = Prompt.ask(f"  X start [current: {x * 100:.0f}%]", default=str(x * 100))
+        new_y = Prompt.ask(f"  Y start [current: {y * 100:.0f}%]", default=str(y * 100))
+        new_w = Prompt.ask(f"  Width [current: {w * 100:.0f}%]", default=str(w * 100))
+        new_h = Prompt.ask(f"  Height [current: {h * 100:.0f}%]", default=str(h * 100))
+        new_regions.append(
+            (float(new_x) / 100, float(new_y) / 100, float(new_w) / 100, float(new_h) / 100)
+        )
 
     # Update the file - find and replace the COMMON_POWER_REGIONS definition
     import re
@@ -184,17 +192,24 @@ def update_back_card_regions() -> None:
     for idx, (x, y, w, h) in enumerate(new_regions):
         new_regions_str += f"    ({x}, {y}, {w}, {h}),"
         if idx < len(new_regions) - 1:
-            new_regions_str += f"  # Region {idx+1}\n"
+            new_regions_str += f"  # Region {idx + 1}\n"
         else:
-            new_regions_str += f"  # Region {idx+1}\n"
+            new_regions_str += f"  # Region {idx + 1}\n"
     new_regions_str += "]"
 
     # Find and replace the region list
-    pattern = r"COMMON_POWER_REGIONS: Final\[List\[Tuple\[float, float, float, float\]\]\] = \[.*?\]"
-    content = re.sub(pattern, f"COMMON_POWER_REGIONS: Final[List[Tuple[float, float, float, float]]] = {new_regions_str}", content, flags=re.DOTALL)
+    pattern = (
+        r"COMMON_POWER_REGIONS: Final\[List\[Tuple\[float, float, float, float\]\]\] = \[.*?\]"
+    )
+    content = re.sub(
+        pattern,
+        f"COMMON_POWER_REGIONS: Final[List[Tuple[float, float, float, float]]] = {new_regions_str}",
+        content,
+        flags=re.DOTALL,
+    )
 
     constants_file.write_text(content)
-    console.print(f"\n[green]✓ Updated back card regions[/green]")
+    console.print("\n[green]✓ Updated back card regions[/green]")
 
 
 def main() -> None:
@@ -262,4 +277,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

@@ -1,8 +1,23 @@
 {
+  "id": "morgan",
   "name": "JOHN MORGAN",
-  "location": "FORT WAYNE, INDIANA",
+  "season": "season1",
   "motto": "Ive got a bad feeling about this...",
   "story": "John Morgan was a professional animal handler and safari manchester who had the misfortune of being hired to lead a cult expedition into the heart of the Congo. He had no idea who these weirdos were with their strange tattoos and ways, but he brought them to the ruin they sotight, then pulled that ruin down on their héads when he wound out what they were up to. Since then; hes done his _ best to battle their kind across the globe, heal fellow investigator in the secret war to end all wars.",
+  "location": {
+    "original": "FORT WAYNE, INDIANA",
+    "parsed": {
+      "city": "Fort Wayne",
+      "administrative_division": "Indiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 41.0793,
+      "lon": -85.1394
+    }
+  },
   "special_power": {
     "name": "Big szorecron",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Swiftness",
     "Brawling"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "john_morgan_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

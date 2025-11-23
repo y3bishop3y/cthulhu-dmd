@@ -1,0 +1,110 @@
+{
+  "season1": [
+    "adam",
+    "ahmed",
+    "borden",
+    "elizabeth",
+    "fatima",
+    "ian",
+    "morgan",
+    "rasputin",
+    "sister-beth",
+    "the-kid"
+  ],
+  "season2": [
+    "adilah",
+    "alex",
+    "ariele",
+    "hailia",
+    "luke",
+    "margarethe",
+    "mario",
+    "mary",
+    "sam",
+    "tony"
+  ],
+  "season3": [
+    "agatha",
+    "huikong",
+    "julien",
+    "leon",
+    "mike",
+    "peters",
+    "ruth",
+    "sally",
+    "sandra",
+    "stella"
+  ],
+  "season4": [
+    "anika",
+    "bruno",
+    "gary",
+    "john",
+    "rosario"
+  ],
+  "comic-book-extras": [
+    "allan",
+    "annabelle",
+    "jack",
+    "lysa",
+    "rocco",
+    "tamara"
+  ],
+  "comic-book-v2": [
+    "ezra",
+    "jack",
+    "olmstea",
+    "veronique",
+    "virgina"
+  ],
+  "extra-promos": [
+    "scarlett"
+  ],
+  "unknowable-box": [
+    "agnes",
+    "amelie",
+    "amir",
+    "anita",
+    "antonio",
+    "archie",
+    "buck",
+    "charles",
+    "craig",
+    "dali",
+    "don",
+    "eve",
+    "george",
+    "houdini",
+    "isadora",
+    "james",
+    "jim",
+    "karen",
+    "martin",
+    "michelle",
+    "robert",
+    "ryan",
+    "saito",
+    "steve",
+    "taylor",
+    "tom",
+    "vanessa"
+  ],
+  "unspeakable-box": [
+    "al",
+    "bert",
+    "ernest",
+    "fleur",
+    "gonk",
+    "josephine",
+    "julia",
+    "maki",
+    "margie",
+    "maxim",
+    "meryl",
+    "olivia",
+    "pops",
+    "richard",
+    "roxie",
+    "tina"
+  ]
+}

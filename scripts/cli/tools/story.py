@@ -323,7 +323,7 @@ def main(
     # Get character name and story
     character_name = get_character_name(char_dir)
     story_text = get_character_story(char_dir)
-    
+
     if not story_text:
         console.print(f"[red]No story found for {character}[/red]")
         console.print(f"Checked: {char_dir / FILENAME_STORY_TXT}")
@@ -337,7 +337,7 @@ def main(
     else:
         full_text = story_text
     console.print(f"\n[green]Found story for {character}[/green]")
-    
+
     console.print(f"[dim]Text length: {len(full_text)} characters[/dim]")
 
     # Determine output directory
@@ -374,7 +374,7 @@ def main(
 
         console.print(f"[green]✓ Audio saved to: {output_file}[/green]")
         console.print(f"[dim]File size: {output_file.stat().st_size / 1024:.1f} KB[/dim]")
-        console.print(f"[dim]Note: Audio files are not committed to git[/dim]")
+        console.print("[dim]Note: Audio files are not committed to git[/dim]")
 
     except Exception as e:
         console.print(f"[red]Error generating audio:[/red] {e}")

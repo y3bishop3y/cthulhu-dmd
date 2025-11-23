@@ -1,0 +1,138 @@
+{
+  "id": "unknowable-box",
+  "name": "Unknowable Box",
+  "display_name": "Unknowable Box",
+  "description": "The Unknowable Box standalone expansion featuring 27 investigators.",
+  "year_published": null,
+  "release_date": null,
+  "box_type": "standalone",
+  "character_count": 27,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.4,
+    "characters_complete": true,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "agnes",
+      "name": "Agnes"
+    },
+    {
+      "id": "amelie",
+      "name": "Amelie"
+    },
+    {
+      "id": "amir",
+      "name": "Amir"
+    },
+    {
+      "id": "anita",
+      "name": "Anita"
+    },
+    {
+      "id": "antonio",
+      "name": "Antonio"
+    },
+    {
+      "id": "archie",
+      "name": "Archie"
+    },
+    {
+      "id": "buck",
+      "name": "Buck"
+    },
+    {
+      "id": "charles",
+      "name": "Charles"
+    },
+    {
+      "id": "craig",
+      "name": "Craig"
+    },
+    {
+      "id": "dali",
+      "name": "Dali"
+    },
+    {
+      "id": "don",
+      "name": "Don"
+    },
+    {
+      "id": "eve",
+      "name": "Eve"
+    },
+    {
+      "id": "george",
+      "name": "George"
+    },
+    {
+      "id": "houdini",
+      "name": "Houdini"
+    },
+    {
+      "id": "isadora",
+      "name": "Isadora"
+    },
+    {
+      "id": "james",
+      "name": "James"
+    },
+    {
+      "id": "jim",
+      "name": "Jim"
+    },
+    {
+      "id": "karen",
+      "name": "Karen"
+    },
+    {
+      "id": "martin",
+      "name": "Martin"
+    },
+    {
+      "id": "michelle",
+      "name": "Michelle"
+    },
+    {
+      "id": "robert",
+      "name": "Robert"
+    },
+    {
+      "id": "ryan",
+      "name": "Ryan"
+    },
+    {
+      "id": "saito",
+      "name": "Saito"
+    },
+    {
+      "id": "steve",
+      "name": "Steve"
+    },
+    {
+      "id": "taylor",
+      "name": "Taylor"
+    },
+    {
+      "id": "tom",
+      "name": "Tom"
+    },
+    {
+      "id": "vanessa",
+      "name": "Vanessa "
+    }
+  ]
+}

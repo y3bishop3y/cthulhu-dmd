@@ -6,5 +6,10 @@
   "common_powers": [
     "Arcane Mastery",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Herbert_West%E2%80%93Reanimator",
+    "grokpedia": "https://grokipedia.com/page/Herbert_West",
+    "other": []
+  }
 }

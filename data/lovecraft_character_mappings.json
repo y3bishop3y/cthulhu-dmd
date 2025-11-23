@@ -1,0 +1,15 @@
+{
+  "_comment": "Manual mappings of game characters to Lovecraft characters. Review and approve before using.",
+  "_instructions": "Add character IDs here if they are confirmed to be Lovecraft characters. The script will use these mappings.",
+  
+  "confirmed_mappings": {
+    "_comment": "Add confirmed mappings here. Format: 'character_id': 'lovecraft_character_key'",
+    "_example": {
+      "charles": "charles dexter ward",
+      "ezra": "ezra weeden"
+    }
+  },
+  
+  "_note": "Most characters in the game are original creations, not direct Lovecraft characters. Only add mappings if you're certain."
+}
+

@@ -1,0 +1,50 @@
+{
+  "id": "season4",
+  "name": "Season 4",
+  "display_name": "Season 4",
+  "description": "Season 4 expansion with 5 new investigators.",
+  "year_published": 2022,
+  "release_date": null,
+  "box_type": "expansion",
+  "character_count": 5,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.4,
+    "characters_complete": true,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "anika",
+      "name": "Anika"
+    },
+    {
+      "id": "bruno",
+      "name": "Bruno"
+    },
+    {
+      "id": "gary",
+      "name": "Gary"
+    },
+    {
+      "id": "john",
+      "name": "John"
+    },
+    {
+      "id": "rosario",
+      "name": "Rosario"
+    }
+  ]
+}

@@ -9,22 +9,21 @@ project_root = Path(__file__).parent.parent.parent.parent
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
+import cv2
+
+from scripts.cli.parse.parsing_constants import COMMON_POWER_REGIONS
+from scripts.models.character import BackCardData
 from scripts.utils.optimal_ocr import (
+    _check_line_has_description_keywords,
+    _extract_common_powers_from_region,
+    _is_line_likely_description,
+    _reject_partial_match,
+    _validate_power_match_quality,
     extract_common_powers_from_back_card,
     extract_text_from_region_with_strategy,
     get_optimal_strategy_for_category,
     load_optimal_strategies,
-    _extract_common_powers_from_region,
 )
-from scripts.cli.parse.parsing_constants import COMMON_POWER_REGIONS
-from scripts.models.character import BackCardData
-from scripts.utils.optimal_ocr import (
-    _is_line_likely_description,
-    _reject_partial_match,
-    _validate_power_match_quality,
-    _check_line_has_description_keywords,
-)
-import cv2
 
 try:
     from rapidfuzz import fuzz as rapidfuzz_fuzz
@@ -47,9 +46,9 @@ def diagnose_character(char_name: str, season: str = "season1") -> None:
         print(f"❌ {char_name}: No back card found")
         return
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"DIAGNOSING: {char_name.upper()}")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     # Get expected powers from JSON if available
     char_json = char_dir / "character.json"
@@ -76,7 +75,9 @@ def diagnose_character(char_name: str, season: str = "season1") -> None:
     img = cv2.imread(str(back_path))
     h, w = img.shape[:2]
     config = load_optimal_strategies()
-    power_strategy = get_optimal_strategy_for_category("special_power", config) or "tesseract_bilateral_psm3"
+    power_strategy = (
+        get_optimal_strategy_for_category("special_power", config) or "tesseract_bilateral_psm3"
+    )
 
     # Analyze each region
     for idx, (x_pct, y_pct, width_pct, height_pct) in enumerate(COMMON_POWER_REGIONS):
@@ -101,7 +102,7 @@ def diagnose_character(char_name: str, season: str = "season1") -> None:
         print(f"\nRegion {idx + 1} extraction result: {region_powers}")
 
         # Detailed analysis of each line
-        print(f"\nPower detection analysis:")
+        print("\nPower detection analysis:")
         for i, line in enumerate(lines):
             power = BackCardData._detect_common_power(line)
             if power:
@@ -138,7 +139,7 @@ def diagnose_character(char_name: str, season: str = "season1") -> None:
                 if reasons:
                     print(f"    ⚠️  Would be rejected: {', '.join(reasons)}")
                 else:
-                    print(f"    ✓ Would be accepted")
+                    print("    ✓ Would be accepted")
 
 
 def main():
@@ -156,4 +157,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

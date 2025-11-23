@@ -1,9 +1,45 @@
 {
+  "id": "adilah",
   "name": "Adilah",
-  "location": null,
+  "season": "season2",
   "motto": null,
+  "story": null,
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
   "common_powers": [
     "Brawling"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.4
+  }
 }

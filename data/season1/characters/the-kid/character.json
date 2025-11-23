@@ -1,8 +1,20 @@
 {
+  "id": "the-kid",
   "name": "THE KID",
-  "location": "UNKNOWN",
+  "season": "season1",
   "motto": "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!",
   "story": "Except for a gleeful cackle, The Kid, as she has become known, makes no other wound. Shes something of a mystery to investigator, and her knowing gaze and thousand-yard stress speak to a potential age far beyond her diminutive stature. She has no apparent need of guardians or guidance in her one-child campaign against the cults and their otherworldly allies. She shows a special andinity for interdimensional gateways, gaining obvious strength and acumen from the proximity. This could hint at a supernatural origin for The Kid, but her glee in destroying said gates and the beings they summon speaks to no allegiance.",
+  "location": {
+    "original": "UNKNOWN",
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "GATE MANIPULATION",
     "is_special": true,
@@ -30,5 +42,28 @@
   "common_powers": [
     "Marksman",
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "the_kid_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.8
+  }
 }

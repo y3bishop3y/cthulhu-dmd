@@ -1,0 +1,60 @@
+{
+  "_comment": "TTS Speaker configuration using HP Lovecraft character names",
+  
+  "female": {
+    "name": "Lavinia",
+    "description": "Named after Lavinia Whateley from 'The Dunwich Horror'",
+    "speaker_id": "p225",
+    "speaker_metadata": {
+      "age": 23,
+      "gender": "female",
+      "accent": "English",
+      "region": "Southern England"
+    }
+  },
+  
+  "male": {
+    "name": "Randolph",
+    "description": "Named after Randolph Carter, Lovecraft's recurring protagonist",
+    "speaker_id": "p226",
+    "speaker_metadata": {
+      "age": 22,
+      "gender": "male",
+      "accent": "English",
+      "region": "Surrey"
+    }
+  },
+  
+  "_alternatives": {
+    "female": [
+      {
+        "name": "Asenath",
+        "description": "Named after Asenath Waite from 'The Thing on the Doorstep'",
+        "speaker_id": "p228"
+      },
+      {
+        "name": "Keziah",
+        "description": "Named after Keziah Mason from 'Dreams in the Witch House'",
+        "speaker_id": "p229"
+      }
+    ],
+    "male": [
+      {
+        "name": "Herbert",
+        "description": "Named after Herbert West from 'Herbert West–Reanimator'",
+        "speaker_id": "p227"
+      },
+      {
+        "name": "Wilbur",
+        "description": "Named after Wilbur Whateley from 'The Dunwich Horror'",
+        "speaker_id": "p232"
+      },
+      {
+        "name": "Charles",
+        "description": "Named after Charles Dexter Ward from 'The Case of Charles Dexter Ward'",
+        "speaker_id": "p227"
+      }
+    ]
+  }
+}
+

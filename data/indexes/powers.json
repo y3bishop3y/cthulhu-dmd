@@ -1,0 +1,93 @@
+{
+  "Toughness": [
+    "al",
+    "allan",
+    "annabelle",
+    "bert",
+    "borden",
+    "fatima",
+    "gonk",
+    "luke",
+    "robert",
+    "sister-beth",
+    "tony"
+  ],
+  "Brawling": [
+    "adilah",
+    "borden",
+    "fatima",
+    "gonk",
+    "jack",
+    "morgan",
+    "rasputin",
+    "rocco",
+    "scarlett",
+    "sister-beth"
+  ],
+  "Special: SAVAGE": [
+    "borden"
+  ],
+  "Special: You may put the first Instead, drow 2": [
+    "fatima"
+  ],
+  "Swiftness": [
+    "adam",
+    "annabelle",
+    "ian",
+    "jack",
+    "morgan",
+    "olivia"
+  ],
+  "Arcane Mastery": [
+    "adam",
+    "ahmed",
+    "annabelle",
+    "bert",
+    "ian",
+    "lysa",
+    "maxim",
+    "rasputin",
+    "robert",
+    "the-kid"
+  ],
+  "Special: VENGEANCE OBSESSION": [
+    "ian"
+  ],
+  "Special: UNKILLABLE": [
+    "rasputin"
+  ],
+  "Marksman": [
+    "al",
+    "allan",
+    "elizabeth",
+    "fleur",
+    "josephine",
+    "rocco",
+    "the-kid"
+  ],
+  "Special: GATE MANIPULATION": [
+    "the-kid"
+  ],
+  "Stealth": [
+    "ahmed",
+    "ariele",
+    "elizabeth",
+    "hailia",
+    "tina"
+  ],
+  "Special: LUCKY": [
+    "elizabeth"
+  ],
+  "Special: STRONG": [
+    "sister-beth"
+  ],
+  "Special: Big szorecron": [
+    "morgan"
+  ],
+  "Special: FUELED BY MADNESS": [
+    "adam"
+  ],
+  "Special: HEALING PRAYER": [
+    "ahmed"
+  ]
+}

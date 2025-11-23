@@ -101,13 +101,13 @@ def main() -> None:
             table.add_column("Percent", justify="right")
             table.add_column("Decimal", justify="right")
 
-            table.add_row("X", str(x), f"{x_pct*100:.2f}%", f"{x_pct:.4f}")
-            table.add_row("Y", str(y), f"{y_pct*100:.2f}%", f"{y_pct:.4f}")
-            table.add_row("Width", str(width), f"{w_pct*100:.2f}%", f"{w_pct:.4f}")
-            table.add_row("Height", str(height), f"{h_pct*100:.2f}%", f"{h_pct:.4f}")
+            table.add_row("X", str(x), f"{x_pct * 100:.2f}%", f"{x_pct:.4f}")
+            table.add_row("Y", str(y), f"{y_pct * 100:.2f}%", f"{y_pct:.4f}")
+            table.add_row("Width", str(width), f"{w_pct * 100:.2f}%", f"{w_pct:.4f}")
+            table.add_row("Height", str(height), f"{h_pct * 100:.2f}%", f"{h_pct:.4f}")
 
             console.print(table)
-            console.print(f"\n[bold]Python constant value:[/bold]")
+            console.print("\n[bold]Python constant value:[/bold]")
             console.print(f"({x_pct:.4f}, {y_pct:.4f}, {w_pct:.4f}, {h_pct:.4f})")
 
         except Exception as e:
@@ -119,4 +119,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

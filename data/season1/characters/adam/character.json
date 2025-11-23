@@ -1,8 +1,23 @@
 {
+  "id": "adam",
   "name": "LORD ADAM BENCHLEY",
-  "location": "MANCHESTER, ENGLAND",
+  "season": "season1",
   "motto": "Shoot first. Never ask,",
   "story": "Lord Benchleys signature eye-twitch is both wound and warning of the roiling toughness beneath his calm, British demeanor. The man holds himself together admirably, but most investigator know to keép some reserve around the poor fellow, lest the twitch settle instead a steely glare. Lord Benchley ts quite mad of course, heal battled the cults for decades and always maintaining the upper hand, if only barelyely. Lord. Benchley himself relies on a stiff upper lip, stoic resolve, and indulging his psychotic tendencies against cultists and their foul minions at every opportunity.",
+  "location": {
+    "original": "MANCHESTER, ENGLAND",
+    "parsed": {
+      "city": "Manchester",
+      "administrative_division": "Greater Manchester",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 53.4808,
+      "lon": -2.2426
+    }
+  },
   "special_power": {
     "name": "FUELED BY MADNESS",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Swiftness",
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "lord_adam_benchley_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

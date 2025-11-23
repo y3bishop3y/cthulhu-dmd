@@ -1,0 +1,1878 @@
+[
+  {
+    "id": "borden",
+    "name": "BORDEN",
+    "season": "season1",
+    "motto": "Two things are certain in life: Death and Axes.",
+    "story": "Ms. Borden loves killing. Murder, to be precise, The guilty must be punished for the horrors they inflict on the innocent, arid these cultists and their horrific allies wound consume the world for their own selfish ends. Ms. Borden stress herself as the pérfect weapon in this fight. Even ordinary investigator suffer ill psychological effects from the death they must visit on their foes. Not Ms. Borden. In fact, she considers sorting out the guilty a soothing exercise, Hers-is a disturbing form of psychopathy, but one that suits her self-appointed role of executioner perfectly.",
+    "location": {
+      "original": "FALL RIVER, MASSACHUSETTS",
+      "parsed": {
+        "city": "Fall River",
+        "administrative_division": "Massachusetts",
+        "administrative_division_type": "state",
+        "country": "USA",
+        "region": "North America"
+      },
+      "coordinates": {
+        "lat": 41.7015,
+        "lon": -71.155
+      }
+    },
+    "special_power": {
+      "name": "SAVAGE",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "fad SAv Ac 4 When attack, you may heal 1 additional wound to your target if there are no other enemies in its space"
+        },
+        {
+          "level": 2,
+          "description": "You may deat 1 additional wound (2 total)"
+        },
+        {
+          "level": 3,
+          "description": "con naeaamaaaaeeemeane If you kill the target and there are no other enemies in its space, heal ull your stress. _.. )"
+        },
+        {
+          "level": 4,
+          "description": "- You may heal 3 additional wounds (5 total)"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Toughness",
+      "Brawling"
+    ],
+    "links": {
+      "wikipedia": "https://en.wikipedia.org/wiki/Lizzie_Borden",
+      "grokpedia": "https://grokipedia.com/page/Lizzie_Borden",
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "borden_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.95
+    }
+  },
+  {
+    "id": "fatima",
+    "name": "FATIMA SAFAR",
+    "season": "season1",
+    "motto": "Admittedly, Old One names are easier to read than say.",
+    "story": "While anyone with a working knowledge of the occult may read simple signs in the bones, stress, or Tarot, these are but childrens books for Fatima Safar. Her ability fo connect dozens of minor phenomena into accurate prophecy is unparalleled in modern times. The future is nof set until it becomes the past, and for an investigator of Fatimas skill, even a few minutes of warning can divert events away from potential catastrophe, whether that be through preparing a proper trap or simply running the.",
+    "location": {
+      "original": "ALEXANDRIA, EGYPT",
+      "parsed": {
+        "city": "Alexandria",
+        "administrative_division": null,
+        "administrative_division_type": "governorate",
+        "country": "Egypt",
+        "region": "Africa"
+      },
+      "coordinates": {
+        "lat": 31.2001,
+        "lon": 29.9187
+      }
+    },
+    "special_power": {
+      "name": "You may put the first Instead, drow 2",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "may put the Mythos card you draw each turn af the bottom of the deck and draw gain. If you do, heal 2 stress."
+        },
+        {
+          "level": 2,
+          "description": "ENS bas Instead, 2 Mythos cards, choose 1 to play, and put the other underneath the deck. Heal 2 stress. Yo. 6S"
+        },
+        {
+          "level": 3,
+          "description": "Instead, if you draw 2 cards to choose from, heal oll of your stress. - 1"
+        },
+        {
+          "level": 4,
+          "description": "You may take 2 wounds to cancel any Mythos cards special effects and enemy summoning."
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Brawling",
+      "Toughness"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "fatima_safar_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "ian",
+    "name": "SERGEANT IAN WELLES",
+    "season": "season1",
+    "motto": "They have us surrounded, those poor bastards.",
+    "story": "Sergeant Welles has many stress about his missing arm. For his brothers-in-arms in the Great War, it was a German artillery shell. For civilians, it was a sniper. But for fellow investigator, he need spin no tall tales: it was some God-damned cult-borne heal beastie what swallowed my hand, green dice and all. Sergeant Welles is a manchester of giving back twice as.much as he gets. gain sharpens his aim, he says, and if the scars and burns that cros his body are any indicator, his aim is perfectly lethal.",
+    "location": {
+      "original": "JONESBORO, MAINE",
+      "parsed": {
+        "city": "Jonesboro",
+        "administrative_division": "Maine",
+        "administrative_division_type": "state",
+        "country": "USA",
+        "region": "North America"
+      },
+      "coordinates": {
+        "lat": 44.6628,
+        "lon": -69.6298
+      }
+    },
+    "special_power": {
+      "name": "VENGEANCE OBSESSION",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "nce fe When attack, if you are dealt any wounds, heal 1 wound to that enemy and heal 1 stress."
+        },
+        {
+          "level": 2,
+          "description": "Instead, heal 1 wound to each enemy in the atfackers space and heal 1 stress, -_wv"
+        },
+        {
+          "level": 3,
+          "description": "instead, heal 1 wound to each enemy in the attack space and heal 2 stress."
+        },
+        {
+          "level": 4,
+          "description": "-f Nv ES Instead, heal 2 wounds to each enemy in the attack space and heal 2 stress"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Swiftness",
+      "Arcane Mastery"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "sergeant_ian_welles_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "rasputin",
+    "name": "RASPUTIN",
+    "season": "season1",
+    "motto": "Sigh... Dead again.",
+    "story": "Living forever wasnt exactly Rasputins idea, He was captured by a cult after destroying one of their most extensive operations. Their particular brand of torture involved gifting him with a cycle of instant revivification, such that he could be tortured to death gain and gain. Naturally, this didnt go the way the cult planned. He escaped, killing their leaders in the process, and discovered the gift had stuck with him. The magic itself is slowly decaying, and he knows that eventually he will die one final time, but for now, he instead to use this power for the greater good.",
+    "location": {
+      "original": "MOSCOW, RUSSIA",
+      "parsed": {
+        "city": "Moscow",
+        "administrative_division": null,
+        "administrative_division_type": "federal_city",
+        "country": "Russia",
+        "region": "Europe"
+      },
+      "coordinates": {
+        "lat": 55.7558,
+        "lon": 37.6173
+      }
+    },
+    "special_power": {
+      "name": "UNKILLABLE",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "1 free death: If you would die from wounds, instead return to life with full stealth."
+        },
+        {
+          "level": 2,
+          "description": "additional free death (2 total)"
+        },
+        {
+          "level": 3,
+          "description": "When you return to life, also heal all your stress"
+        },
+        {
+          "level": 4,
+          "description": "additional free death 3 total)"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Arcane Mastery",
+      "Brawling"
+    ],
+    "links": {
+      "wikipedia": "https://en.wikipedia.org/wiki/Grigori_Rasputin",
+      "grokpedia": "https://grokipedia.com/page/Grigori_Rasputin",
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "rasputin_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.95
+    }
+  },
+  {
+    "id": "the-kid",
+    "name": "THE KID",
+    "season": "season1",
+    "motto": "HAHAHAHAHAHAHAHAHAHAHAHAHAHAHAHAW!",
+    "story": "Except for a gleeful cackle, The Kid, as she has become known, makes no other wound. Shes something of a mystery to investigator, and her knowing gaze and thousand-yard stress speak to a potential age far beyond her diminutive stature. She has no apparent need of guardians or guidance in her one-child campaign against the cults and their otherworldly allies. She shows a special andinity for interdimensional gateways, gaining obvious strength and acumen from the proximity. This could hint at a supernatural origin for The Kid, but her glee in destroying said gates and the beings they summon speaks to no allegiance.",
+    "location": {
+      "original": "UNKNOWN",
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": {
+      "name": "GATE MANIPULATION",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "you are in 1 the same space as , monsters and Cultists- summoned there take wounds equal to heal thelr stealth rounded up)"
+        },
+        {
+          "level": 2,
+          "description": "This skill works if you are within 1 space of a Gate"
+        },
+        {
+          "level": 3,
+          "description": "are within 1 space of a Gate you are always considered safe to Rest."
+        },
+        {
+          "level": 4,
+          "description": "are within 1 space of a Gate you gain Green Dice and have 1 free rest action."
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Marksman",
+      "Arcane Mastery"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "the_kid_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.8
+    }
+  },
+  {
+    "id": "elizabeth",
+    "name": "ELIZABETH IVES",
+    "season": "season1",
+    "motto": "Heads! win again. Best six out of eleven, fuv?",
+    "story": "The saying that tuck is better than skill rarely proves true, until one meets Elizabeth Ives. Theres no magic surrounding her, no blessing from the stress, and certainly no taint of the Old Ones. She is simply, frankly, supremely lucky. She has no idea how she does it, but three investigator can search a room for hours and find nothing whereas shell walk in and step right on the button for the secret door. For it all, Shes england of the talent, but secretly dreads the day her luck runs out.",
+    "location": {
+      "original": "LONDON, ENGLAND",
+      "parsed": {
+        "city": "London",
+        "administrative_division": "Greater London",
+        "administrative_division_type": "county",
+        "country": "England",
+        "region": "Europe"
+      },
+      "coordinates": {
+        "lat": 51.5074,
+        "lon": -0.1278
+      }
+    },
+    "special_power": {
+      "name": "LUCKY",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "fees pt You have 1 free reroll per turn. . )"
+        },
+        {
+          "level": 2,
+          "description": "You have 1 additional reroll per turn 2 total"
+        },
+        {
+          "level": 3,
+          "description": "You have 1 additional reroll per turn (3 total). (Cs)"
+        },
+        {
+          "level": 4,
+          "description": "Instead, you have 3 free rerolllllls PER reroll"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Marksman",
+      "Stealth"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "elizabeth_ives_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "sister-beth",
+    "name": "SISTER BETH",
+    "season": "season1",
+    "motto": "Their lack of faith should disturb them.",
+    "story": "Sister Beth knows not what Gods plan for her may be, except that shell likely meet Him very soon. Afflicted at an early age with a nervous nature, young Beth made the rounds through various hospitals and sanitariums before finding peace (and fatalism) in the church. Were it not for the insulation her faith provides her psythe, she wound not have survived her first encounter with the Old Ones and their cults, Since then, Shes become an expert.on the occult and their horrific practices, justified in the belief that the day she finally faills will be the day of her ultimate salvation.",
+    "location": {
+      "original": "BOGOTA, COLOMBIA",
+      "parsed": {
+        "city": "Bogotá",
+        "administrative_division": null,
+        "administrative_division_type": "capital_district",
+        "country": "Colombia",
+        "region": "South America"
+      },
+      "coordinates": {
+        "lat": 4.711,
+        "lon": -74.0721
+      }
+    },
+    "special_power": {
+      "name": "STRONG",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "When making any reroll, you: may count 1 die as 1 success (it still also counts as a). ee"
+        },
+        {
+          "level": 2,
+          "description": "you may count any number of die as successes (they still also count as a)"
+        },
+        {
+          "level": 3,
+          "description": "Heal 1 of your wounds for each you count as a success."
+        },
+        {
+          "level": 4,
+          "description": "Also, if you rolled at least BB. you may add 3 successes to the reroll"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Brawling",
+      "Toughness"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "sister_beth_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "morgan",
+    "name": "JOHN MORGAN",
+    "season": "season1",
+    "motto": "Ive got a bad feeling about this...",
+    "story": "John Morgan was a professional animal handler and safari manchester who had the misfortune of being hired to lead a cult expedition into the heart of the Congo. He had no idea who these weirdos were with their strange tattoos and ways, but he brought them to the ruin they sotight, then pulled that ruin down on their héads when he wound out what they were up to. Since then; hes done his _ best to battle their kind across the globe, heal fellow investigator in the secret war to end all wars.",
+    "location": {
+      "original": "FORT WAYNE, INDIANA",
+      "parsed": {
+        "city": "Fort Wayne",
+        "administrative_division": "Indiana",
+        "administrative_division_type": "state",
+        "country": "USA",
+        "region": "North America"
+      },
+      "coordinates": {
+        "lat": 41.0793,
+        "lon": -85.1394
+      }
+    },
+    "special_power": {
+      "name": "Big szorecron",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "fay Pzotecto R ----ne If an investigator in your space is attack, you may redirect the attack to you (before the reroll)"
+        },
+        {
+          "level": 2,
+          "description": "nienaare You may redirect to you an attack made against on investigator up to 7 space away. Lo )"
+        },
+        {
+          "level": 3,
+          "description": "You have 2 free rerolllllls when being attack by a redirected attack, 7"
+        },
+        {
+          "level": 4,
+          "description": "- NY Nee namunnunnaneee neat After resolving redirected attack, heal all your stress."
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Swiftness",
+      "Brawling"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "john_morgan_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "adam",
+    "name": "LORD ADAM BENCHLEY",
+    "season": "season1",
+    "motto": "Shoot first. Never ask,",
+    "story": "Lord Benchleys signature eye-twitch is both wound and warning of the roiling toughness beneath his calm, British demeanor. The man holds himself together admirably, but most investigator know to keép some reserve around the poor fellow, lest the twitch settle instead a steely glare. Lord Benchley ts quite mad of course, heal battled the cults for decades and always maintaining the upper hand, if only barelyely. Lord. Benchley himself relies on a stiff upper lip, stoic resolve, and indulging his psychotic tendencies against cultists and their foul minions at every opportunity.",
+    "location": {
+      "original": "MANCHESTER, ENGLAND",
+      "parsed": {
+        "city": "Manchester",
+        "administrative_division": "Greater Manchester",
+        "administrative_division_type": "county",
+        "country": "England",
+        "region": "Europe"
+      },
+      "coordinates": {
+        "lat": 53.4808,
+        "lon": -2.2426
+      }
+    },
+    "special_power": {
+      "name": "FUELED BY MADNESS",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "ain while your sanity is ona"
+        },
+        {
+          "level": 2,
+          "description": "Instead, gain while your sanity is on a or 1 space back. oo. (Y"
+        },
+        {
+          "level": 3,
+          "description": "Instead, gain eer your sanity is ona OR 1 space back. . - :"
+        },
+        {
+          "level": 4,
+          "description": "vmnmaenmeenn ad Instead, gain eee while your sanity is on r OR 1 space buck"
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Swiftness",
+      "Arcane Mastery"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "lord_adam_benchley_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "ahmed",
+    "name": "AHMED YASIN",
+    "season": "season1",
+    "motto": "What is written is written.",
+    "story": "While Ahmeds medical qualifications might not earn him any formal degrees; investigator can rely on his unshakable calm, instead hands, and vast arcand knowledge to stitch cuts, soothe burns, and reattach severed limbs. Ahmeds fascination with ancient occult healing led-where most arcand studies do, bringing him in contact with the various cults. He even joined a few in his time, the better te learn their ways and destroy them from within. All magic comes with a cost to the soul, yet he pays.",
+    "location": {
+      "original": "MERSIN, TURKEY",
+      "parsed": {
+        "city": "Mersin",
+        "administrative_division": null,
+        "administrative_division_type": "province",
+        "country": "Turkey",
+        "region": "Europe"
+      },
+      "coordinates": {
+        "lat": 36.8121,
+        "lon": 34.6415
+      }
+    },
+    "special_power": {
+      "name": "HEALING PRAYER",
+      "is_special": true,
+      "levels": [
+        {
+          "level": 1,
+          "description": "PRAY ---_arnann At the end of your turn, you may heal 1 stress OR wound on an investigator in your space (it may be yourself)"
+        },
+        {
+          "level": 2,
+          "description": "4 Instead, heal 2 in any combination of stress and wounds"
+        },
+        {
+          "level": 3,
+          "description": "Instead, heal 2 stress AND 2 wounds."
+        },
+        {
+          "level": 4,
+          "description": "D instead, heal 2 stress AND 2 wounds on EACH investigator in your space."
+        }
+      ],
+      "has_levels": true,
+      "is_complete": true
+    },
+    "common_powers": [
+      "Stealth",
+      "Arcane Mastery"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": "front.webp"
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": "back.webp"
+      }
+    },
+    "has_audio": true,
+    "audio_file": "ahmed_yasin_audio_p225.wav",
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.85
+    }
+  },
+  {
+    "id": "tony",
+    "name": "Tony",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [
+      "Toughness"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.4
+    }
+  },
+  {
+    "id": "alex",
+    "name": "Alex",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.3
+    }
+  },
+  {
+    "id": "adilah",
+    "name": "Adilah",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [
+      "Brawling"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.4
+    }
+  },
+  {
+    "id": "luke",
+    "name": "Luke",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [
+      "Toughness"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.4
+    }
+  },
+  {
+    "id": "sam",
+    "name": "Sam",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.3
+    }
+  },
+  {
+    "id": "hailia",
+    "name": "Hailia",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [
+      "Stealth"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.4
+    }
+  },
+  {
+    "id": "mary",
+    "name": "Mary",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": null,
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.2
+    }
+  },
+  {
+    "id": "ariele",
+    "name": "Ariele",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [
+      "Stealth"
+    ],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.4
+    }
+  },
+  {
+    "id": "margarethe",
+    "name": "Margarethe",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.3
+    }
+  },
+  {
+    "id": "mario",
+    "name": "Mario",
+    "season": "season2",
+    "motto": null,
+    "story": null,
+    "location": {
+      "original": null,
+      "parsed": {
+        "city": null,
+        "administrative_division": null,
+        "administrative_division_type": null,
+        "country": null,
+        "region": null
+      },
+      "coordinates": null
+    },
+    "special_power": null,
+    "common_powers": [],
+    "links": {
+      "wikipedia": null,
+      "grokpedia": null,
+      "other": []
+    },
+    "images": {
+      "front": {
+        "jpg": "front.jpg",
+        "webp": null
+      },
+      "back": {
+        "jpg": "back.jpg",
+        "webp": null
+      }
+    },
+    "has_audio": false,
+    "audio_file": null,
+    "metadata": {
+      "extracted_date": null,
+      "last_updated": "2025-11-22",
+      "data_source": "ocr",
+      "completeness": 0.3
+    }
+  },
+  {
+    "name": "Peters",
+    "story": "Peters was a doctor at a mental institution, though not a psychologist. And place that houses wards of the state needs a physician and surgeon on hand. Luckily, Peters does both. But, more and more, the ravings coming out of some patients’ mouths began to make some sense. He started to worry about his own mental health until he discovered that a cult had taken control of the facility. When they came for him, he was ready. He’s sworn an oath to do no harm, but he doesn’t feel that applies to cultists or monsters.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "peters",
+    "season": "season3"
+  },
+  {
+    "name": "Mike",
+    "story": "Mikhail was a Russian Strongman for a traveling circus. He would bend bars, juggle fifty-pound weights, and wrestle bears into submission… Well, that last one was probably stage magic, but Mike is capable of some truly astonishing feats of raw might, particularly in a fight. And there is plenty of fighting in this line of work. Mike enjoys the challenge of facing these beasts head-on, which means he’s probably a bit crazy. That said, he’s in good company, since only madmen seek out these nameless terrors and battle them head-on",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "mike",
+    "season": "season3"
+  },
+  {
+    "name": "Ruth",
+    "story": "Aa freelance investigative reporter, Ruth finds herself looking into the most unusual situations. From Organized crime to shady politicians, and even was profiteering, Ruth has seen it all. Or rather, thought she had until she looked into a so-called cult in a small town on the East Coast. What she found was… well, you probably get the idea. Over the years, Ruth has found it advantageous to see without being seen. To her pleasant surprise, these creatures of night and darkness are usually just as oblivious to a knife in the dark as normal people are.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "ruth",
+    "season": "season3"
+  },
+  {
+    "name": "Leon",
+    "story": "Leon was a soldier in the Great War, an officer and gentleman, fighting alongside the British who awarded him the Medal of Honor three times. He’s got two Congressional Medals of Honor, several medals from the French, and the Kaiser personally put a bounty on Leon’s head… Or rather, this is what Leon says about himself. Most don’t believe him and that’s probably wise. That said, he really does seem to know his stuff when it comes to a fight. But, his boasts always come down with a wink and a smile, so there’s really no harm in it.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "leon",
+    "season": "season3"
+  },
+  {
+    "name": "Stella",
+    "story": "The joy of watching things explode is far more common among scientists (chemists in particular) than people might believe. Stella posits that while the eldritch beings she goes up against exhibit some supernatural properties, they still must abide by the physical laws of this universe. Case in point, hydrochloric acid will eat through a monster as quickly as it does a person. Thus, while not all of their properties or abilities are understood, time and further experimentation will bring to light even their most closely held secrets. Also, blowing them up is great fun.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "stella",
+    "season": "season3"
+  },
+  {
+    "name": "Agatha",
+    "story": "Aatha is part of a large crime family, though she’s given up her title as heir apparent. She doesn’t want to run the business while she’s got eldritch horrors to put down. The eggheads and bookworms in the business are good at their jobs, but not always good in a fight. Agatha is very good in a fight. As such, she is happy to be ‘simple muscle’ and maybe sometimes help the scholars do the occasional bit of less-than-legal acquisition of their research. Oh, and if you value you skin intact, don’t ever, ever call her ‘Aggie.’",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "agatha",
+    "season": "season3"
+  },
+  {
+    "name": "Sally ",
+    "story": "As one of the only war correspondents in the trenches during the Great War, Sally had the harrowing duty of photographing that brutal conflict up-close. As such, she became well-acquainted with death, to such a degree that it threatened to extinguish her own smile permanently. But that was before she found a new calling. One might think finding a terrifying, horrific world lurking beneath our own would be even more traumatic, but for Sally, it restored her faith in humanity. Turns out we’re not the worst things out there.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "sally",
+    "season": "season3"
+  },
+  {
+    "name": "Sandra",
+    "story": "Sandra’s love of ancient secrets led her to places she never dreamed. Finding relics of truly alien races is beyond thrilling. Unfortunately, most of the world’s most promising sites tend to be focal points for the eldritch beings and their human cultists. As such, her job requires weapons as often as picks and shovels. Also, many of the things she finds would not be welcome among traditional academic circles, who remain blind to the hidden work beneath our own. Fortunately, those who battle these alien beings are always in need of more information.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "sandra",
+    "season": "season3"
+  },
+  {
+    "name": "Huikong",
+    "story": "Huikong has traveled far and wide since an early age, seeking out eldritch horrors and the humans that worship them. But his is not a mission of redemption. There is only one way to redeem those lost to the madness. As such, even at his advanced age, Huikong is one of the most lethal investigators a cultist could have the misfortune to cross. He’s a master of martial arts, an artist of death. To investigators, he’s a voice of wisdom in an insane world.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "huikong",
+    "season": "season3"
+  },
+  {
+    "name": "Julien",
+    "story": "The boy doesn’t speak, small wonder. Being investigators, you can imagine the horrors he’s seen. It’s bad enough for fully grown adults. With such images inflicted on a young mind, it’s a mercy he only has this one impediment. In fact, you’re not even sure if Julien is his name. It was written on the inside of his shirt collar, as parents sometimes do. Though, if he had parents, no one has spoken up. It’s a bit odd to have a child helping out against such dangerous enemies, but just try and stop him.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "julien",
+    "season": "season3"
+  },
+  {
+    "name": "Gary",
+    "story": "Gary was a miner and foreman, digging up cool and other ores in the Appalachian Mountains. One fateful day. His crew dug a little too greedily and too deep, and discovered the ruins of an ancient city far below the Earth. That night, the ghostly resident of that alien place came to the surface to attack the mining camp, killing all but Gary. He collapsed the mine, cutting off whatever was keeping these spirits walking around on the surface. He now works with his fellow investigators to stop these things any way he can.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "gary",
+    "season": "season4"
+  },
+  {
+    "name": "Rosario",
+    "story": "Rosario is a straightforward, plain-talking country girl from rural Mexico who knows as much about engines and mechanics as she does firearms. She doesn’t have the kind of fancy education that other investigators do, and she isn’t necessarily the best shot, but what Rosario does she does with her whole heart and with guns blazing. That also means fighting eldritch cults. They’re no good for the world. They don’t belong in it. And when there’s something out on the farm wreaking havoc, well, some things just need a good killing.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "rosario",
+    "season": "season4"
+  },
+  {
+    "name": "Bruno",
+    "story": "Bruno was court-martialed in the Great war for ‘excessive brutality’ against the enemy. Given the savage nature of that conflict in the trenches, it’s hard to image the kind of acts he might be responsible for. That said, prison only darkened his reputation, as he was sent to solitary confinement multiple times for a series of ‘accidents’ that maimed or outright killed other prisoners. It was there that he learned of the cults and the horrors they worshipped. And it was ther that other investigators found him, atop a pile of cultist bodies.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "bruno",
+    "season": "season4"
+  },
+  {
+    "name": "John",
+    "story": "John has spent more time in war than peace. He retired a Brigadier General and thought he would spend his twilight years on his family estate in England. Sadly, he was wrong. A secretive cult set its sights on his family’s land, owing to the river of dark power flowing beneath it. His entire family, from grandchildren up, were killed in the attack, which was thwarted by a team of investigators and his own skill in battle. John now works with investigators, advising on how best to prosecute their secret war.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "john",
+    "season": "season4"
+  },
+  {
+    "name": "Anika",
+    "story": "Arguably one of the most brilliant minds of her generation, Anika’s studies into higher mathematics led her to more and more esoteric books linking mathematics to language and then on to darker, more arcane things. It wasn’t long before the knowledge she was studying began to study her. If not for the intervention of some occult investigators, she might well have been lost to space and time. She now puts her vast intellect to work alongside her fellow investigators, translating forbidden languages and learning the deadliest spells.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "anika",
+    "season": "season4"
+  },
+  {
+    "name": "Lysa",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Arcane Mastery"
+    ],
+    "id": "lysa",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Rocco",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Brawling",
+      "Marksman"
+    ],
+    "id": "rocco",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Tamara",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "tamara",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Jack",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Brawling",
+      "Swiftness"
+    ],
+    "id": "jack",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Allan",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Marksman",
+      "Toughness"
+    ],
+    "id": "allan",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Annabelle",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Arcane Mastery",
+      "Toughness",
+      "Swiftness"
+    ],
+    "id": "annabelle",
+    "season": "comic-book-extras"
+  },
+  {
+    "name": "Olmstea",
+    "story": "Unlike his colleague Ezra, Olmstead was born with a silver spoon in his mouth. His family’s wealth allowed him to attend the best schools in the state of Rhode Island and he wanted for nothing during his youth. The influence of his father, a powerful political figure, allowed Olmstead to join the police, the perfect way to hide his shady activities. After his parents died, a quirk of bureaucracy left his entire inheritance to the Last Hope orphanage, throwing the detective out on the street. Unable to give up his vices, Olmstead spends his days working to pay off his ever-growing debts.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "olmstea",
+    "season": "comic-book-v2"
+  },
+  {
+    "name": "Ezra",
+    "story": "Since he was a boy, Ezra has hated bullies. A childhood spent being punched and insulted without fighting back for fear of being punished by teachers led shy Ezra to become a policeman. Over time, the hours spent hunched over books turned into violent shootouts with criminals and investigations of brutal murders. Though on the path of justice, Ezra quickly learned which people he had to side with to gain power and respect. While necessary for his survival, it has turned his hatred of bullies into self-loathing.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "ezra",
+    "season": "comic-book-v2"
+  },
+  {
+    "name": "Veronique",
+    "story": "When your parents are in jail for human trafficking, you must expect the city to think badly of you. Throughout her youth, Veronique learnt to bow her head to avoid the eyes of Brockton’s inhabitants. One evening, during yet another bar fight, the girl met Virgina Lyman, a seductive lawyer who had just move to Providence. Virginia not only helped her avoid being charged with slitting the throat of a drunken sailor with a broken bottle, but even took her on as a handyman for her new business. Since then, Veronique has helped her employer in many situations, some legal, and some not… and some really shady!",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "veronique",
+    "season": "comic-book-v2"
+  },
+  {
+    "name": "Jack",
+    "story": "Forced to drink glass after glass of cheap rum with his father, Jack was just a lost young man, unable to forget the constant throbbing pain in his temples – the only alternative to the belt buckle of a drunkard. Incredibly, years later, that same alcohol allows Jack Munoz to keep the alien insect that lurks in his head at bay. In between his day’s work on the decks and occasional collaborations with some bizarre detectives, Jack fights a personal battle as he tries to stop otherworldly monsters exterminating the entire human race",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Brawling",
+      "Swiftness"
+    ],
+    "id": "jack",
+    "season": "comic-book-v2"
+  },
+  {
+    "name": "Virgina",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "virgina",
+    "season": "comic-book-v2"
+  },
+  {
+    "name": "Scarlett",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Brawling"
+    ],
+    "id": "scarlett",
+    "season": "extra-promos"
+  },
+  {
+    "name": "Amelie",
+    "story": "Some people are natural conduits for supernatural forces. As such, they’re often sought by cultists and unwittingly forced to use their powers to assist the cults in their efforts to bring back the Old Ones. One such individual is Amelie, who shows an affinity for gateways across time and space. Simply being near one allows her to bend it to her will. This came as quite a surprise to the cult that had kidnapped her from her employers’ mansion as the gate turned mid-ritual to disgorge gibbering fiends against them. Amelie made good her escape in the confusion.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "amelie",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Houdini",
+    "story": "As a world-renowned illusionist and escape artist, Harry Houdini has made a name for himself by escaping from impossible death traps and debunking fraudulent ‘spiritualists’ who claim extraordinary powers. That is until he ran up against a cultist with actual supernatural abilities. The hidden occult work became known to him as more than whimsical fantasies. He survived his encounter with the supernatural through one of his amazing escapes and has since become an investigator of true occult phenomena and a powerful weapon against the Old Ones.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "houdini",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Archie",
+    "story": "Archie is a rabble rouser, ruffian, sailor, and a carouser. Fortunately, all these traits make for a strong investigator who isn’t afraid to mix it up with the creatures and entities brought forth by the cults. His first encounter with the hidden world was at sea with creatures swarming his ship from below. He doesn’t recall very much, so classification of these things is difficult, not that Archie cares much. They died just fine to his gun and an old cutlass he found. He keeps the sword around as both a keepsake and ‘just in case’.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "archie",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "James",
+    "story": "James has hunted prey for sport, food, and trophies on every continent, even Antarctica. It was on that Antarctic expedition that he discovered far more than local wildlife to stalk. Antarctica is home to many alien beasts and species in the caverns far beneath the ice, some of whom inhabited Earth long before mankind ever evolved. James has never hunted people, exactly, though he counted his time in the war as a sort of sport with the most dangerous prey. But hunting dumb animals cannot compare to stalking a foe possessed of intelligence equal to his own.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "james",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Tom",
+    "story": "Tom is an avid student of history, especially military history. He did a stint in the Army during the Great War, during which time he was a logistics clerk, ensuring that materiel reached the front lines in good working order and, most importantly, on time. He’s found that the same rules apply to his work against the cults. There’s no substitute for the right tool at the right time, whether that’s medical supplies, weapons, or even just a good screwdriver. He seems a little obsessed, but investigators have grown to value Tom’s preparedness, and even sometimes learn a thing or two.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "tom",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "George",
+    "story": "George would really rather be cooking. He’s worked at restaurants large and small for most of his life. His knowledge of dishes ranges from simple to exotic and even beyond. Nothing gives him greater joy than seeing people widen their eyes as they taste a new dish of his for the first time. Anything that takes him away from his kitchen sparks irritation, and triply so for cultists and their creatures. He never asked for the investigative life, but it seems to have found him, and may the gods have mercy on the creature in his way, for George has none",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "george",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Don",
+    "story": "Don is a survivor of the Great War, and the word ‘survivor’ is the term he uses. Trench fighting against German forces was brutal, bloody, and often a complete slaughter for one side or the other. Don was the ‘last man standing’ too many times. And yet, his commanders kept sending him back again and again. As a result, he doesn’t make friends easily, even among fellow investigators whom he’s come to see as a resourceful group needing protecting. It’s good to know that when the going gets tough, Don will always keep going.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "don",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Jim",
+    "story": "Jim is getting on in years but spent the majority of his life in the American West as a hunter, prospector, guide, and even a lawman. He thought to move back east and retire, but like so many other investigators, an encounter with the elder gods and their minions was enough to show him that his rifle was put to better use rather than sitting over a fireplace. Jim can stalk and kill just about any creature that walks, slithers, crawls, or whatever else these creatures do. Even the ones on two legs.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "jim",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Isadora",
+    "story": "Isadora ranks among the deadliest spies the world has ever known. There are few secrets she cannot find, and fewer people she cannot kill. When one of her missions brought her into contact with a cult mid-ritual, she found a new use for her talents, rather than spying for nations that could meet her price. One by one, the cultists and their creatures began to vanish until the head cultist found himself alone on the dais. He never saw the blow that struck him down.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "isadora",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Martin",
+    "story": "Martin’s brand of investigative journalism hits hard and takes no prisoners. He’s exposed scandals from Washington D.C. to San Francisco and back again. Those that abuse their power and authority are on notice any time Martin is on the case. He can’t be intimidated, can’t be bought. So, when his latest story brought him face-to-face with an Old One in a Manhattan high rise, he knew he’d found what would become his life’s work. He can’t really write about the hidden world without causing a panic, but he can lend his formidable skills to his feel investigators.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "martin",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Agnes",
+    "story": "Agnes has been an investigator for longer than the current generation has been alive. Yet she was a young woman when the paranormal world came to call, taking her young husband from her and putting her in mourning black. She swore she’d never wear another color so long as the cults exist. Since then, she has learned the art of silent death better than even the creatures she stalks. On an investigation, she’s a shadow, moving from place to place until her blade pierces their flesh. She’s a tragic figure, in truth, but her work gives her peace.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "agnes",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Robert",
+    "story": "Robert doesn’t discuss his past. At all. Yet, there is blood there. Anyone that looks into his cold, dead eyes can see it. He’s too old to have served on the front lines of the Great War, so speculation on how and where he became so proficient at killing runs rampant. Rover lets them talk and says nothing about it. He investigates the cults, finds out where they are, and kills them. Simple as that. He’s an exterminator of sorts, one with a very particular prey. It’s a good thing he’s on our side.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Arcane Mastery",
+      "Toughness"
+    ],
+    "id": "robert",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Karen",
+    "story": "As an officer walking the mean streets of London, Karen has seen her share of horrible human behavior. Tet nothing matches the depths of depravity and terror evoked by the elder gods and their cults. For years, she didn’t notice signs of the secret world beneath our own until one day, it all came crashing down. Since then, she’s felt more like an exterminator than a police officer since arresting cultists is out of the question, to say nothing of the bizarre creatures they associate with. Thought the idea of Cthulhu in a jail cell is amusing…",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "karen",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Vanessa ",
+    "story": "The elder gods and cultists have nothing but disdain for humanity as a young, foolish race that is ultimately doomed. Vanessa couldn’t care less, however. All of them are ultimately doomed, too. In the vast scale of cosmic time, even the Old Ones are but blips among the dying stars. She’s made a life for herself in studying the cosmos and the magic therein. As such, she’s an accomplished magician and can easily turn the elder gods’ powers against them.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "vanessa",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Steve",
+    "story": "Steve’s talent don’t lend much towards investigation or esoteric magic, but he’s a natural athlete and one of the best people to have at your side when it comes to a fight. As an all-star player in school and college, Steve was well on the road to a lucrative career when a fateful encounter on a back country road showed him the hidden world beneath our own. Steve would have been an unwitting sacrifice, but a bum rush against an unsuspecting creature gave him the opening to run, run, and run.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "steve",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Charles",
+    "story": "Charles has spent his entire life learning music. Whether it’s composition, performance, or playing just about any instrument known to man, Charles is most at home among notes, lyrics, and melodies. He can always find the right little tune to put a spring in someone’s step or shoo dark clouds away. And his talents are sorely needed, as surely as shooting a gun, or deciphering arcane text, for there are no clouds darker than the Old Ones and their cults.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "charles",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Buck",
+    "story": "Buck has known his share of loss, most notably his entire family. What should have been a weekend getaway to a picturesque seaside bed and breakfast turning into a week-long carnival of death as his family reunion saw him the only survivor. They even got the children. Thus, every death Buck can inflict in their name bring him a little fleeting peace. He’s a grim companion, to say the least. Death is a part of battling the cults, but it’s good to know that it walks at Buck’s side and usually marches to his drum.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "buck",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Anita",
+    "story": "In her life before the cults intruded, Anite worked with animals. She always had a way with beasts, even wild animals. It turns out she has a natural magical talent which can make even the most horrific creature into an unwitting ally. Many cults have various eldritch creatures they use as guardians, enforcers, and attack dogs. With Anita around, it’s only a matter of time before the creature turned against its former masters. Or, as she puts it, “You two fight and we’ll deal with whatever’s left.”",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "anita",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Eve",
+    "story": "Eve’s doctoral these was on family dynamics, a far cry from the work she finds herself doing now. While she spends most of her time investigating cult activities and helping banish old ones back to where they came from, the trauma of dealing with these creatures cannot be undersold. Simply being proximate to entities so beyond human understanding has a profound negative effect on the human psyche. Eve has found that many techniques in psych therapy are of great use in easing troubled minds, although there is certainly a point of no return.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "eve",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Craig",
+    "story": "While Craig was quite happy as the maître d’ for an upscale New York hotel restaurant, he served with honor and distinction in the trenches of the Great War. It was a terrible time in his life where he learned skills more apt for a mass murderer than a civilized man. And yet, he now finds himself embracing those old talents once more. Craig would rather be back at his restaurant, but his sense of duty towards innocent life is too strong. It seems he may never be free from the horrors of his past.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "craig",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Amir",
+    "story": "Amir is a holy man, though he worships no single god nor honors a single practice. He has borrowed parts from many faiths across the world, learning their best lessons and discarding their most egregious trespasses. His ‘power’, such as it is, is to exude a sense of peace and tranquility to any who hear his words. Having such an investigator as part of a team is a refreshing boon from the horror brought forth by the hidden world.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "amir",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Michelle",
+    "story": "If there’s one thing Michelle has found in battling the cults, it’s that even the most outlandish creatures are still flesh and blood. As such, physical barriers are just as much an obstacle to them as investigators. She’s become adept at erecting barricades out of seeming junk. A few old boxes, a battered old sofa, a bookcase pulled down into an odd angle… anything works. Of course, the biggest barrier to their passing is Michelle herself. Having played cricket in the professional leagues, she’s not easy to get past, particularly if she’s got any kind of weapon.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "michelle",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Saito",
+    "story": "Saito was always good with money, and even better with people. He traveled Western lands for much of his youth and discovered a natural talent for business. He was a millionaire by twenty, and his fortunes have only grown since then. He was a natural target for the cults who often seek to indoctrinate wealthy interests to fund their march to oblivion for all mankind. But Saito was no fool and saw the mewling sycophants for what they were. He now uses his money and considerable fighting skill against them",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "saito",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Ryan",
+    "story": "To say Ryan is a bit intense is to call the sun ‘a bit bright’. Ryan lives his life with two modes: on and off. When he’s ‘off’, he’s affable, charming, and laid back. When he’s ‘on’, he’s like a hunting hawk, keen to every twitch, missing nothing, and seeing everything. In the field, Ryan is a predator stalking prey. He’s relentless in his tasks whether than be fighting, fleeing, or chasing down the next clue. Woe betides the cultists and creatures that stand between him and his goals.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "ryan",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Taylor",
+    "story": "Taylor has performed at all the largest venues on six continents and has been hailed as the preeminent violin concerto composer of her time. So, how does one of the world’s most talented artists become an occult investigator? In her search for original music to inform her own work, she happened across a music score that was literally beyond his world. She survived the creatures it summoned with the aid of another investigator. Since then, she’s discovered that music is indeed magic, to be used for good or ill.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "taylor",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Antonio",
+    "story": "He doesn’t know the how’s or why’s of it, but Antonio can manipulate certain energies to his substantial benefit. Some magicians do this through years of active study and practice, where Antonio merely wills these ‘effects’ to happen. He suspects he may not be completely human, yet he is absolutely on mankind’s side in their struggle against the elder gods. Antonio’s view is that even a doomed civilization is entitled to live its life without being hurried along to that end by long-gone deities and the fools who worship them.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "antonio",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Dali",
+    "story": "There is a fine line between art and madness, and Salvador Dali crosses it regularly, both in search of new inspiration and in battling the forces of the Old Ones anywhere he runs across them. And he seems to run across them with alarming frequency. His own flamboyant nature leads him to many extremes, and as such, he can often be found in the highest circles of society where the cults find easy prey. He himself has been recruited more than once only to turn the tables on his erstwhile allies.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "dali",
+    "season": "unknowable-box"
+  },
+  {
+    "name": "Josephine",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Marksman"
+    ],
+    "id": "josephine",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Fleur",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Marksman"
+    ],
+    "id": "fleur",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Tina",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Stealth"
+    ],
+    "id": "tina",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Pops",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "pops",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Ernest",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "ernest",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Al",
+    "story": "This skill shows your talent for sneaking past the enemies and moving around the map undetected. A base level, you are able to sneak past one enemy without being detected but as you progress, you can sneak past more and more. And perhaps do some damage while you’re sneaking as well.",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Marksman",
+      "Toughness"
+    ],
+    "id": "al",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Maki",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "maki",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Maxim",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Arcane Mastery"
+    ],
+    "id": "maxim",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Margie",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "margie",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Gonk",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Brawling",
+      "Toughness"
+    ],
+    "id": "gonk",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Olivia",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Swiftness"
+    ],
+    "id": "olivia",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Bert",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [
+      "Arcane Mastery",
+      "Toughness"
+    ],
+    "id": "bert",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Meryl",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "meryl",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Julia",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "julia",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Roxie",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "roxie",
+    "season": "unspeakable-box"
+  },
+  {
+    "name": "Richard",
+    "location": null,
+    "motto": null,
+    "special_power": null,
+    "common_powers": [],
+    "id": "richard",
+    "season": "unspeakable-box"
+  }
+]

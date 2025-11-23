@@ -1,0 +1,34 @@
+{
+  "id": "extra-promos",
+  "name": "Extra Promos",
+  "display_name": "Extra Promos",
+  "description": "Extra promotional characters.",
+  "year_published": null,
+  "release_date": null,
+  "box_type": "promo",
+  "character_count": 1,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.0,
+    "characters_complete": false,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "scarlett",
+      "name": "Scarlett"
+    }
+  ]
+}

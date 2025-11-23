@@ -7,5 +7,10 @@
   "common_powers": [
     "Marksman",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Dreams_in_the_Witch_House",
+    "grokpedia": "https://grokipedia.com/page/Walter_Gilman",
+    "other": []
+  }
 }

@@ -1,0 +1,168 @@
+{
+  "_comment": "Location parsing data for character JSON updates",
+  
+  "administrative_division_types": {
+    "USA": "state",
+    "United States": "state",
+    "United States of America": "state",
+    "England": "county",
+    "United Kingdom": "county",
+    "UK": "county",
+    "Scotland": "council_area",
+    "Wales": "county",
+    "Northern Ireland": "county",
+    "Canada": "province",
+    "Australia": "state",
+    "South Africa": "province",
+    "France": "department",
+    "Germany": "state",
+    "Italy": "region",
+    "Spain": "province",
+    "Russia": "oblast",
+    "China": "province",
+    "Japan": "prefecture",
+    "India": "state",
+    "Brazil": "state",
+    "Mexico": "state",
+    "Argentina": "province",
+    "Colombia": "department",
+    "Egypt": "governorate",
+    "Turkey": "province"
+  },
+  
+  "country_to_region": {
+    "England": "Europe",
+    "USA": "North America",
+    "United States": "North America",
+    "United States of America": "North America",
+    "Russia": "Europe",
+    "Egypt": "Africa",
+    "Colombia": "South America",
+    "Turkey": "Europe",
+    "Canada": "North America",
+    "Australia": "Oceania",
+    "South Africa": "Africa",
+    "France": "Europe",
+    "Germany": "Europe",
+    "Italy": "Europe",
+    "Spain": "Europe",
+    "China": "Asia",
+    "Japan": "Asia",
+    "India": "Asia",
+    "Brazil": "South America",
+    "Mexico": "North America",
+    "Argentina": "South America"
+  },
+  
+  "us_states": [
+    "Massachusetts",
+    "Maine",
+    "Indiana",
+    "New York",
+    "New Jersey",
+    "California",
+    "Texas",
+    "Florida",
+    "Illinois",
+    "Pennsylvania",
+    "Ohio",
+    "Michigan",
+    "Georgia",
+    "North Carolina",
+    "New Jersey"
+  ],
+  
+  "location_coordinates": {
+    "MANCHESTER, ENGLAND": {
+      "city": "Manchester",
+      "administrative_division": "Greater Manchester",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe",
+      "lat": 53.4808,
+      "lon": -2.2426
+    },
+    "FALL RIVER, MASSACHUSETTS": {
+      "city": "Fall River",
+      "administrative_division": "Massachusetts",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 41.7015,
+      "lon": -71.1550
+    },
+    "MOSCOW, RUSSIA": {
+      "city": "Moscow",
+      "administrative_division": null,
+      "administrative_division_type": "federal_city",
+      "country": "Russia",
+      "region": "Europe",
+      "lat": 55.7558,
+      "lon": 37.6173
+    },
+    "LONDON, ENGLAND": {
+      "city": "London",
+      "administrative_division": "Greater London",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe",
+      "lat": 51.5074,
+      "lon": -0.1278
+    },
+    "ALEXANDRIA, EGYPT": {
+      "city": "Alexandria",
+      "administrative_division": null,
+      "administrative_division_type": "governorate",
+      "country": "Egypt",
+      "region": "Africa",
+      "lat": 31.2001,
+      "lon": 29.9187
+    },
+    "BOGOTA, COLOMBIA": {
+      "city": "Bogotá",
+      "administrative_division": null,
+      "administrative_division_type": "capital_district",
+      "country": "Colombia",
+      "region": "South America",
+      "lat": 4.7110,
+      "lon": -74.0721
+    },
+    "FORT WAYNE, INDIANA": {
+      "city": "Fort Wayne",
+      "administrative_division": "Indiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 41.0793,
+      "lon": -85.1394
+    },
+    "JONESBORO, MAINE": {
+      "city": "Jonesboro",
+      "administrative_division": "Maine",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 44.6628,
+      "lon": -69.6298
+    },
+    "MERSIN, TURKEY": {
+      "city": "Mersin",
+      "administrative_division": null,
+      "administrative_division_type": "province",
+      "country": "Turkey",
+      "region": "Europe",
+      "lat": 36.8121,
+      "lon": 34.6415
+    },
+    "UNKNOWN": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null,
+      "lat": null,
+      "lon": null
+    }
+  }
+}
+

@@ -1,8 +1,23 @@
 {
+  "id": "rasputin",
   "name": "RASPUTIN",
-  "location": "MOSCOW, RUSSIA",
+  "season": "season1",
   "motto": "Sigh... Dead again.",
   "story": "Living forever wasnt exactly Rasputins idea, He was captured by a cult after destroying one of their most extensive operations. Their particular brand of torture involved gifting him with a cycle of instant revivification, such that he could be tortured to death gain and gain. Naturally, this didnt go the way the cult planned. He escaped, killing their leaders in the process, and discovered the gift had stuck with him. The magic itself is slowly decaying, and he knows that eventually he will die one final time, but for now, he instead to use this power for the greater good.",
+  "location": {
+    "original": "MOSCOW, RUSSIA",
+    "parsed": {
+      "city": "Moscow",
+      "administrative_division": null,
+      "administrative_division_type": "federal_city",
+      "country": "Russia",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 55.7558,
+      "lon": 37.6173
+    }
+  },
   "special_power": {
     "name": "UNKILLABLE",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Arcane Mastery",
     "Brawling"
-  ]
+  ],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Grigori_Rasputin",
+    "grokpedia": "https://grokipedia.com/page/Grigori_Rasputin",
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "rasputin_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.95
+  }
 }

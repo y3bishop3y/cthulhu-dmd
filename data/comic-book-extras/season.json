@@ -1,0 +1,54 @@
+{
+  "id": "comic-book-extras",
+  "name": "Comic Book Extras",
+  "display_name": "Comic Book Extras",
+  "description": "Comic book extras with 6 additional characters.",
+  "year_published": null,
+  "release_date": null,
+  "box_type": "promo",
+  "character_count": 6,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.0,
+    "characters_complete": false,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "allan",
+      "name": "Allan"
+    },
+    {
+      "id": "annabelle",
+      "name": "Annabelle"
+    },
+    {
+      "id": "jack",
+      "name": "Jack"
+    },
+    {
+      "id": "lysa",
+      "name": "Lysa"
+    },
+    {
+      "id": "rocco",
+      "name": "Rocco"
+    },
+    {
+      "id": "tamara",
+      "name": "Tamara"
+    }
+  ]
+}

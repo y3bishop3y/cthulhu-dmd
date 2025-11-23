@@ -1,0 +1,70 @@
+{
+  "id": "season3",
+  "name": "Season 3",
+  "display_name": "Season 3",
+  "description": "Season 3 expansion with 10 new investigators.",
+  "year_published": 2021,
+  "release_date": null,
+  "box_type": "expansion",
+  "character_count": 10,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.4,
+    "characters_complete": true,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "agatha",
+      "name": "Agatha"
+    },
+    {
+      "id": "huikong",
+      "name": "Huikong"
+    },
+    {
+      "id": "julien",
+      "name": "Julien"
+    },
+    {
+      "id": "leon",
+      "name": "Leon"
+    },
+    {
+      "id": "mike",
+      "name": "Mike"
+    },
+    {
+      "id": "peters",
+      "name": "Peters"
+    },
+    {
+      "id": "ruth",
+      "name": "Ruth"
+    },
+    {
+      "id": "sally",
+      "name": "Sally "
+    },
+    {
+      "id": "sandra",
+      "name": "Sandra"
+    },
+    {
+      "id": "stella",
+      "name": "Stella"
+    }
+  ]
+}

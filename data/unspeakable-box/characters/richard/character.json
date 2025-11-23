@@ -3,5 +3,10 @@
   "location": null,
   "motto": null,
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Pickman%27s_Model",
+    "grokpedia": "https://grokipedia.com/page/Richard_Upton_Pickman",
+    "other": []
+  }
 }

@@ -1,8 +1,23 @@
 {
+  "id": "ian",
   "name": "SERGEANT IAN WELLES",
-  "location": "JONESBORO, MAINE",
+  "season": "season1",
   "motto": "They have us surrounded, those poor bastards.",
   "story": "Sergeant Welles has many stress about his missing arm. For his brothers-in-arms in the Great War, it was a German artillery shell. For civilians, it was a sniper. But for fellow investigator, he need spin no tall tales: it was some God-damned cult-borne heal beastie what swallowed my hand, green dice and all. Sergeant Welles is a manchester of giving back twice as.much as he gets. gain sharpens his aim, he says, and if the scars and burns that cros his body are any indicator, his aim is perfectly lethal.",
+  "location": {
+    "original": "JONESBORO, MAINE",
+    "parsed": {
+      "city": "Jonesboro",
+      "administrative_division": "Maine",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 44.6628,
+      "lon": -69.6298
+    }
+  },
   "special_power": {
     "name": "VENGEANCE OBSESSION",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Swiftness",
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "sergeant_ian_welles_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

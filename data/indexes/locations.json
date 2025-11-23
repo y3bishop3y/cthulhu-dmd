@@ -1,0 +1,90 @@
+{
+  "regions": {
+    "North America": [
+      "borden",
+      "ian",
+      "morgan"
+    ],
+    "Africa": [
+      "fatima"
+    ],
+    "Europe": [
+      "adam",
+      "ahmed",
+      "elizabeth",
+      "rasputin"
+    ],
+    "South America": [
+      "sister-beth"
+    ]
+  },
+  "countries": {
+    "USA": [
+      "borden",
+      "ian",
+      "morgan"
+    ],
+    "Egypt": [
+      "fatima"
+    ],
+    "Russia": [
+      "rasputin"
+    ],
+    "England": [
+      "adam",
+      "elizabeth"
+    ],
+    "Colombia": [
+      "sister-beth"
+    ],
+    "Turkey": [
+      "ahmed"
+    ]
+  },
+  "administrative_divisions": {
+    "Massachusetts": [
+      "borden"
+    ],
+    "Maine": [
+      "ian"
+    ],
+    "Greater London": [
+      "elizabeth"
+    ],
+    "Indiana": [
+      "morgan"
+    ],
+    "Greater Manchester": [
+      "adam"
+    ]
+  },
+  "cities": {
+    "Fall River": [
+      "borden"
+    ],
+    "Alexandria": [
+      "fatima"
+    ],
+    "Jonesboro": [
+      "ian"
+    ],
+    "Moscow": [
+      "rasputin"
+    ],
+    "London": [
+      "elizabeth"
+    ],
+    "Bogotá": [
+      "sister-beth"
+    ],
+    "Fort Wayne": [
+      "morgan"
+    ],
+    "Manchester": [
+      "adam"
+    ],
+    "Mersin": [
+      "ahmed"
+    ]
+  }
+}

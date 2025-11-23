@@ -1,8 +1,23 @@
 {
+  "id": "elizabeth",
   "name": "ELIZABETH IVES",
-  "location": "LONDON, ENGLAND",
+  "season": "season1",
   "motto": "Heads! win again. Best six out of eleven, fuv?",
   "story": "The saying that tuck is better than skill rarely proves true, until one meets Elizabeth Ives. Theres no magic surrounding her, no blessing from the stress, and certainly no taint of the Old Ones. She is simply, frankly, supremely lucky. She has no idea how she does it, but three investigator can search a room for hours and find nothing whereas shell walk in and step right on the button for the secret door. For it all, Shes england of the talent, but secretly dreads the day her luck runs out.",
+  "location": {
+    "original": "LONDON, ENGLAND",
+    "parsed": {
+      "city": "London",
+      "administrative_division": "Greater London",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 51.5074,
+      "lon": -0.1278
+    }
+  },
   "special_power": {
     "name": "LUCKY",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Marksman",
     "Stealth"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "elizabeth_ives_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

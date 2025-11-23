@@ -4,5 +4,10 @@
   "location": null,
   "motto": null,
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/The_Case_of_Charles_Dexter_Ward",
+    "grokpedia": "https://grokipedia.com/page/Charles_Dexter_Ward",
+    "other": []
+  }
 }

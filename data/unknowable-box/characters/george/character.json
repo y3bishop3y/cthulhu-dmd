@@ -4,5 +4,10 @@
   "location": null,
   "motto": null,
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/The_Call_of_Cthulhu",
+    "grokpedia": "https://grokipedia.com/page/George_Gammell_Angell",
+    "other": []
+  }
 }

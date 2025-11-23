@@ -1,0 +1,50 @@
+{
+  "id": "comic-book-v2",
+  "name": "Comic Book V2",
+  "display_name": "Comic Book V2",
+  "description": "Comic book version 2 with 5 additional characters.",
+  "year_published": null,
+  "release_date": null,
+  "box_type": "comic",
+  "character_count": 5,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.32,
+    "characters_complete": false,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "ezra",
+      "name": "Ezra"
+    },
+    {
+      "id": "jack",
+      "name": "Jack"
+    },
+    {
+      "id": "olmstea",
+      "name": "Olmstea"
+    },
+    {
+      "id": "veronique",
+      "name": "Veronique"
+    },
+    {
+      "id": "virgina",
+      "name": "Virgina"
+    }
+  ]
+}

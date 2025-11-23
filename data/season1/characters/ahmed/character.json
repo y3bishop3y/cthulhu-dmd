@@ -1,8 +1,23 @@
 {
+  "id": "ahmed",
   "name": "AHMED YASIN",
-  "location": "MERSIN, TURKEY",
+  "season": "season1",
   "motto": "What is written is written.",
   "story": "While Ahmeds medical qualifications might not earn him any formal degrees; investigator can rely on his unshakable calm, instead hands, and vast arcand knowledge to stitch cuts, soothe burns, and reattach severed limbs. Ahmeds fascination with ancient occult healing led-where most arcand studies do, bringing him in contact with the various cults. He even joined a few in his time, the better te learn their ways and destroy them from within. All magic comes with a cost to the soul, yet he pays.",
+  "location": {
+    "original": "MERSIN, TURKEY",
+    "parsed": {
+      "city": "Mersin",
+      "administrative_division": null,
+      "administrative_division_type": "province",
+      "country": "Turkey",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 36.8121,
+      "lon": 34.6415
+    }
+  },
   "special_power": {
     "name": "HEALING PRAYER",
     "is_special": true,
@@ -30,5 +45,28 @@
   "common_powers": [
     "Stealth",
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": "front.webp"
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": "back.webp"
+    }
+  },
+  "has_audio": true,
+  "audio_file": "ahmed_yasin_audio_p225.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

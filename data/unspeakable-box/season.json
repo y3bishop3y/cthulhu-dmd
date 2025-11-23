@@ -1,0 +1,94 @@
+{
+  "id": "unspeakable-box",
+  "name": "Unspeakable Box",
+  "display_name": "Unspeakable Box",
+  "description": "The Unspeakable Box standalone expansion featuring 16 investigators.",
+  "year_published": null,
+  "release_date": null,
+  "box_type": "standalone",
+  "character_count": 16,
+  "images": {
+    "box_art": null,
+    "box_art_webp": null,
+    "character_book": "character-book.pdf"
+  },
+  "purchase_links": {
+    "amazon": null,
+    "publisher": null,
+    "boardgamegeek": null,
+    "other": []
+  },
+  "metadata": {
+    "last_updated": "2025-11-22",
+    "data_completeness": 0.03,
+    "characters_complete": false,
+    "audio_complete": false,
+    "images_complete": false
+  },
+  "characters": [
+    {
+      "id": "al",
+      "name": "Al"
+    },
+    {
+      "id": "bert",
+      "name": "Bert"
+    },
+    {
+      "id": "ernest",
+      "name": "Ernest"
+    },
+    {
+      "id": "fleur",
+      "name": "Fleur"
+    },
+    {
+      "id": "gonk",
+      "name": "Gonk"
+    },
+    {
+      "id": "josephine",
+      "name": "Josephine"
+    },
+    {
+      "id": "julia",
+      "name": "Julia"
+    },
+    {
+      "id": "maki",
+      "name": "Maki"
+    },
+    {
+      "id": "margie",
+      "name": "Margie"
+    },
+    {
+      "id": "maxim",
+      "name": "Maxim"
+    },
+    {
+      "id": "meryl",
+      "name": "Meryl"
+    },
+    {
+      "id": "olivia",
+      "name": "Olivia"
+    },
+    {
+      "id": "pops",
+      "name": "Pops"
+    },
+    {
+      "id": "richard",
+      "name": "Richard"
+    },
+    {
+      "id": "roxie",
+      "name": "Roxie"
+    },
+    {
+      "id": "tina",
+      "name": "Tina"
+    }
+  ]
+}
