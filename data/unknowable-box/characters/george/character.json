@@ -1,13 +1,43 @@
 {
+  "id": "george",
   "name": "George",
-  "story": "George would really rather be cooking. He’s worked at restaurants large and small for most of his life. His knowledge of dishes ranges from simple to exotic and even beyond. Nothing gives him greater joy than seeing people widen their eyes as they taste a new dish of his for the first time. Anything that takes him away from his kitchen sparks irritation, and triply so for cultists and their creatures. He never asked for the investigative life, but it seems to have found him, and may the gods have mercy on the creature in his way, for George has none",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "George would really rather be cooking. He’s worked at restaurants large and small for most of his life. His knowledge of dishes ranges from simple to exotic and even beyond. Nothing gives him greater joy than seeing people widen their eyes as they taste a new dish of his for the first time. Anything that takes him away from his kitchen sparks irritation, and triply so for cultists and their creatures. He never asked for the investigative life, but it seems to have found him, and may the gods have mercy on the creature in his way, for George has none",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
   "common_powers": [],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/The_Call_of_Cthulhu",
-    "grokpedia": "https://grokipedia.com/page/George_Gammell_Angell",
+    "wikipedia": null,
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
   }
 }

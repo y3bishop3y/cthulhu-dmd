@@ -1,8 +1,20 @@
 {
+  "id": "sally",
   "name": ". DRAW MYTHOS",
-  "location": null,
+  "season": "season3",
   "motto": null,
   "story": "As one of the only war correspondents in the trenches during the Great War, Sally had the harrowing duty of photographing that brutal conflict up-close. As such, she became well-acquainted with death, to such a degree that it threatened to extinguish her own smile permanently. But that was before she found a new calling. One might think finding a terrifying, horrific world lurking beneath our own would be even more traumatic, but for Sally, it restored her faith in humanity. Turns out we’re not the worst things out there.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "Other investigators investigator in your",
     "is_special": true,
@@ -30,5 +42,28 @@
   "common_powers": [
     "Arcane Mastery",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "sally_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

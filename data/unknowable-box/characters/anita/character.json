@@ -1,8 +1,43 @@
 {
+  "id": "anita",
   "name": "Anita",
-  "story": "In her life before the cults intruded, Anite worked with animals. She always had a way with beasts, even wild animals. It turns out she has a natural magical talent which can make even the most horrific creature into an unwitting ally. Many cults have various eldritch creatures they use as guardians, enforcers, and attack dogs. With Anita around, it’s only a matter of time before the creature turned against its former masters. Or, as she puts it, “You two fight and we’ll deal with whatever’s left.”",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "In her life before the cults intruded, Anite worked with animals. She always had a way with beasts, even wild animals. It turns out she has a natural magical talent which can make even the most horrific creature into an unwitting ally. Many cults have various eldritch creatures they use as guardians, enforcers, and attack dogs. With Anita around, it’s only a matter of time before the creature turned against its former masters. Or, as she puts it, “You two fight and we’ll deal with whatever’s left.”",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

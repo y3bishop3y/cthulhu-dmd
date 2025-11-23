@@ -1,8 +1,43 @@
 {
+  "id": "anika",
   "name": "Anika",
-  "story": "Arguably one of the most brilliant minds of her generation, Anika’s studies into higher mathematics led her to more and more esoteric books linking mathematics to language and then on to darker, more arcane things. It wasn’t long before the knowledge she was studying began to study her. If not for the intervention of some occult investigators, she might well have been lost to space and time. She now puts her vast intellect to work alongside her fellow investigators, translating forbidden languages and learning the deadliest spells.",
-  "location": null,
+  "season": "season4",
   "motto": null,
+  "story": "Arguably one of the most brilliant minds of her generation, Anika’s studies into higher mathematics led her to more and more esoteric books linking mathematics to language and then on to darker, more arcane things. It wasn’t long before the knowledge she was studying began to study her. If not for the intervention of some occult investigators, she might well have been lost to space and time. She now puts her vast intellect to work alongside her fellow investigators, translating forbidden languages and learning the deadliest spells.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

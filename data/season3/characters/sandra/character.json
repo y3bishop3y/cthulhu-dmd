@@ -1,8 +1,20 @@
 {
+  "id": "sandra",
   "name": "& TQM",
-  "location": null,
+  "season": "season3",
   "motto": null,
   "story": "Sandra’s love of ancient secrets led her to places she never dreamed. Finding relics of truly alien races is beyond thrilling. Unfortunately, most of the world’s most promising sites tend to be focal points for the eldritch beings and their human cultists. As such, her job requires weapons as often as picks and shovels. Also, many of the things she finds would not be welcome among traditional academic circles, who remain blind to the hidden work beneath our own. Fortunately, those who battle these alien beings are always in need of more information.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "Healing Power",
     "is_special": true,
@@ -25,5 +37,28 @@
   },
   "common_powers": [
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "sandra_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

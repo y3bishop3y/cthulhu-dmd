@@ -1,8 +1,43 @@
 {
+  "id": "don",
   "name": "Don",
-  "story": "Don is a survivor of the Great War, and the word ‘survivor’ is the term he uses. Trench fighting against German forces was brutal, bloody, and often a complete slaughter for one side or the other. Don was the ‘last man standing’ too many times. And yet, his commanders kept sending him back again and again. As a result, he doesn’t make friends easily, even among fellow investigators whom he’s come to see as a resourceful group needing protecting. It’s good to know that when the going gets tough, Don will always keep going.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Don is a survivor of the Great War, and the word ‘survivor’ is the term he uses. Trench fighting against German forces was brutal, bloody, and often a complete slaughter for one side or the other. Don was the ‘last man standing’ too many times. And yet, his commanders kept sending him back again and again. As a result, he doesn’t make friends easily, even among fellow investigators whom he’s come to see as a resourceful group needing protecting. It’s good to know that when the going gets tough, Don will always keep going.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

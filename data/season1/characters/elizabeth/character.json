@@ -61,12 +61,12 @@
       "webp": "back.webp"
     }
   },
-  "has_audio": true,
-  "audio_file": "elizabeth_ives_audio_p225.wav",
+  "has_audio": false,
+  "audio_file": null,
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.85
+    "completeness": 0.75
   }
 }

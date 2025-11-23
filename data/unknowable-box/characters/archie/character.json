@@ -1,8 +1,43 @@
 {
+  "id": "archie",
   "name": "Archie",
-  "story": "Archie is a rabble rouser, ruffian, sailor, and a carouser. Fortunately, all these traits make for a strong investigator who isn’t afraid to mix it up with the creatures and entities brought forth by the cults. His first encounter with the hidden world was at sea with creatures swarming his ship from below. He doesn’t recall very much, so classification of these things is difficult, not that Archie cares much. They died just fine to his gun and an old cutlass he found. He keeps the sword around as both a keepsake and ‘just in case’.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Archie is a rabble rouser, ruffian, sailor, and a carouser. Fortunately, all these traits make for a strong investigator who isn’t afraid to mix it up with the creatures and entities brought forth by the cults. His first encounter with the hidden world was at sea with creatures swarming his ship from below. He doesn’t recall very much, so classification of these things is difficult, not that Archie cares much. They died just fine to his gun and an old cutlass he found. He keeps the sword around as both a keepsake and ‘just in case’.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

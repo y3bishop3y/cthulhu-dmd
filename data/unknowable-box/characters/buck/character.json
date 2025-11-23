@@ -1,8 +1,43 @@
 {
+  "id": "buck",
   "name": "Buck",
-  "story": "Buck has known his share of loss, most notably his entire family. What should have been a weekend getaway to a picturesque seaside bed and breakfast turning into a week-long carnival of death as his family reunion saw him the only survivor. They even got the children. Thus, every death Buck can inflict in their name bring him a little fleeting peace. He’s a grim companion, to say the least. Death is a part of battling the cults, but it’s good to know that it walks at Buck’s side and usually marches to his drum.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Buck has known his share of loss, most notably his entire family. What should have been a weekend getaway to a picturesque seaside bed and breakfast turning into a week-long carnival of death as his family reunion saw him the only survivor. They even got the children. Thus, every death Buck can inflict in their name bring him a little fleeting peace. He’s a grim companion, to say the least. Death is a part of battling the cults, but it’s good to know that it walks at Buck’s side and usually marches to his drum.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

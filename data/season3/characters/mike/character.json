@@ -1,8 +1,20 @@
 {
+  "id": "mike",
   "name": ". DRAW MYTHOS",
-  "location": null,
+  "season": "season3",
   "motto": null,
   "story": "Mikhail was a Russian Strongman for a traveling circus. He would bend bars, juggle fifty-pound weights, and wrestle bears into submission… Well, that last one was probably stage magic, but Mike is capable of some truly astonishing feats of raw might, particularly in a fight. And there is plenty of fighting in this line of work. Mike enjoys the challenge of facing these beasts head-on, which means he’s probably a bit crazy. That said, he’s in good company, since only madmen seek out these nameless terrors and battle them head-on",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "STRONG",
     "is_special": true,
@@ -30,5 +42,28 @@
   "common_powers": [
     "Arcane Mastery",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "mike_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

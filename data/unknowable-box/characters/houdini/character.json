@@ -1,8 +1,43 @@
 {
+  "id": "houdini",
   "name": "Houdini",
-  "story": "As a world-renowned illusionist and escape artist, Harry Houdini has made a name for himself by escaping from impossible death traps and debunking fraudulent ‘spiritualists’ who claim extraordinary powers. That is until he ran up against a cultist with actual supernatural abilities. The hidden occult work became known to him as more than whimsical fantasies. He survived his encounter with the supernatural through one of his amazing escapes and has since become an investigator of true occult phenomena and a powerful weapon against the Old Ones.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "As a world-renowned illusionist and escape artist, Harry Houdini has made a name for himself by escaping from impossible death traps and debunking fraudulent ‘spiritualists’ who claim extraordinary powers. That is until he ran up against a cultist with actual supernatural abilities. The hidden occult work became known to him as more than whimsical fantasies. He survived his encounter with the supernatural through one of his amazing escapes and has since become an investigator of true occult phenomena and a powerful weapon against the Old Ones.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

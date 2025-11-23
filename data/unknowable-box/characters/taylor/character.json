@@ -1,8 +1,43 @@
 {
+  "id": "taylor",
   "name": "Taylor",
-  "story": "Taylor has performed at all the largest venues on six continents and has been hailed as the preeminent violin concerto composer of her time. So, how does one of the world’s most talented artists become an occult investigator? In her search for original music to inform her own work, she happened across a music score that was literally beyond his world. She survived the creatures it summoned with the aid of another investigator. Since then, she’s discovered that music is indeed magic, to be used for good or ill.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Taylor has performed at all the largest venues on six continents and has been hailed as the preeminent violin concerto composer of her time. So, how does one of the world’s most talented artists become an occult investigator? In her search for original music to inform her own work, she happened across a music score that was literally beyond his world. She survived the creatures it summoned with the aid of another investigator. Since then, she’s discovered that music is indeed magic, to be used for good or ill.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

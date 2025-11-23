@@ -1,8 +1,43 @@
 {
+  "id": "steve",
   "name": "Steve",
-  "story": "Steve’s talent don’t lend much towards investigation or esoteric magic, but he’s a natural athlete and one of the best people to have at your side when it comes to a fight. As an all-star player in school and college, Steve was well on the road to a lucrative career when a fateful encounter on a back country road showed him the hidden world beneath our own. Steve would have been an unwitting sacrifice, but a bum rush against an unsuspecting creature gave him the opening to run, run, and run.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Steve’s talent don’t lend much towards investigation or esoteric magic, but he’s a natural athlete and one of the best people to have at your side when it comes to a fight. As an all-star player in school and college, Steve was well on the road to a lucrative career when a fateful encounter on a back country road showed him the hidden world beneath our own. Steve would have been an unwitting sacrifice, but a bum rush against an unsuspecting creature gave him the opening to run, run, and run.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

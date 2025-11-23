@@ -1,13 +1,43 @@
 {
+  "id": "charles",
   "name": "Charles",
-  "story": "Charles has spent his entire life learning music. Whether it’s composition, performance, or playing just about any instrument known to man, Charles is most at home among notes, lyrics, and melodies. He can always find the right little tune to put a spring in someone’s step or shoo dark clouds away. And his talents are sorely needed, as surely as shooting a gun, or deciphering arcane text, for there are no clouds darker than the Old Ones and their cults.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Charles has spent his entire life learning music. Whether it’s composition, performance, or playing just about any instrument known to man, Charles is most at home among notes, lyrics, and melodies. He can always find the right little tune to put a spring in someone’s step or shoo dark clouds away. And his talents are sorely needed, as surely as shooting a gun, or deciphering arcane text, for there are no clouds darker than the Old Ones and their cults.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
   "common_powers": [],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/The_Case_of_Charles_Dexter_Ward",
-    "grokpedia": "https://grokipedia.com/page/Charles_Dexter_Ward",
+    "wikipedia": null,
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
   }
 }

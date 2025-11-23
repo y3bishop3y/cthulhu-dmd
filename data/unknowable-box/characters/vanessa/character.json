@@ -1,8 +1,43 @@
 {
+  "id": "vanessa",
   "name": "Vanessa ",
-  "story": "The elder gods and cultists have nothing but disdain for humanity as a young, foolish race that is ultimately doomed. Vanessa couldn’t care less, however. All of them are ultimately doomed, too. In the vast scale of cosmic time, even the Old Ones are but blips among the dying stars. She’s made a life for herself in studying the cosmos and the magic therein. As such, she’s an accomplished magician and can easily turn the elder gods’ powers against them.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "The elder gods and cultists have nothing but disdain for humanity as a young, foolish race that is ultimately doomed. Vanessa couldn’t care less, however. All of them are ultimately doomed, too. In the vast scale of cosmic time, even the Old Ones are but blips among the dying stars. She’s made a life for herself in studying the cosmos and the magic therein. As such, she’s an accomplished magician and can easily turn the elder gods’ powers against them.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

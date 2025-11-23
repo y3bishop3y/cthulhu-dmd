@@ -1,8 +1,43 @@
 {
+  "id": "amir",
   "name": "Amir",
-  "story": "Amir is a holy man, though he worships no single god nor honors a single practice. He has borrowed parts from many faiths across the world, learning their best lessons and discarding their most egregious trespasses. His ‘power’, such as it is, is to exude a sense of peace and tranquility to any who hear his words. Having such an investigator as part of a team is a refreshing boon from the horror brought forth by the hidden world.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "Amir is a holy man, though he worships no single god nor honors a single practice. He has borrowed parts from many faiths across the world, learning their best lessons and discarding their most egregious trespasses. His ‘power’, such as it is, is to exude a sense of peace and tranquility to any who hear his words. Having such an investigator as part of a team is a refreshing boon from the horror brought forth by the hidden world.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

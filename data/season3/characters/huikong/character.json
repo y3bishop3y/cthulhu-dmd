@@ -24,11 +24,11 @@
   },
   "images": {
     "front": {
-      "jpg": "front.jpg",
+      "jpg": null,
       "webp": null
     },
     "back": {
-      "jpg": null,
+      "jpg": "back.jpg",
       "webp": null
     }
   },

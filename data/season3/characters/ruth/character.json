@@ -1,8 +1,20 @@
 {
+  "id": "ruth",
   "name": ". DRAW MYTHOS",
-  "location": null,
+  "season": "season3",
   "motto": "a etaeeeentestf",
   "story": "Aa freelance investigative reporter, Ruth finds herself looking into the most unusual situations. From Organized crime to shady politicians, and even was profiteering, Ruth has seen it all. Or rather, thought she had until she looked into a so-called cult in a small town on the East Coast. What she found was… well, you probably get the idea. Over the years, Ruth has found it advantageous to see without being seen. To her pleasant surprise, these creatures of night and darkness are usually just as oblivious to a knife in the dark as normal people are.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "Instead, EACH TIME  Once per turn, after",
     "is_special": true,
@@ -30,5 +42,28 @@
   "common_powers": [
     "Stealth",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "ruth_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.65
+  }
 }

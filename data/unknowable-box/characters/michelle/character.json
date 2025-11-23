@@ -1,8 +1,43 @@
 {
+  "id": "michelle",
   "name": "Michelle",
-  "story": "If there’s one thing Michelle has found in battling the cults, it’s that even the most outlandish creatures are still flesh and blood. As such, physical barriers are just as much an obstacle to them as investigators. She’s become adept at erecting barricades out of seeming junk. A few old boxes, a battered old sofa, a bookcase pulled down into an odd angle… anything works. Of course, the biggest barrier to their passing is Michelle herself. Having played cricket in the professional leagues, she’s not easy to get past, particularly if she’s got any kind of weapon.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "If there’s one thing Michelle has found in battling the cults, it’s that even the most outlandish creatures are still flesh and blood. As such, physical barriers are just as much an obstacle to them as investigators. She’s become adept at erecting barricades out of seeming junk. A few old boxes, a battered old sofa, a bookcase pulled down into an odd angle… anything works. Of course, the biggest barrier to their passing is Michelle herself. Having played cricket in the professional leagues, she’s not easy to get past, particularly if she’s got any kind of weapon.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

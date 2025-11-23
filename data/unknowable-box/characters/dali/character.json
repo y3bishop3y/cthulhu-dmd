@@ -1,8 +1,43 @@
 {
+  "id": "dali",
   "name": "Dali",
-  "story": "There is a fine line between art and madness, and Salvador Dali crosses it regularly, both in search of new inspiration and in battling the forces of the Old Ones anywhere he runs across them. And he seems to run across them with alarming frequency. His own flamboyant nature leads him to many extremes, and as such, he can often be found in the highest circles of society where the cults find easy prey. He himself has been recruited more than once only to turn the tables on his erstwhile allies.",
-  "location": null,
+  "season": "unknowable-box",
   "motto": null,
+  "story": "There is a fine line between art and madness, and Salvador Dali crosses it regularly, both in search of new inspiration and in battling the forces of the Old Ones anywhere he runs across them. And he seems to run across them with alarming frequency. His own flamboyant nature leads him to many extremes, and as such, he can often be found in the highest circles of society where the cults find easy prey. He himself has been recruited more than once only to turn the tables on his erstwhile allies.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

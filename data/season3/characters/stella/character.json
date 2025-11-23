@@ -1,8 +1,20 @@
 {
+  "id": "stella",
   "name": "AUET LUHOVE OY SVU)",
-  "location": null,
+  "season": "season3",
   "motto": "“ “Science has",
   "story": "The joy of watching things explode is far more common among scientists (chemists in particular) than people might believe. Stella posits that while the eldritch beings she goes up against exhibit some supernatural properties, they still must abide by the physical laws of this universe. Case in point, hydrochloric acid will eat through a monster as quickly as it does a person. Thus, while not all of their properties or abilities are understood, time and further experimentation will bring to light even their most closely held secrets. Also, blowing them up is great fun.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": {
     "name": "OO",
     "is_special": true,
@@ -22,5 +34,28 @@
   "common_powers": [
     "Brawling",
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "stella_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.65
+  }
 }
