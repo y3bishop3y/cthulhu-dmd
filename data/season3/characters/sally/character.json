@@ -1,39 +1,34 @@
 {
-  "id": "sally",
-  "name": "Sally ",
-  "season": "season3",
+  "name": ". DRAW MYTHOS",
+  "location": null,
   "motto": null,
   "story": "As one of the only war correspondents in the trenches during the Great War, Sally had the harrowing duty of photographing that brutal conflict up-close. As such, she became well-acquainted with death, to such a degree that it threatened to extinguish her own smile permanently. But that was before she found a new calling. One might think finding a terrifying, horrific world lurking beneath our own would be even more traumatic, but for Sally, it restored her faith in humanity. Turns out we’re not the worst things out there.",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "Other investigators investigator in your",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "When an leaves space, you may follow."
+      },
+      {
+        "level": 2,
+        "description": "RAPHER a . in space 4 gain"
+      },
+      {
+        "level": 3,
+        "description": "pe ence ne When another in space Rests, you may heal 3 wounds/stress in any combination"
+      },
+      {
+        "level": 4,
+        "description": "Once per turn, you _ oran in space, may perform free action."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Arcane Mastery",
+    "Toughness"
+  ]
 }

@@ -1,39 +1,34 @@
 {
-  "id": "agatha",
-  "name": "Agatha",
-  "season": "season3",
+  "name": "DRAW MYTHOS @",
+  "location": null,
   "motto": null,
   "story": "Aatha is part of a large crime family, though she’s given up her title as heir apparent. She doesn’t want to run the business while she’s got eldritch horrors to put down. The eggheads and bookworms in the business are good at their jobs, but not always good in a fight. Agatha is very good in a fight. As such, she is happy to be ‘simple muscle’ and maybe sometimes help the scholars do the occasional bit of less-than-legal acquisition of their research. Oh, and if you value you skin intact, don’t ever, ever call her ‘Aggie.’",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "Once per turn, when - oe ag .",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "turn, . attack, youmay take stress to heal - 1 additional wound."
+      },
+      {
+        "level": 2,
+        "description": "using this skill, . heal 1 additional .,- wound (2 total)"
+      },
+      {
+        "level": 3,
+        "description": "dont need to . take stress using this skill."
+      },
+      {
+        "level": 4,
+        "description": "Instead, ALL your attack heal 2 additional wounds."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Toughness",
+    "Marksman"
+  ]
 }

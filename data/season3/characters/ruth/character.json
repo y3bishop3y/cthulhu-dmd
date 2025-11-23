@@ -1,39 +1,34 @@
 {
-  "id": "ruth",
-  "name": "Ruth",
-  "season": "season3",
-  "motto": null,
+  "name": ". DRAW MYTHOS",
+  "location": null,
+  "motto": "a etaeeeentestf",
   "story": "Aa freelance investigative reporter, Ruth finds herself looking into the most unusual situations. From Organized crime to shady politicians, and even was profiteering, Ruth has seen it all. Or rather, thought she had until she looked into a so-called cult in a small town on the East Coast. What she found was… well, you probably get the idea. Over the years, Ruth has found it advantageous to see without being seen. To her pleasant surprise, these creatures of night and darkness are usually just as oblivious to a knife in the dark as normal people are.",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "Instead, EACH TIME  Once per turn, after",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Run, when you Sneak, heal 1 stress."
+      },
+      {
+        "level": 2,
+        "description": "heal I wound . to enemy you Sneak past .- (cumulative with . Stealth)"
+      },
+      {
+        "level": 3,
+        "description": "_ . instead, you Sneak, heal 1 stress OR wound and heal 1 wound. to the enemy."
+      },
+      {
+        "level": 4,
+        "description": "turn, a Run in which you Sneaked, if you are in ao Safe space, you may investigator."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Stealth",
+    "Toughness"
+  ]
 }

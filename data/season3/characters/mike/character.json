@@ -1,39 +1,34 @@
 {
-  "id": "mike",
-  "name": "Mike",
-  "season": "season3",
+  "name": ". DRAW MYTHOS",
+  "location": null,
   "motto": null,
   "story": "Mikhail was a Russian Strongman for a traveling circus. He would bend bars, juggle fifty-pound weights, and wrestle bears into submission… Well, that last one was probably stage magic, but Mike is capable of some truly astonishing feats of raw might, particularly in a fight. And there is plenty of fighting in this line of work. Mike enjoys the challenge of facing these beasts head-on, which means he’s probably a bit crazy. That said, he’s in good company, since only madmen seek out these nameless terrors and battle them head-on",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "IENT When attack, for each stress you spend to reroll - adie, you may reroll - 1 additional die (resolve 1 attack time). )"
+      },
+      {
+        "level": 2,
+        "description": "You may also do , this on rolls that . are not attack."
+      },
+      {
+        "level": 3,
+        "description": "When attack, - you may heal I stress before _ the reroll."
+      },
+      {
+        "level": 4,
+        "description": "You may also heal 1 stress before rolls that are not attack."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Arcane Mastery",
+    "Toughness"
+  ]
 }

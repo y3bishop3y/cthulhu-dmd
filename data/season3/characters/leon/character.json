@@ -1,39 +1,34 @@
 {
-  "id": "leon",
-  "name": "Leon",
-  "season": "season3",
+  "name": "Resolve",
+  "location": null,
   "motto": null,
   "story": "Leon was a soldier in the Great War, an officer and gentleman, fighting alongside the British who awarded him the Medal of Honor three times. He’s got two Congressional Medals of Honor, several medals from the French, and the Kaiser personally put a bounty on Leon’s head… Or rather, this is what Leon says about himself. Most don’t believe him and that’s probably wise. That said, he really does seem to know his stuff when it comes to a fight. But, his boasts always come down with a wink and a smile, so there’s really no harm in it.",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Iftheres another investigator in your space, you gain"
+      },
+      {
+        "level": 2,
+        "description": "Instead, if theres another investigator sy S within 2 spaces, _ you gain"
+      },
+      {
+        "level": 3,
+        "description": "also have 1 free reroll per reroll if theres another investigator within. 2 spaces."
+      },
+      {
+        "level": 4,
+        "description": "Instead, for EACH - other investigator within 2 spaces, gain and 1 free reroll per reroll."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Marksman",
+    "Toughness"
+  ]
 }

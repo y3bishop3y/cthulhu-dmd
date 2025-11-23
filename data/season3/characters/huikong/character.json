@@ -24,16 +24,20 @@
   },
   "images": {
     "front": {
-      "jpg": "front.jpg"
+      "jpg": "front.jpg",
+      "webp": null
     },
-    "back": {}
+    "back": {
+      "jpg": null,
+      "webp": null
+    }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "huikong_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.6
+    "completeness": 0.4
   }
 }

@@ -1,39 +1,34 @@
 {
-  "id": "peters",
-  "name": "Peters",
-  "season": "season3",
+  "name": "CARD",
+  "location": ", DRAW MYTHOS",
   "motto": null,
   "story": "Peters was a doctor at a mental institution, though not a psychologist. And place that houses wards of the state needs a physician and surgeon on hand. Luckily, Peters does both. But, more and more, the ravings coming out of some patients’ mouths began to make some sense. He started to worry about his own mental health until he discovered that a cult had taken control of the facility. When they came for him, he was ready. He’s sworn an oath to do no harm, but he doesn’t feel that applies to cultists or monsters.",
-  "location": {
-    "original": null,
-    "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
-    },
-    "coordinates": null
+  "special_power": {
+    "name": "Instead of 1, heal",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": ",xe SURGEON Rat When you kill an onemy,: 1 stress OR wound on an investigator in your space (it may be yourself)"
+      },
+      {
+        "level": 2,
+        "description": "the total stealth of _ the killed enemy Jin any combination of stress/wounds."
+      },
+      {
+        "level": 3,
+        "description": "4 You may divide . the healing amongst jou and investigator within space. - -., )"
+      },
+      {
+        "level": 4,
+        "description": "ea, , you and EACH investigator within 1 space the total amount. i. )"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
   },
-  "special_power": null,
-  "common_powers": [],
-  "links": {
-    "wikipedia": null,
-    "grokpedia": null,
-    "other": []
-  },
-  "images": {
-    "front": {
-      "jpg": "front.jpg"
-    },
-    "back": {}
-  },
-  "has_audio": false,
-  "audio_file": null,
-  "metadata": {
-    "extracted_date": null,
-    "last_updated": "2025-11-22",
-    "data_source": "ocr",
-    "completeness": 0.6
-  }
+  "common_powers": [
+    "Brawling",
+    "Toughness"
+  ]
 }
