@@ -27,7 +27,11 @@
     "Argentina": "province",
     "Colombia": "department",
     "Egypt": "governorate",
-    "Turkey": "province"
+    "Turkey": "province",
+    "Romania": "county",
+    "Ireland": "county",
+    "Haiti": "department",
+    "Australia": "state"
   },
   
   "country_to_region": {
@@ -51,7 +55,10 @@
     "India": "Asia",
     "Brazil": "South America",
     "Mexico": "North America",
-    "Argentina": "South America"
+    "Argentina": "South America",
+    "Romania": "Europe",
+    "Ireland": "Europe",
+    "Haiti": "Caribbean"
   },
   
   "us_states": [
@@ -153,6 +160,87 @@
       "region": "Europe",
       "lat": 36.8121,
       "lon": 34.6415
+    },
+    "HUNEDOARA, TRANSYLVANIA, ROMANIA": {
+      "city": "Hunedoara",
+      "administrative_division": "Transylvania",
+      "administrative_division_type": "county",
+      "country": "Romania",
+      "region": "Europe",
+      "lat": 45.7667,
+      "lon": 22.9167
+    },
+    "BRISBANE, AUSTRALIA": {
+      "city": "Brisbane",
+      "administrative_division": "Queensland",
+      "administrative_division_type": "state",
+      "country": "Australia",
+      "region": "Oceania",
+      "lat": -27.4698,
+      "lon": 153.0251
+    },
+    "LES CAYES, HAITI": {
+      "city": "Les Cayes",
+      "administrative_division": "Sud",
+      "administrative_division_type": "department",
+      "country": "Haiti",
+      "region": "Caribbean",
+      "lat": 18.2000,
+      "lon": -73.7500
+    },
+    "LISMORE, IRELAND": {
+      "city": "Lismore",
+      "administrative_division": "Waterford",
+      "administrative_division_type": "county",
+      "country": "Ireland",
+      "region": "Europe",
+      "lat": 52.1375,
+      "lon": -7.9333
+    },
+    "MUNICH, GERMANY": {
+      "city": "Munich",
+      "administrative_division": "Bavaria",
+      "administrative_division_type": "state",
+      "country": "Germany",
+      "region": "Europe",
+      "lat": 48.1351,
+      "lon": 11.5820
+    },
+    "NAPOLI ITALY": {
+      "city": "Naples",
+      "administrative_division": "Campania",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe",
+      "lat": 40.8518,
+      "lon": 14.2681
+    },
+    "BARI, ITALY": {
+      "city": "Bari",
+      "administrative_division": "Apulia",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe",
+      "lat": 41.1177,
+      "lon": 16.8719
+    },
+    "WICHITA, KANSAS": {
+      "city": "Wichita",
+      "administrative_division": "Kansas",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 37.6872,
+      "lon": -97.3301
+    },
+    "NEW YORK CITY, NEW YORK": {
+      "city": "New York City",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 40.7128,
+      "lon": -74.0060
     },
     "UNKNOWN": {
       "city": null,
