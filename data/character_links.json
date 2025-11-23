@@ -1,5 +1,15 @@
 {
   "_comment": "Historical/fictional character links for Wikipedia and Grokpedia",
+  "al": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Al_Capone",
+    "grokpedia": null,
+    "other": []
+  },
+  "bert": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "grokpedia": null,
+    "other": []
+  },
   "borden": {
     "wikipedia": "https://en.wikipedia.org/wiki/Lizzie_Borden",
     "grokpedia": "https://grokipedia.com/page/Lizzie_Borden",
@@ -8,6 +18,11 @@
   "rasputin": {
     "wikipedia": "https://en.wikipedia.org/wiki/Grigori_Rasputin",
     "grokpedia": "https://grokipedia.com/page/Grigori_Rasputin",
+    "other": []
+  },
+  "ernest": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Ernest_Hemingway",
+    "grokpedia": null,
     "other": []
   }
 }
