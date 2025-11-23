@@ -633,7 +633,7 @@ def parse_character_images(
         Tuple of (CharacterData, list of issues)
     """
     if not quiet:
-    console.print("[cyan]Parsing images for character...[/cyan]")
+        console.print("[cyan]Parsing images for character...[/cyan]")
 
     # Extract text from images
     if use_optimal_strategies:
@@ -647,10 +647,10 @@ def parse_character_images(
     # Validate extraction results
     if not front_text:
         if not quiet:
-        console.print("[yellow]Warning: No text extracted from front image[/yellow]")
+            console.print("[yellow]Warning: No text extracted from front image[/yellow]")
     if not back_text:
         if not quiet:
-        console.print("[yellow]Warning: No text extracted from back image[/yellow]")
+            console.print("[yellow]Warning: No text extracted from back image[/yellow]")
 
     # Load HTML-extracted story if available
     story_text = _load_story_from_file(story_file, quiet)
@@ -757,7 +757,14 @@ def _find_characters_to_process(
         )
         for season_dir in search_dirs:
             if season_dir.is_dir():
-                char_dir = season_dir / character.lower()
+                # Look for character in season_dir/characters/ subdirectory first
+                characters_subdir = season_dir / "characters"
+                if characters_subdir.exists() and characters_subdir.is_dir():
+                    char_dir = characters_subdir / character.lower()
+                else:
+                    # Fallback to old structure
+                    char_dir = season_dir / character.lower()
+                
                 if char_dir.exists():
                     char_path = char_dir
                     break
@@ -775,7 +782,15 @@ def _find_characters_to_process(
         for season_dir in season_dirs:
             if not season_dir.is_dir():
                 continue
-            for char_dir in season_dir.iterdir():
+            # Look for characters in season_dir/characters/ subdirectory
+            characters_subdir = season_dir / "characters"
+            if characters_subdir.exists() and characters_subdir.is_dir():
+                search_dir = characters_subdir
+            else:
+                # Fallback to old structure (characters directly in season_dir)
+                search_dir = season_dir
+            
+            for char_dir in search_dir.iterdir():
                 if char_dir.is_dir():
                     # Check if images exist (either as files or in zip)
                     char_name = char_dir.name
