@@ -912,6 +912,7 @@ def _process_character_normal(
     back_path: Optional[Path],
     use_optimal_strategies: bool,
     output_format: str,
+    season_id: Optional[str] = None,
 ) -> None:
     """Process a character in normal mode (parse and save).
 
@@ -921,6 +922,7 @@ def _process_character_normal(
         back_path: Optional path to back card image
         use_optimal_strategies: Whether to use optimal OCR strategies
         output_format: Output format (json or yaml)
+        season_id: Optional season ID for metadata updates
     """
     existing_data = load_existing_character_json(char_dir)
     if existing_data:
@@ -947,6 +949,16 @@ def _process_character_normal(
 
     # Save to file
     _save_character_data(char_dir, character_data, output_format)
+    
+    # Update with full schema (location parsing, links, images, audio, metadata)
+    # This will pull in URLs from character_links.json and add all metadata
+    if season_id:
+        try:
+            from scripts.cli.tools.update_character_json import update_character_json
+            console.print(f"  [cyan]Updating character JSON with full schema (location, links, images, audio, metadata)...[/cyan]")
+            update_character_json(char_dir, season_id)
+        except Exception as e:
+            console.print(f"  [yellow]Warning: Could not update full schema: {e}[/yellow]")
 
 
 @click.command()
@@ -1043,8 +1055,18 @@ def main(
                 )
                     parsing_results.append(result)
                 else:
+                    # Extract season_id from char_dir path (e.g., data/season1/characters/adam -> season1)
+                    season_id = None
+                    parts = char_dir.parts
+                    if "characters" in parts:
+                        char_idx = parts.index("characters")
+                        if char_idx > 0:
+                            season_id = parts[char_idx - 1]
+                    elif season:
+                        season_id = season
+                    
                     _process_character_normal(
-                        char_dir, front_path, back_path, use_optimal_strategies, output_format
+                        char_dir, front_path, back_path, use_optimal_strategies, output_format, season_id
                     )
                 progress.update(task, advance=1)
             except Exception as e:
