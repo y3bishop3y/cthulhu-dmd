@@ -795,10 +795,10 @@ def _find_characters_to_process(
                     # Check if images exist (either as files or in zip)
                     char_name = char_dir.name
                     zip_path = char_dir / f"{char_name}.zip"
-                    front_path, _ = _find_image_files(char_dir)
+                    front_path, back_path = _find_image_files(char_dir)
 
-                    # Include if has front image or zip (back may be missing for some seasons)
-                    if zip_path.exists() or front_path:
+                    # Include if has front image, back image, or zip
+                    if zip_path.exists() or front_path or back_path:
                         characters_to_process.append(char_dir)
 
     if not characters_to_process:
@@ -1019,15 +1019,22 @@ def main(
 
             front_path, back_path = _find_image_files(char_dir)
 
-            if not front_path:
+            if not front_path and not back_path:
                 console.print(
-                    f"[yellow]⚠ Skipping {char_dir.name}: Character does not have a front card image[/yellow]"
+                    f"[yellow]⚠ Skipping {char_dir.name}: Character does not have any card images[/yellow]"
                 )
                 console.print(
                     f"[dim]   Please fill in the character data manually in {char_dir / Filename.CHARACTER_JSON}[/dim]"
                 )
                 progress.update(task, advance=1)
                 continue
+            
+            # If no front image but we have back image, use back image for both (back cards contain powers)
+            if not front_path and back_path:
+                console.print(
+                    f"[yellow]⚠ {char_dir.name}: No front image found, parsing back image only[/yellow]"
+                )
+                front_path = back_path  # Use back image as front for parsing
 
             try:
                 if verify:
