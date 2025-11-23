@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cthulhu: Death May Die - Character Database</title>
+    <link rel="icon" type="image/x-icon" href="artifacts/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="artifacts/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="artifacts/images/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="artifacts/images/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -191,9 +195,12 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
             <div class="p-4 border-b border-gray-700">
-                <a href="index.html" class="block hover:opacity-80 transition-opacity">
-                    <h1 class="text-xl font-bold text-primary">Cthulhu: DMD</h1>
-                    <p class="text-sm text-gray-400">Character Database</p>
+                <a href="index.html" class="block hover:opacity-80 transition-opacity flex items-center gap-3 mb-3">
+                    <img src="artifacts/images/logo-small.png" alt="Cthulhu Logo" class="h-12 w-auto" />
+                    <div>
+                        <h1 class="text-xl font-bold text-primary">Cthulhu: DMD</h1>
+                        <p class="text-sm text-gray-400">Character Database</p>
+                    </div>
                 </a>
                 
                 <!-- Theme Selector -->
@@ -235,15 +242,48 @@
         </aside>
         
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-8">
+        <main class="flex-1 overflow-y-auto p-8 relative">
+            
+            <!-- Search Bar -->
+            <div class="mb-8">
+                <div class="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                    <label for="search-input" class="block text-sm font-semibold text-primary mb-2">Search Characters</label>
+                    <div class="flex gap-2">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            placeholder="Search by power (e.g., Marksman), location, or character name..."
+                            class="flex-1 bg-gray-700 text-white px-4 py-2 rounded border border-gray-600 focus:outline-none focus:border-primary"
+                            onkeyup="handleSearchInput(event)"
+                        />
+                        <button 
+                            onclick="performSearch()"
+                            class="bg-primary hover:bg-primary-hover text-white px-6 py-2 rounded font-semibold transition-colors"
+                        >
+                            Search
+                        </button>
+                        <button 
+                            onclick="clearSearch()"
+                            class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors"
+                            id="clear-search-btn"
+                            style="display: none;"
+                        >
+                            Clear
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Search for powers (Marksman, Stealth, etc.), locations, or character names</p>
+                </div>
+            </div>
+            
             <div id="content">
                 <h2 class="text-3xl font-bold mb-6 text-primary">Welcome</h2>
-                <p class="text-gray-300">Select a season from the sidebar to view characters.</p>
+                <p class="text-gray-300">Select a season from the sidebar to view characters, or use the search above.</p>
             </div>
         </main>
     </div>
     
     <script src="js/app.js"></script>
+    <script src="js/search.js"></script>
 </body>
 </html>
 

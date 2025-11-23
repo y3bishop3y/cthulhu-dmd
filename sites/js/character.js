@@ -108,13 +108,15 @@ async function loadCharacter() {
         // Try relative path first (from sites/ directory)
         // Character data is symlinked as character-data/
         // Support both old structure (season1/adam/) and new structure (season1/characters/adam/)
+        // Add cache-busting parameter to force fresh data
+        const cacheBuster = `?t=${Date.now()}`;
         const paths = [
-            `character-data/${seasonId}/characters/${characterId}/character.json`,
-            `character-data/${seasonId}/${characterId}/character.json`,
-            `data/${seasonId}/characters/${characterId}/character.json`,
-            `data/${seasonId}/${characterId}/character.json`,
-            `../data/${seasonId}/characters/${characterId}/character.json`,
-            `../data/${seasonId}/${characterId}/character.json`,
+            `character-data/${seasonId}/characters/${characterId}/character.json${cacheBuster}`,
+            `character-data/${seasonId}/${characterId}/character.json${cacheBuster}`,
+            `data/${seasonId}/characters/${characterId}/character.json${cacheBuster}`,
+            `data/${seasonId}/${characterId}/character.json${cacheBuster}`,
+            `../data/${seasonId}/characters/${characterId}/character.json${cacheBuster}`,
+            `../data/${seasonId}/${characterId}/character.json${cacheBuster}`,
         ];
         
         let loaded = false;
@@ -122,11 +124,11 @@ async function loadCharacter() {
         for (const path of paths) {
             try {
                 console.log('Trying path:', path);
-                response = await fetch(path);
+                response = await fetch(path, { cache: 'no-store' });
                 console.log('Response status:', response.status, response.statusText);
                 if (response.ok) {
                     characterData = await response.json();
-                    successfulPath = path;
+                    successfulPath = path.replace(cacheBuster, ''); // Remove cache buster for base path
                     loaded = true;
                     console.log('Successfully loaded character data:', characterData.name);
                     break;
@@ -216,34 +218,91 @@ function renderCharacterPage(seasonId, characterId, characterData, basePath) {
     }
     
     // Try to find audio file - check common patterns
+    // Convert characterId to different formats (hyphen to underscore, lowercase)
+    const characterIdUnderscore = characterId.replace(/-/g, '_');
+    const characterIdLower = characterId.toLowerCase();
+    const characterIdUnderscoreLower = characterIdUnderscore.toLowerCase();
+    
+    // Also try using character name from JSON (converted to file format)
+    const characterNameForFile = characterData.name 
+        ? characterData.name.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '')
+        : null;
+    
     const audioPatterns = [
+        `${dataBasePath}/${characterIdUnderscoreLower}_audio_p225.wav`,
+        `${dataBasePath}/${characterIdUnderscore}_audio_p225.wav`,
+        `${dataBasePath}/${characterIdLower}_audio_p225.wav`,
         `${dataBasePath}/${characterId}_audio_p225.wav`,
-        `${dataBasePath}/*_audio*.wav`,
-        `${dataBasePath}/*audio*.wav`,
     ];
+    
+    // Add character name-based patterns if available
+    if (characterNameForFile) {
+        audioPatterns.push(`${dataBasePath}/${characterNameForFile}_audio_p225.wav`);
+    }
     
     // We'll try the first pattern and check if it exists
     const audioPath = audioPatterns[0];
     
+    // Build audio source with multiple fallbacks
+    const audioSources = audioPatterns.map(path => 
+        `<source src="${path}" type="audio/wav">`
+    ).join('');
+    
+    // Build audio paths for both male and female
+    const femaleAudioPaths = [
+        `${dataBasePath}/${characterIdUnderscoreLower}_audio_female.wav`,
+        `${dataBasePath}/${characterIdUnderscore}_audio_female.wav`,
+        `${dataBasePath}/${characterIdLower}_audio_female.wav`,
+        `${dataBasePath}/${characterId}_audio_female.wav`,
+        `${dataBasePath}/${characterIdUnderscoreLower}_audio_p225.wav`, // Old format
+        `${dataBasePath}/${characterIdUnderscore}_audio_p225.wav`,
+    ];
+    
+    const maleAudioPaths = [
+        `${dataBasePath}/${characterIdUnderscoreLower}_audio_male.wav`,
+        `${dataBasePath}/${characterIdUnderscore}_audio_male.wav`,
+        `${dataBasePath}/${characterIdLower}_audio_male.wav`,
+        `${dataBasePath}/${characterId}_audio_male.wav`,
+        `${dataBasePath}/${characterIdUnderscoreLower}_audio_p226.wav`, // Old format
+        `${dataBasePath}/${characterIdUnderscore}_audio_p226.wav`,
+    ];
+    
+    if (characterNameForFile) {
+        femaleAudioPaths.push(`${dataBasePath}/${characterNameForFile}_audio_female.wav`);
+        femaleAudioPaths.push(`${dataBasePath}/${characterNameForFile}_audio_p225.wav`);
+        maleAudioPaths.push(`${dataBasePath}/${characterNameForFile}_audio_male.wav`);
+        maleAudioPaths.push(`${dataBasePath}/${characterNameForFile}_audio_p226.wav`);
+    }
+    
     let html = `
         <div class="mb-8">
-            <h1 class="text-4xl font-bold text-primary mb-2 flex items-center gap-3">
+            <h1 class="text-4xl font-bold text-primary mb-2 flex items-center gap-3 flex-wrap">
                 ${characterData.name || characterId}
-                <audio id="character-audio" preload="none" style="display: none;">
-                    <source src="${audioPath}" type="audio/wav">
-                </audio>
-                <button 
-                    id="audio-play-btn"
-                    onclick="toggleAudio()"
-                    class="text-primary hover:text-primary-hover text-2xl cursor-pointer"
-                    title="Play character story"
-                    style="display: none;"
-                >
-                    🔊
-                </button>
+                <span class="flex items-center gap-2 text-lg">
+                    <audio id="character-audio-male" preload="none" style="display: none;"></audio>
+                    <button 
+                        id="audio-play-btn-male"
+                        onclick="toggleAudio('male')"
+                        class="text-primary hover:text-primary-hover text-xl cursor-pointer flex items-center gap-1"
+                        title="Play character story (Randolph - Male voice)"
+                        style="display: none;"
+                    >
+                        <span class="text-sm">Randolph</span> 🔊
+                    </button>
+                    <audio id="character-audio-female" preload="none" style="display: none;"></audio>
+                    <button 
+                        id="audio-play-btn-female"
+                        onclick="toggleAudio('female')"
+                        class="text-primary hover:text-primary-hover text-xl cursor-pointer flex items-center gap-1"
+                        title="Play character story (Lavinia - Female voice)"
+                        style="display: none;"
+                    >
+                        <span class="text-sm">Lavinia</span> 🔊
+                    </button>
+                </span>
             </h1>
             ${characterData.motto ? `<p class="text-xl text-gray-300 italic mb-4">"${characterData.motto}"</p>` : ''}
-            ${characterData.location ? `<p class="text-gray-400 mb-6">📍 ${characterData.location}</p>` : ''}
+            ${characterData.location ? `<p class="text-gray-400 mb-6">📍 ${typeof characterData.location === 'string' ? characterData.location : (characterData.location.original || 'Unknown')}</p>` : ''}
         </div>
     `;
     
@@ -263,7 +322,8 @@ function renderCharacterPage(seasonId, characterId, characterData, basePath) {
                 id="front-card-img"
                 src="${frontCardPaths[0]}" 
                 alt="Front card"
-                class="w-full rounded border border-gray-700 shadow-lg"
+                class="w-full rounded border border-gray-700 shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                onclick="openCardModal('${frontCardPaths[0]}', 'Front Card', ['${frontCardPaths[1]}', '${frontCardPaths[2]}'])"
                 onerror="handleImageError(this, ['${frontCardPaths[1]}', '${frontCardPaths[2]}'])"
             />
         </div>
@@ -288,13 +348,84 @@ function renderCharacterPage(seasonId, characterId, characterData, basePath) {
                 id="back-card-img"
                 src="${backCardPaths[0]}" 
                 alt="Back card"
-                class="w-full rounded border border-gray-700 shadow-lg"
-                onerror="handleImageError(this, ['${backCardPaths[1]}', '${backCardPaths[2]}'])"
+                class="w-full rounded border border-gray-700 shadow-lg cursor-pointer hover:opacity-90 transition-opacity"
+                onclick="openCardModal('${backCardPaths[0]}', 'Back Card', ['${backCardPaths[1]}', '${backCardPaths[2]}', '${backCardPaths[3]}', '${backCardPaths[4]}', '${backCardPaths[5]}', '${backCardPaths[6]}', '${backCardPaths[7]}', '${backCardPaths[8]}'])"
+                onerror="handleImageError(this, ['${backCardPaths[1]}', '${backCardPaths[2]}', '${backCardPaths[3]}', '${backCardPaths[4]}', '${backCardPaths[5]}', '${backCardPaths[6]}', '${backCardPaths[7]}', '${backCardPaths[8]}'])"
             />
         </div>
     `;
     
     html += '</div>';
+    
+    // Add modal HTML for card popup
+    html += `
+        <div id="card-modal" class="fixed inset-0 bg-black bg-opacity-75 z-50 hidden flex items-center justify-center p-4" onclick="closeCardModal(event)">
+            <div class="bg-gray-800 rounded-lg max-w-6xl max-h-[95vh] overflow-auto relative" onclick="event.stopPropagation()">
+                <button 
+                    onclick="closeCardModal()" 
+                    class="absolute top-4 right-4 text-gray-400 hover:text-white text-3xl font-bold z-10 bg-gray-800 rounded-full w-10 h-10 flex items-center justify-center"
+                    title="Close (ESC)"
+                >
+                    ×
+                </button>
+                <div class="p-6">
+                    <h3 id="modal-title" class="text-2xl font-bold text-primary mb-4"></h3>
+                    <img 
+                        id="modal-card-img" 
+                        src="" 
+                        alt="Card" 
+                        class="w-full rounded border border-gray-700 shadow-lg"
+                    />
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // External links section
+    const links = characterData.links || {};
+    if (links.wikipedia || links.grokpedia || (links.other && links.other.length > 0)) {
+        html += `
+            <div class="bg-gray-800 rounded-lg p-6 border border-gray-700 mb-8">
+                <h2 class="text-2xl font-bold text-primary mb-4">External Links</h2>
+                <div class="flex flex-wrap gap-3">
+        `;
+        
+        if (links.wikipedia) {
+            html += `
+                <a href="${links.wikipedia}" target="_blank" rel="noopener noreferrer" 
+                   class="text-primary hover:text-primary-hover border border-primary px-4 py-2 rounded transition-colors">
+                    📖 Wikipedia
+                </a>
+            `;
+        }
+        
+        if (links.grokpedia) {
+            html += `
+                <a href="${links.grokpedia}" target="_blank" rel="noopener noreferrer" 
+                   class="text-primary hover:text-primary-hover border border-primary px-4 py-2 rounded transition-colors">
+                    🔍 Grokpedia
+                </a>
+            `;
+        }
+        
+        if (links.other && links.other.length > 0) {
+            links.other.forEach(link => {
+                const url = typeof link === 'string' ? link : link.url;
+                const label = typeof link === 'string' ? 'Other' : (link.label || 'Other');
+                html += `
+                    <a href="${url}" target="_blank" rel="noopener noreferrer" 
+                       class="text-primary hover:text-primary-hover border border-primary px-4 py-2 rounded transition-colors">
+                        🔗 ${label}
+                    </a>
+                `;
+            });
+        }
+        
+        html += `
+                </div>
+            </div>
+        `;
+    }
     
     // Story section
     if (characterData.story) {
@@ -310,6 +441,7 @@ function renderCharacterPage(seasonId, characterId, characterData, basePath) {
     try {
         content.innerHTML = html;
         console.log('[renderCharacterPage] Successfully rendered character page');
+        
     } catch (e) {
         console.error('[renderCharacterPage] Error:', e);
         content.innerHTML = `<div class="bg-red-900/20 border border-red-700 rounded-lg p-6">
@@ -318,9 +450,56 @@ function renderCharacterPage(seasonId, characterId, characterData, basePath) {
         </div>`;
     }
     
-    // Check if audio file exists and show/hide button (after DOM update)
+    // Check if audio files exist and show/hide buttons (after DOM update)
     setTimeout(() => {
-        checkAudioFile(audioPath, characterId);
+        // Check female audio
+        const tryFemaleAudio = async (index) => {
+            if (index >= femaleAudioPaths.length) {
+                return; // No female audio found
+            }
+            
+            const path = femaleAudioPaths[index];
+            const response = await fetch(path, { method: 'HEAD' }).catch(() => null);
+            
+            if (response && response.ok) {
+                const audio = document.getElementById('character-audio-female');
+                const btn = document.getElementById('audio-play-btn-female');
+                if (audio) {
+                    audio.innerHTML = `<source src="${path}" type="audio/wav">`;
+                }
+                if (btn) {
+                    btn.style.display = 'inline-block';
+                }
+            } else {
+                tryFemaleAudio(index + 1);
+            }
+        };
+        
+        // Check male audio
+        const tryMaleAudio = async (index) => {
+            if (index >= maleAudioPaths.length) {
+                return; // No male audio found
+            }
+            
+            const path = maleAudioPaths[index];
+            const response = await fetch(path, { method: 'HEAD' }).catch(() => null);
+            
+            if (response && response.ok) {
+                const audio = document.getElementById('character-audio-male');
+                const btn = document.getElementById('audio-play-btn-male');
+                if (audio) {
+                    audio.innerHTML = `<source src="${path}" type="audio/wav">`;
+                }
+                if (btn) {
+                    btn.style.display = 'inline-block';
+                }
+            } else {
+                tryMaleAudio(index + 1);
+            }
+        };
+        
+        tryFemaleAudio(0);
+        tryMaleAudio(0);
     }, 100);
 }
 
@@ -362,8 +541,17 @@ async function checkAudioFile(audioPath, characterId) {
     ];
     
     // Try to find any audio file by checking common patterns
+    // Convert characterId to different formats
+    const characterIdUnderscore = characterId.replace(/-/g, '_');
+    const characterIdLower = characterId.toLowerCase();
+    const characterIdUnderscoreLower = characterIdUnderscore.toLowerCase();
+    
     const audioFiles = [
+        `${basePath}/${characterIdUnderscoreLower}_audio_p225.wav`,
+        `${basePath}/${characterIdUnderscore}_audio_p225.wav`,
+        `${basePath}/${characterIdLower}_audio_p225.wav`,
         `${basePath}/${characterId}_audio_p225.wav`,
+        `${basePath}/${characterIdUnderscoreLower}_audio.wav`,
         `${basePath}/${characterId}_audio.wav`,
     ];
     
@@ -388,26 +576,91 @@ async function checkAudioFile(audioPath, characterId) {
     btn.style.display = 'none';
 }
 
-// Toggle audio playback
-window.toggleAudio = function() {
-    const audio = document.getElementById('character-audio');
-    const btn = document.getElementById('audio-play-btn');
+// Card modal functions
+window.openCardModal = function(imageSrc, title, fallbackPaths = []) {
+    const modal = document.getElementById('card-modal');
+    const modalImg = document.getElementById('modal-card-img');
+    const modalTitle = document.getElementById('modal-title');
     
-    if (!audio) return;
+    if (!modal || !modalImg || !modalTitle) return;
+    
+    modalTitle.textContent = title;
+    modalImg.src = imageSrc;
+    modalImg.onerror = function() {
+        if (fallbackPaths && fallbackPaths.length > 0) {
+            const nextPath = fallbackPaths.shift();
+            modalImg.src = nextPath;
+            if (fallbackPaths.length > 0) {
+                modalImg.onerror = arguments.callee;
+            }
+        }
+    };
+    
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+};
+
+window.closeCardModal = function(event) {
+    // If event is provided and it's not a click on the modal content, close
+    if (event && event.target.id !== 'card-modal') {
+        return;
+    }
+    
+    const modal = document.getElementById('card-modal');
+    if (modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = ''; // Restore scrolling
+    }
+};
+
+// Close modal on ESC key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        closeCardModal();
+    }
+});
+
+// Toggle audio playback
+window.toggleAudio = function(gender) {
+    const audioId = gender === 'male' ? 'character-audio-male' : 'character-audio-female';
+    const btnId = gender === 'male' ? 'audio-play-btn-male' : 'audio-play-btn-female';
+    const speakerName = gender === 'male' ? 'Randolph' : 'Lavinia';
+    
+    const audio = document.getElementById(audioId);
+    const btn = document.getElementById(btnId);
+    
+    if (!audio || !btn) return;
+    
+    // Stop the other audio if playing
+    const otherGender = gender === 'male' ? 'female' : 'male';
+    const otherAudioId = otherGender === 'male' ? 'character-audio-male' : 'character-audio-female';
+    const otherBtnId = otherGender === 'male' ? 'audio-play-btn-male' : 'audio-play-btn-female';
+    const otherAudio = document.getElementById(otherAudioId);
+    const otherBtn = document.getElementById(otherBtnId);
+    
+    if (otherAudio && !otherAudio.paused) {
+        otherAudio.pause();
+        otherAudio.currentTime = 0;
+        if (otherBtn) {
+            const otherSpeakerName = otherGender === 'male' ? 'Randolph' : 'Lavinia';
+            otherBtn.innerHTML = `<span class="text-sm">${otherSpeakerName}</span> 🔊`;
+        }
+    }
     
     if (audio.paused) {
         audio.play();
-        btn.textContent = '⏸️';
-        btn.title = 'Pause audio';
+        btn.innerHTML = `<span class="text-sm">${speakerName}</span> ⏸️`;
+        btn.title = `Pause audio (${speakerName} - ${gender === 'male' ? 'Male' : 'Female'} voice)`;
     } else {
         audio.pause();
-        btn.textContent = '🔊';
-        btn.title = 'Play character story';
+        audio.currentTime = 0;
+        btn.innerHTML = `<span class="text-sm">${speakerName}</span> 🔊`;
+        btn.title = `Play character story (${speakerName} - ${gender === 'male' ? 'Male' : 'Female'} voice)`;
     }
     
     audio.onended = () => {
-        btn.textContent = '🔊';
-        btn.title = 'Play character story';
+        btn.innerHTML = `<span class="text-sm">${speakerName}</span> 🔊`;
+        btn.title = `Play character story (${speakerName} - ${gender === 'male' ? 'Male' : 'Female'} voice)`;
     };
 };
 
@@ -435,9 +688,10 @@ async function loadSeasons() {
             return;
         }
         
-        let response = await fetch('data/seasons.json');
+        // Add cache-busting parameter to ensure fresh data
+        let response = await fetch(`data/seasons.json?t=${Date.now()}`);
         if (!response.ok) {
-            response = await fetch('/data/seasons.json');
+            response = await fetch(`/data/seasons.json?t=${Date.now()}`);
         }
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);

@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Character - Cthulhu: Death May Die</title>
+    <link rel="icon" type="image/x-icon" href="artifacts/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="artifacts/images/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="artifacts/images/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="artifacts/images/apple-touch-icon.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -50,6 +54,16 @@
         .leaflet-popup-content strong {
             color: var(--theme-primary) !important;
         }
+        
+        /* Card modal styles */
+        #card-modal {
+            backdrop-filter: blur(4px);
+        }
+        
+        #card-modal img {
+            max-height: calc(95vh - 120px);
+            object-fit: contain;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white min-h-screen theme-green">
@@ -57,9 +71,12 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
             <div class="p-4 border-b border-gray-700">
-                <a href="index.html" class="block hover:opacity-80 transition-opacity">
-                    <h1 class="text-xl font-bold text-primary">Cthulhu: DMD</h1>
-                    <p class="text-sm text-gray-400">Character Database</p>
+                <a href="index.html" class="block hover:opacity-80 transition-opacity flex items-center gap-3 mb-3">
+                    <img src="artifacts/images/logo-small.png" alt="Cthulhu Logo" class="h-12 w-auto" />
+                    <div>
+                        <h1 class="text-xl font-bold text-primary">Cthulhu: DMD</h1>
+                        <p class="text-sm text-gray-400">Character Database</p>
+                    </div>
                 </a>
                 
                 <!-- Theme Selector -->
@@ -99,7 +116,8 @@
         </aside>
         
         <!-- Main Content -->
-        <main class="flex-1 overflow-y-auto p-8">
+        <main class="flex-1 overflow-y-auto p-8 relative">
+            
             <div id="breadcrumbs" class="mb-6"></div>
             <div id="content">
                 <div class="bg-blue-900/20 border border-blue-700 rounded-lg p-6">

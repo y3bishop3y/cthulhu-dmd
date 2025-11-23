@@ -91,10 +91,11 @@ async function loadSeasons() {
         }
         
         // Try relative path first (for local development)
-        let response = await fetch('data/seasons.json');
+        // Add cache-busting parameter to ensure fresh data
+        let response = await fetch(`data/seasons.json?t=${Date.now()}`);
         if (!response.ok) {
             // Try absolute path
-            response = await fetch('/data/seasons.json');
+            response = await fetch(`/data/seasons.json?t=${Date.now()}`);
         }
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -166,15 +167,41 @@ async function loadSeason(seasonId) {
     
     currentSeason = seasonId;
     
+    // Clear search input when loading a season
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.value = '';
+    }
+    const clearBtn = document.getElementById('clear-search-btn');
+    if (clearBtn) {
+        clearBtn.style.display = 'none';
+    }
+    
     // Update URL without reload (only if we're on index.html)
     if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
         window.history.pushState({season: seasonId}, '', `?season=${seasonId}`);
     }
     
     try {
-        const response = await fetch(`data/seasons/${seasonId}.json`);
-        const seasonData = await response.json();
-        renderSeasonPage(seasonData);
+        // Try to load new season.json format first (has purchase links)
+        let response = await fetch(`character-data/${seasonId}/season.json`).catch(() => 
+            fetch(`data/${seasonId}/season.json`)
+        );
+        
+        let seasonData;
+        if (response.ok) {
+            seasonData = await response.json();
+        } else {
+            // Fall back to old format
+            response = await fetch(`data/seasons/${seasonId}.json`);
+            if (response.ok) {
+                seasonData = await response.json();
+            } else {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+        }
+        
+        await renderSeasonPage(seasonData);
     } catch (error) {
         console.error(`Error loading season ${seasonId}:`, error);
         const content = document.getElementById('content');
@@ -220,13 +247,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     
-    const params = new URLSearchParams(window.location.search);
-    const seasonId = params.get('season');
-    if (seasonId) {
-        // Small delay to ensure seasons are loaded
-        setTimeout(() => loadSeason(seasonId), 100);
-    }
+        const params = new URLSearchParams(window.location.search);
+        const seasonId = params.get('season');
+        if (seasonId) {
+            // Small delay to ensure seasons are loaded
+            setTimeout(() => {
+                loadSeason(seasonId).catch(err => console.error('Error loading season:', err));
+            }, 100);
+        }
 });
+
+// Format season name
+function formatSeasonName(seasonId) {
+    if (seasonId.startsWith('season')) {
+        const num = seasonId.replace('season', '');
+        return `Season ${num}`;
+    }
+    return seasonId.split('-').map(word =>
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+}
 
 // Render breadcrumbs
 function renderBreadcrumbs(items) {
@@ -254,7 +294,7 @@ function renderBreadcrumbs(items) {
 }
 
 // Render season page with characters in a table
-function renderSeasonPage(seasonData) {
+async function renderSeasonPage(seasonData) {
     // Don't render on character.html pages
     if (window.location.pathname.includes('character.html')) {
         console.warn('[app.js] renderSeasonPage called on character.html, ignoring');
@@ -275,18 +315,95 @@ function renderSeasonPage(seasonData) {
     
     let html = renderBreadcrumbs(breadcrumbs);
     
-    // Season header with purchase link
-    html += `<div class="flex items-center justify-between mb-6">`;
-    html += `<h2 class="text-3xl font-bold text-primary">${seasonData.name}</h2>`;
-    if (seasonData.amazon_link) {
-        html += `<a href="${seasonData.amazon_link}" target="_blank" rel="noopener noreferrer" 
-                    class="text-sm text-gray-400 hover:text-primary transition-colors">
-                    Purchase →
-                </a>`;
+    // Season header with box art and purchase links
+    html += `<div class="mb-6">`;
+    
+    // Box art image
+    const boxArt = seasonData.images?.box_art;
+    if (boxArt) {
+        const boxArtPath = `character-data/${seasonData.id}/${boxArt}`;
+        html += `<div class="mb-6">`;
+        html += `<img src="${boxArtPath}" alt="${seasonData.name || seasonData.display_name || formatSeasonName(seasonData.id)} Box Art" class="max-w-md rounded-lg border border-gray-700 shadow-lg" onerror="this.style.display='none'" />`;
+        html += `</div>`;
     }
+    
+    html += `<div class="flex items-center justify-between mb-2">`;
+    html += `<h2 class="text-3xl font-bold text-primary">${seasonData.name || seasonData.display_name || formatSeasonName(seasonData.id)}</h2>`;
     html += `</div>`;
     
+    // Purchase links section
+    const purchaseLinks = seasonData.purchase_links || {};
+    if (purchaseLinks.amazon || purchaseLinks.publisher || purchaseLinks.boardgamegeek || (purchaseLinks.other && purchaseLinks.other.length > 0)) {
+        html += `<div class="mb-4">`;
+        html += `<h4 class="text-xl font-bold text-primary mb-3">Purchase</h4>`;
+        html += `<div class="flex flex-wrap gap-3">`;
+        
+        if (purchaseLinks.amazon) {
+            html += `<a href="${purchaseLinks.amazon}" target="_blank" rel="noopener noreferrer" 
+                        class="text-sm text-primary hover:text-primary-hover transition-colors border border-primary px-3 py-1 rounded">
+                        🛒 Amazon
+                    </a>`;
+        }
+        if (purchaseLinks.publisher) {
+            html += `<a href="${purchaseLinks.publisher}" target="_blank" rel="noopener noreferrer" 
+                        class="text-sm text-primary hover:text-primary-hover transition-colors border border-primary px-3 py-1 rounded">
+                        🎲 Publisher
+                    </a>`;
+        }
+        if (purchaseLinks.boardgamegeek) {
+            html += `<a href="${purchaseLinks.boardgamegeek}" target="_blank" rel="noopener noreferrer" 
+                        class="text-sm text-primary hover:text-primary-hover transition-colors border border-primary px-3 py-1 rounded">
+                        📊 BoardGameGeek
+                    </a>`;
+        }
+        if (purchaseLinks.other && purchaseLinks.other.length > 0) {
+            purchaseLinks.other.forEach(link => {
+                html += `<a href="${link.url || link}" target="_blank" rel="noopener noreferrer" 
+                            class="text-sm text-primary hover:text-primary-hover transition-colors border border-primary px-3 py-1 rounded">
+                            ${link.label || 'Other'}
+                        </a>`;
+            });
+        }
+        
+        html += `</div>`;
+        html += `</div>`;
+    } else if (seasonData.amazon_link) {
+        // Fallback to old format
+        html += `<a href="${seasonData.amazon_link}" target="_blank" rel="noopener noreferrer" 
+                    class="text-sm text-gray-400 hover:text-primary transition-colors mb-4 inline-block">
+                    Purchase on Amazon →
+                </a>`;
+    }
+    
+    // Season description
+    if (seasonData.description) {
+        html += `<p class="text-gray-300 mb-4">${seasonData.description}</p>`;
+    }
+    
+    html += `</div>`;
+    
+    // Load full character data for each character
+    let fullCharacters = [];
     if (seasonData.characters && seasonData.characters.length > 0) {
+        const characterPromises = seasonData.characters.map(async (char) => {
+            try {
+                const charPath = `character-data/${seasonData.id}/characters/${char.id}/character.json`;
+                const response = await fetch(charPath);
+                if (response.ok) {
+                    const fullCharData = await response.json();
+                    return { ...char, ...fullCharData };
+                }
+            } catch (e) {
+                console.warn(`Could not load full data for ${char.id}:`, e);
+            }
+            return char;
+        });
+        
+        // Wait for all character data to load
+        fullCharacters = await Promise.all(characterPromises);
+    }
+    
+    if (fullCharacters.length > 0) {
         html += `
             <div class="overflow-x-auto">
                 <table id="character-table" class="w-full border-collapse">
@@ -308,16 +425,19 @@ function renderSeasonPage(seasonData) {
                     <tbody id="character-table-body">
         `;
         
-        seasonData.characters.forEach((character, index) => {
+        fullCharacters.forEach((character, index) => {
             const rowClass = index % 2 === 0 ? 'bg-gray-800' : 'bg-gray-800/50';
             const commonPowers = character.common_powers && character.common_powers.length > 0 
                 ? character.common_powers.join(', ') 
                 : '—';
             const characterUrl = `character.html?season=${encodeURIComponent(seasonData.id)}&character=${encodeURIComponent(character.id)}`;
+            const locationDisplay = typeof character.location === 'string' 
+                ? character.location 
+                : (character.location && character.location.original) || '—';
             html += `
                 <tr class="${rowClass} border-b border-gray-700 hover:bg-gray-700 transition-colors" 
                     data-name="${(character.name || 'Unknown').toLowerCase()}" 
-                    data-location="${(character.location || '').toLowerCase()}">
+                    data-location="${locationDisplay.toLowerCase()}">
                     <td class="p-4">
                         <a href="${characterUrl}" 
                            class="text-primary hover:text-primary-hover font-semibold block">
@@ -326,7 +446,7 @@ function renderSeasonPage(seasonData) {
                     </td>
                     <td class="p-4 text-gray-300 italic">${character.motto || '—'}</td>
                     <td class="p-4 text-gray-300">${commonPowers}</td>
-                    <td class="p-4 text-gray-400">${character.location || '—'}</td>
+                    <td class="p-4 text-gray-400">${locationDisplay}</td>
                     <td class="p-4">
                         <a href="${characterUrl}" 
                            class="text-primary hover:text-primary-hover text-sm inline-block">
@@ -356,13 +476,14 @@ function renderSeasonPage(seasonData) {
     
     content.innerHTML = html;
     
-    // Store season data for sorting reset
-    window.currentSeasonData = seasonData;
+    // Store season data for sorting reset (with full character data)
+    const seasonDataWithFullChars = { ...seasonData, characters: fullCharacters };
+    window.currentSeasonData = seasonDataWithFullChars;
     
     // Initialize map if characters exist
-    if (seasonData.characters && seasonData.characters.length > 0) {
+    if (fullCharacters.length > 0) {
         setTimeout(() => {
-            initializeCharacterMap(seasonData.characters);
+            initializeCharacterMap(fullCharacters);
         }, 100);
     }
 }
@@ -409,7 +530,7 @@ window.sortTable = function(column) {
         const content = document.getElementById('content');
         const seasonData = window.currentSeasonData;
         if (seasonData) {
-            renderSeasonPage(seasonData);
+            renderSeasonPage(seasonData).catch(err => console.error('Error re-rendering season:', err));
         }
         return;
     }
@@ -456,71 +577,94 @@ function initializeCharacterMap(characters) {
     }
     
     // Initialize map centered on world
-    const map = L.map('character-map').setView([20, 0], 2);
+    const map = L.map('character-map', {
+        attributionControl: false  // Disable attribution control
+    }).setView([20, 0], 2);
     
     // Add lighter tile layer (positron style)
     L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        attribution: '',  // Remove attribution
         subdomains: 'abcd',
         maxZoom: 19
     }).addTo(map);
     
-    // Geocode locations and add markers
-    const locations = {};
+    // Process character locations and extract coordinates
+    const locationMap = new Map(); // Map of coordinates to characters
+    
     characters.forEach(char => {
-        if (char.location) {
-            const loc = char.location.toUpperCase();
-            if (!locations[loc]) {
-                locations[loc] = [];
+        if (!char.location) return;
+        
+        let coords = null;
+        let locationKey = '';
+        
+        // Handle location as object (new format with coordinates)
+        if (typeof char.location === 'object' && char.location !== null) {
+            // Use coordinates if available
+            if (char.location.coordinates && 
+                typeof char.location.coordinates.lat === 'number' && 
+                typeof char.location.coordinates.lon === 'number') {
+                coords = [char.location.coordinates.lat, char.location.coordinates.lon];
+                locationKey = char.location.original || JSON.stringify(coords);
+            } else if (char.location.original) {
+                // Fall back to original string for lookup
+                locationKey = char.location.original.toUpperCase();
             }
-            locations[loc].push(char);
+        } else if (typeof char.location === 'string') {
+            // Handle location as string (old format)
+            locationKey = char.location.toUpperCase();
+        }
+        
+        if (!coords && locationKey) {
+            // Simple location to coordinates mapping (fallback)
+            const locationCoords = {
+                'MANCHESTER, ENGLAND': [53.4808, -2.2426],
+                'MERSIN, TURKEY': [36.8121, 34.6415],
+                'FALL RIVER, MASSACHUSETTS': [41.7015, -71.1550],
+                'LONDON, ENGLAND': [51.5074, -0.1278],
+                'ALEXANDRIA, EGYPT': [31.2001, 29.9187],
+                'BOGOTA, COLOMBIA': [4.7110, -74.0721],
+                'FORT WAYNE, INDIANA': [41.0793, -85.1394],
+                'JONESBORO, MAINE': [44.6628, -69.6298],
+                'MOSCOW, RUSSIA': [55.7558, 37.6173],
+                'ARKHAM, MASSACHUSETTS': [42.6526, -70.8450],
+                'NEW YORK, NEW YORK': [40.7128, -74.0060],
+                'BOSTON, MASSACHUSETTS': [42.3601, -71.0589],
+                'PARIS, FRANCE': [48.8566, 2.3522],
+                'CAIRO, EGYPT': [30.0444, 31.2357],
+                'TOKYO, JAPAN': [35.6762, 139.6503],
+            };
+            coords = locationCoords[locationKey];
+        }
+        
+        if (coords) {
+            const coordKey = `${coords[0]},${coords[1]}`;
+            if (!locationMap.has(coordKey)) {
+                locationMap.set(coordKey, { coords, characters: [] });
+            }
+            locationMap.get(coordKey).characters.push(char);
         }
     });
     
-    // Simple location to coordinates mapping (you can expand this)
-    const locationCoords = {
-        'MANCHESTER, ENGLAND': [53.4808, -2.2426],
-        'MERSIN, TURKEY': [36.8121, 34.6415],
-        'FALL RIVER, MASSACHUSETTS': [41.7015, -71.1550],
-        'LONDON, ENGLAND': [51.5074, -0.1278],
-        'ALEXANDRIA, EGYPT': [31.2001, 29.9187],
-        'BOGOTA, COLOMBIA': [4.7110, -74.0721],
-        'FORT WAYNE, INDIANA': [41.0793, -85.1394],
-        'JONESBORO, MAINE': [44.6628, -69.6298],
-        'MOSCOW, RUSSIA': [55.7558, 37.6173],
-        'ARKHAM, MASSACHUSETTS': [42.6526, -70.8450],
-        'NEW YORK, NEW YORK': [40.7128, -74.0060],
-        'BOSTON, MASSACHUSETTS': [42.3601, -71.0589],
-        'PARIS, FRANCE': [48.8566, 2.3522],
-        'CAIRO, EGYPT': [30.0444, 31.2357],
-        'TOKYO, JAPAN': [35.6762, 139.6503],
-        'UNKNOWN': null, // Skip unknown locations
-    };
-    
     // Add markers for all locations
     const markers = [];
-    Object.keys(locations).forEach(loc => {
-        const coords = locationCoords[loc];
-        if (coords) {
-            const chars = locations[loc];
-            const popupContent = chars.map(char => 
-                `<strong class="text-primary">${char.name}</strong><br>${char.motto || ''}`
-            ).join('<hr>');
-            
-            const marker = L.marker(coords)
-                .addTo(map)
-                .bindPopup(popupContent);
-            markers.push(marker);
-        } else if (loc !== 'UNKNOWN') {
-            // Log missing locations for debugging
-            console.warn(`Location not mapped: ${loc}`);
-        }
+    locationMap.forEach((locationData, coordKey) => {
+        const { coords, characters: chars } = locationData;
+        const popupContent = chars.map(char => 
+            `<strong class="text-primary">${char.name}</strong><br>${char.motto || ''}`
+        ).join('<hr>');
+        
+        const marker = L.marker(coords)
+            .addTo(map)
+            .bindPopup(popupContent);
+        markers.push(marker);
     });
     
     // Fit map bounds to show all markers if we have any
     if (markers.length > 0) {
         const group = new L.featureGroup(markers);
         map.fitBounds(group.getBounds().pad(0.1));
+    } else {
+        console.warn('No location markers found for characters');
     }
 }
 
