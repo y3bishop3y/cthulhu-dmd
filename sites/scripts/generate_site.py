@@ -63,15 +63,22 @@ def get_seasons() -> List[str]:
         return []
     
     seasons = []
-    excluded_dirs = {'.git', '__pycache__', '.DS_Store'}
+    excluded_dirs = {'.git', '__pycache__', '.DS_Store', 'indexes'}
     
     for item in DATA_DIR.iterdir():
         if item.is_dir() and item.name not in excluded_dirs:
-            # Check if it contains character subdirectories
+            # Check if it contains character subdirectories directly
             has_characters = any(
                 subitem.is_dir() and (subitem / "character.json").exists()
                 for subitem in item.iterdir()
             )
+            # Also check if it has a characters/ subdirectory (new structure)
+            characters_dir = item / "characters"
+            if characters_dir.exists() and characters_dir.is_dir():
+                has_characters = has_characters or any(
+                    char_dir.is_dir() and (char_dir / "character.json").exists()
+                    for char_dir in characters_dir.iterdir()
+                )
             if has_characters:
                 seasons.append(item.name)
     
@@ -92,9 +99,17 @@ def get_characters(season: str) -> List[str]:
         return []
     
     characters = []
-    for item in season_dir.iterdir():
-        if item.is_dir():
-            characters.append(item.name)
+    # Check for characters/ subdirectory first (new structure)
+    characters_dir = season_dir / "characters"
+    if characters_dir.exists() and characters_dir.is_dir():
+        for item in characters_dir.iterdir():
+            if item.is_dir() and (item / "character.json").exists():
+                characters.append(item.name)
+    else:
+        # Fall back to old structure (characters directly in season dir)
+        for item in season_dir.iterdir():
+            if item.is_dir() and (item / "character.json").exists():
+                characters.append(item.name)
     
     return sorted(characters)
 
