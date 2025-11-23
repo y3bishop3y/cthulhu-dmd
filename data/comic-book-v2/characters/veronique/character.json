@@ -1,8 +1,43 @@
 {
+  "id": "veronique",
   "name": "Veronique",
-  "story": "When your parents are in jail for human trafficking, you must expect the city to think badly of you. Throughout her youth, Veronique learnt to bow her head to avoid the eyes of Brockton’s inhabitants. One evening, during yet another bar fight, the girl met Virgina Lyman, a seductive lawyer who had just move to Providence. Virginia not only helped her avoid being charged with slitting the throat of a drunken sailor with a broken bottle, but even took her on as a handyman for her new business. Since then, Veronique has helped her employer in many situations, some legal, and some not… and some really shady!",
-  "location": null,
+  "season": "comic-book-v2",
   "motto": null,
+  "story": "When your parents are in jail for human trafficking, you must expect the city to think badly of you. Throughout her youth, Veronique learnt to bow her head to avoid the eyes of Brockton’s inhabitants. One evening, during yet another bar fight, the girl met Virgina Lyman, a seductive lawyer who had just move to Providence. Virginia not only helped her avoid being charged with slitting the throat of a drunken sailor with a broken bottle, but even took her on as a handyman for her new business. Since then, Veronique has helped her employer in many situations, some legal, and some not… and some really shady!",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

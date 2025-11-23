@@ -1,7 +1,72 @@
 {
-  "name": "Tamara",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "tamara",
+  "name": "TAMARA",
+  "season": "comic-book-extras",
+  "motto": "Canvases, brushes, and colors are my weapons!",
+  "story": "Not everyone fights the Old Ones with weapons, Those with other skills are called the Guardians of the Threshold. There are many ways the Old Ones infiltrate the living world and many ways to close the gaps and watch over such hidden doors. Some repel them with music, playing the violin by the wiridow. Others keep a lighthouse shining over dork waters, Tamara impris wound them on canvas with brush stress.-The investigator dont worry cbout.her unpredictable ways, her england look, or her hysterical daughter. When Tamora polite, it means Shes fighting to defend our World! .",
+  "location": {
+    "original": "PROVIDENCE, RHODE ISLAND",
+    "parsed": {
+      "city": "Providence",
+      "administrative_division": "Rhode Island",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 41.824,
+      "lon": -71.4128
+    }
+  },
+  "special_power": {
+    "name": "ARCANE PAINTER w",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "gain When you Rest, place (or move) a Painting token within 1 space of you. investigator may discard Painting in their space to prevent T attack against them. )"
+      },
+      {
+        "level": 2,
+        "description": "Instead, place 2 tokens imay be in different spaces)"
+      },
+      {
+        "level": 3,
+        "description": "You may Rest in unsafe spaces."
+      },
+      {
+        "level": 4,
+        "description": "investigator gain for each Painting token in their space."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Toughness",
+    "Arcane Mastery"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.75
+  }
 }

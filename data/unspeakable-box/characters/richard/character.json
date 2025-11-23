@@ -1,12 +1,69 @@
 {
-  "name": "Richard",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": [],
+  "id": "richard",
+  "name": ". Richard",
+  "season": "unspeakable-box",
+  "motto": "mer.",
+  "story": "3. investigator OR FIGHT! If Safe, draw a Discovery card. Otherwise, nemies attack you, 4, RESOLVE END OF TURN You have 1 free reroll when ae ma licensed. Wf attack or brawling for Fire. SWIFTNESS When you Run, you may move additfonal space: ERTIES WOUTOS ficken and loss. of sanity by whdn reduce wounds taken wound lossof sanity takenby-2 and loss by 1 from. ANY of sdirtity by froin attack or brawling sou Rc E. ANY SOURCE, for Fire. During a Run, you may take 1 investigator with yourwheti lsavirg You have extra action each turn. You have 1 free Run actioneach turn.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
+  "special_power": {
+    "name": "Majesty's Secret Service",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Gain Green Dicewhen attacking a target in your space."
+      },
+      {
+        "level": 2,
+        "description": "You may attack a target 1 space away. If you do, gain"
+      },
+      {
+        "level": 3,
+        "description": "You may Sneak 3 times per Run, and heal wound to each enemy you past. a ;"
+      },
+      {
+        "level": 4,
+        "description": "- You may convert each YF you reroll into FF healing stress for each YE you convert."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Brawling",
+    "Toughness"
+  ],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/Pickman%27s_Model",
-    "grokpedia": "https://grokipedia.com/page/Richard_Upton_Pickman",
+    "wikipedia": null,
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": null,
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "richard_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.65
   }
 }

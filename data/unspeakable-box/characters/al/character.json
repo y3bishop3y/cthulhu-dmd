@@ -1,16 +1,72 @@
 {
-  "name": "Al",
+  "id": "al",
+  "name": "AL CAPONE",
+  "season": "unspeakable-box",
+  "motto": "1 let ‘em think the scar’s from some mook that slashed me in Brooklyn.",
   "story": "This skill shows your talent for sneaking past the enemies and moving around the map undetected. A base level, you are able to sneak past one enemy without being detected but as you progress, you can sneak past more and more. And perhaps do some damage while you’re sneaking as well.",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "location": {
+    "original": "CHICAGO, ILLINOIS",
+    "parsed": {
+      "city": "Chicago",
+      "administrative_division": "Illinois",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 41.8781,
+      "lon": -87.6298
+    }
+  },
+  "special_power": {
+    "name": "Cultists cant",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Nect ED Gain if in the same space as a Cultist. Poe A 4"
+      },
+      {
+        "level": 2,
+        "description": "You may Sneak past they never fallow you)"
+      },
+      {
+        "level": 3,
+        "description": "Gain an additional if in the same space as a Cultist. . ae (O ;"
+      },
+      {
+        "level": 4,
+        "description": "NSF ON ee es attack you and other investigator in your space"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Marksman",
     "Toughness"
   ],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/Dreams_in_the_Witch_House",
-    "grokpedia": "https://grokipedia.com/page/Walter_Gilman",
+    "wikipedia": "https://en.wikipedia.org/wiki/Al_Capone",
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "al_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.9
   }
 }

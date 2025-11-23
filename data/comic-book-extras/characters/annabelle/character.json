@@ -1,11 +1,73 @@
 {
-  "name": "Annabelle",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "annabelle",
+  "name": "ANNABELLE LAVEAU",
+  "season": "comic-book-extras",
+  "motto": "When you can communicate with the spirits, you know how fo deal with a ghoul.",
+  "story": "Raised. in Last Hope orphanage, survivor of a terrible hurricand which took her family away, Annabelle is Marie Laveaus granddaughier, the famous Voodoo Queen of New Orleans. Like every Voodoo practitioner, Annabelle knows well that heal with things from other worlds is no cakewalk, But the éntities she.calls to her-aid often reveal secrets invaluable to ihe eternal struggle against the darkness from beyond, Every investigator knows wel that. to battle the minions of the Great Old Ones, guns are sometimes: not enough.",
+  "location": {
+    "original": "NEW ORLEANS, LOUISIANA",
+    "parsed": {
+      "city": "New Orleans",
+      "administrative_division": "Louisiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 29.9511,
+      "lon": -90.0715
+    }
+  },
+  "special_power": {
+    "name": "CHANNELING",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "start of your turn, reroll] 6 ( any bonus dice). Choose 1 to keep as your Gift until your next turn. You may add AND your Gift to 1 reroll each turn."
+      },
+      {
+        "level": 2,
+        "description": "Instead, you may add af AND your Gift to all your rolls, oo. 6S"
+      },
+      {
+        "level": 3,
+        "description": "sna oewenne RE You may also add and your Gift to rolls of investigator in your spaice. . -__w"
+      },
+      {
+        "level": 4,
+        "description": "Nee ed Instead, you may add to rolls of ALL investigator."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Arcane Mastery",
     "Toughness",
     "Swiftness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.75
+  }
 }

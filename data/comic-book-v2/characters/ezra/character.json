@@ -1,13 +1,43 @@
 {
+  "id": "ezra",
   "name": "Ezra",
-  "story": "Since he was a boy, Ezra has hated bullies. A childhood spent being punched and insulted without fighting back for fear of being punished by teachers led shy Ezra to become a policeman. Over time, the hours spent hunched over books turned into violent shootouts with criminals and investigations of brutal murders. Though on the path of justice, Ezra quickly learned which people he had to side with to gain power and respect. While necessary for his survival, it has turned his hatred of bullies into self-loathing.",
-  "location": null,
+  "season": "comic-book-v2",
   "motto": null,
+  "story": "Since he was a boy, Ezra has hated bullies. A childhood spent being punched and insulted without fighting back for fear of being punished by teachers led shy Ezra to become a policeman. Over time, the hours spent hunched over books turned into violent shootouts with criminals and investigations of brutal murders. Though on the path of justice, Ezra quickly learned which people he had to side with to gain power and respect. While necessary for his survival, it has turned his hatred of bullies into self-loathing.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
   "common_powers": [],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/The_Case_of_Charles_Dexter_Ward",
-    "grokpedia": "https://grokipedia.com/page/Ezra_Weeden",
+    "wikipedia": null,
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
   }
 }

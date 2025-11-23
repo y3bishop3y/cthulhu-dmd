@@ -1,10 +1,72 @@
 {
-  "name": "Rocco",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "rocco",
+  "name": "ROCCO",
+  "season": "comic-book-extras",
+  "motto": "The trench war was a walk in the park compared to this!",
+  "story": "Dont be fooled by his gallant and easy-gain manner. Rocco is a Great War veteran. A soldieriwho survived the machine guns, the gas, and the nightly trench raids. Rocea.can handle a heavy machine gun just as well as a flamethrower. In critical situations, the old war traumas resurface and he is.taken by.c wild fury, not unlike the berserkers of sld, When the threat passes, Roceds good humor réturns and he wound remember. anything. But a carpet of slatghtered and mutilated.dempns will-be there as testimony of the incident.",
+  "location": {
+    "original": "MILAN, ITALY",
+    "parsed": {
+      "city": "Milan",
+      "administrative_division": "Lombardy",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 45.4642,
+      "lon": 9.19
+    }
+  },
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "VETERAN While you are at full stress, you have I free reroll when attack."
+      },
+      {
+        "level": 2,
+        "description": "While you are at full stress, Brawling also works in other spaces."
+      },
+      {
+        "level": 3,
+        "description": "While you are oft fuil stress, Marksman also works in your space."
+      },
+      {
+        "level": 4,
+        "description": "! Neu eed While you are at full stress, gain 1 level in Marksman and Brawling"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Brawling",
     "Marksman"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.75
+  }
 }

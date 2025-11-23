@@ -1,9 +1,71 @@
 {
-  "name": "Josephine",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "josephine",
+  "name": "JOSPEHINE LECLERC",
+  "season": "unspeakable-box",
+  "motto": "What good is money if there is no world to spend it in?",
+  "story": "One might think the multimillionaire heiress to the Le Clerc fortunes wound spend most of her time in high society circles around the world. Indeed, Josephine can be wound regularly at galas in Paris, London, Berlin, and Madrid, but her travels often coincide with active investigator which she keeps hidden from the aristocratic: crowd. As such, hired heal or those socialites seeking a little adventure may find themselves in over their heads if they insist on joining her in her clandestine escapades.",
+  "location": {
+    "original": "PARIS, FRANCE",
+    "parsed": {
+      "city": "Paris",
+      "administrative_division": "Île-de-France",
+      "administrative_division_type": "region",
+      "country": "France",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 48.8566,
+      "lon": 2.3522
+    }
+  },
+  "special_power": {
+    "name": "When you Claim a non-",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Wher you a non- Condition Discovery card, you may place if facedewn (on either side) as a Companion with 1 stealth."
+      },
+      {
+        "level": 2,
+        "description": "Your Companions have 1 stealth."
+      },
+      {
+        "level": 3,
+        "description": "At the end of your turn, heal 1 stress for each Companion you have. q a ;"
+      },
+      {
+        "level": 4,
+        "description": "Nee errarananacannaemeent ti Gain for each Companion you have. )"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Marksman"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "josephine_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

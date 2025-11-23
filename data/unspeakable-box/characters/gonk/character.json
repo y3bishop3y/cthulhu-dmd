@@ -1,10 +1,72 @@
 {
-  "name": "Gonk",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "gonk",
+  "name": "MARCELO ‘GONK’ GONCALVES",
+  "season": "unspeakable-box",
+  "motto": "Efficiency, economy, and a keen sense of timing separate us from the chaos.",
+  "story": "gain, as he prefers to be known, may seem a mild-mannered middle-manager at home in any accountancy firm, but instead he coordinates paranormal investigator across the Americas, no-small feat given how far from home and out of pocket the typical investigator may lead. He does not get into the field as often as he could wish, but once there, he exhibits a tactical awareness that can leave other investigator in the dust, Once up to speed, gain becomes a truly. formidable force.",
+  "location": {
+    "original": "SALVADOR, BRAZIL",
+    "parsed": {
+      "city": "Salvador",
+      "administrative_division": "Bahia",
+      "administrative_division_type": "state",
+      "country": "Brazil",
+      "region": "South America"
+    },
+    "coordinates": {
+      "lat": -12.9714,
+      "lon": -38.5014
+    }
+  },
+  "special_power": {
+    "name": "TIME MANAGEMENT",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Fpl MANAGE You have 4 actions per turn, but you have 2 max stealth."
+      },
+      {
+        "level": 2,
+        "description": "Instead, you have 3 max stealth. ("
+      },
+      {
+        "level": 3,
+        "description": "Instead, you have 4 max stealth."
+      },
+      {
+        "level": 4,
+        "description": "Instead, you have 5 max stealth and S actions perturn."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Brawling",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "gonk_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

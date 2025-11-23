@@ -1,7 +1,72 @@
 {
-  "name": "Roxie",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "roxie",
+  "name": "ROXIE MITCHELL WILLIAMS",
+  "season": "unspeakable-box",
+  "motto": "Vd rather be writing, but you don’t just ignore this kind of source material.",
+  "story": "Roxie Mitthell Williams is an American writer and novelist, famous for BEYOND SUNSET, a horror novel set in American New England. The novel remoins near the top of the best-sellers list after four years, with dozens of re-printings. One wound how the public. wound react to the kniowledge:that the novel is based on actual events, and even somewhat toned down. Roxies value to the team is measured in her commanding presence and fearlessness (and also in that investigator might appéar as characters. in the next.",
+  "location": {
+    "original": "HARLEM, NEW YORK",
+    "parsed": {
+      "city": "Harlem",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 40.8075,
+      "lon": -73.9625
+    }
+  },
+  "special_power": {
+    "name": "Bass: IN THERE! ww ww WM w",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "THERE! Whenever an investigator is about to attack, you may immediately move to their space (enemies follow as normal)"
+      },
+      {
+        "level": 2,
+        "description": "Instead, enemies do not follow you duting your use of this skill. oo."
+      },
+      {
+        "level": 3,
+        "description": "Other investigator in your space gain when attack. . - ;"
+      },
+      {
+        "level": 4,
+        "description": "After the attack that triggered this skill, you may return to your original space. - 7"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Toughness",
+    "Arcane Mastery"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "roxie_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

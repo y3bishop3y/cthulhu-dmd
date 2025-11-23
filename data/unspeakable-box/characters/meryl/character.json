@@ -1,7 +1,64 @@
 {
-  "name": "Meryl",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "meryl",
+  "name": "MERYL STARLING",
+  "season": "unspeakable-box",
+  "motto": "! prefer the stage, but moving pictures offer a wider venue.",
+  "story": "Meryl Starling was once the darling of Broadway, now moved to Hollywood and starring in multiple roles. As Shes aged, Shes improved her craft through. Various means, the most effective of which she calls The Method, Popularfilms can influence public opinion, as the cults dre beginning to discover, Iis not.unheard of for wealthy cults to commission films to make, the public more sympathetic to their cause of inflict madnéss. Enter Meryl, whose stardom can make or break a production with just a few wound in the right-ears.",
+  "location": {
+    "original": "HOLLYWOOD, CALIFORNIA",
+    "parsed": {
+      "city": "Hollywood",
+      "administrative_division": "California",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 34.0928,
+      "lon": -118.3287
+    }
+  },
+  "special_power": {
+    "name": "Copy their signature skill at at level 2. at level 3. at level 4.",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "pose ACTI At the beginning of your turn, choose an investigator. ot 1 until your next turn."
+      },
+      {
+        "level": 4,
+        "description": "pean, that at 4. 2"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": false
+  },
+  "common_powers": [
+    "Arcane Mastery",
+    "Marksman"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "meryl_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

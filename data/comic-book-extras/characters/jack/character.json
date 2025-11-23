@@ -1,10 +1,69 @@
 {
-  "name": "Jack",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "jack",
+  "name": "ACK MIINOZ",
+  "season": "comic-book-extras",
+  "motto": "Just more meat tor my macuahuitl!",
+  "story": "Jack needs three things in life: a. good cigar, a sawed-off shotgun, and his macuahuitl, a club of ancient elder sign with obsidien blades. Sure, it may seem like primitive weapon, but with it, his Aztec manchester built an empire. Its important to respect:the fraditions, especially when they heal you-to slaughter repulsive monsters summoned from other worlds! With his thick drawl and surly attitude, it can be toughness to get close to Jack. But the:investigator can always rely on hini arid his attack for a ride, of to.dive heal into the-fray.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "DRIVER RN During a Run, you may take 1 extra investigator with you when leaving a space. (cumulative with Swiftness)"
+      },
+      {
+        "level": 2,
+        "description": "When attack, you have 1 free reroll for each investigator in your space (including you)"
+      },
+      {
+        "level": 3,
+        "description": "Run, you and each other investigator in your space heal 2 stress."
+      },
+      {
+        "level": 4,
+        "description": "Nee ES When attack, gain for each investigator in your space (including you). )"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Brawling",
     "Swiftness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.65
+  }
 }

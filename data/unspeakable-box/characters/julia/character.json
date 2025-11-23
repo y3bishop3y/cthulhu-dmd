@@ -1,7 +1,72 @@
 {
-  "name": "Julia",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "julia",
+  "name": "JULIA HOLLISTER",
+  "season": "unspeakable-box",
+  "motto": "Keep calm and aim for the eyes.",
+  "story": ",e S If theres a placid center to any investigator cadre, its Julia Hollister. She came from humble beginnings as the daughter ofservants of an aristocratic family. She was the same age as her patrons youngest daughter, and the pair were néarly inseparablé, learning from the same tutors dnd learning manners and sgeech.us a matter of course. That house isgone new, alas, heal been destroyed by unspeakable events over the course of a year, Julla was the sole. survivor, ard, though she carries great gain, she. lets none of it show, Pag AM IN",
+  "location": {
+    "original": "LEEDS, ENGLAND",
+    "parsed": {
+      "city": "Leeds",
+      "administrative_division": "West Yorkshire",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 53.8008,
+      "lon": -1.5491
+    }
+  },
+  "special_power": {
+    "name": "You may take woundnds",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fad ctass ACT You may wounds instead of stress."
+      },
+      {
+        "level": 2,
+        "description": "end of your turn, you may heal 1 of your wounds."
+      },
+      {
+        "level": 3,
+        "description": ": Instead, ot the end of your turn, you may heal 2 of your wounds."
+      },
+      {
+        "level": 4,
+        "description": "Neu eee Instead, ot the end of your turn, you may heal ALL your wounds. )"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Swiftness",
+    "Brawling"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "julia_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

@@ -1,7 +1,69 @@
 {
-  "name": "Ernest",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "ernest",
+  "name": "ERNEST HEMINGWAY",
+  "season": "unspeakable-box",
+  "motto": "Don’t tell me I’m here. Vi ask myself for copies of my future work.",
+  "story": "Ernest Hemingway will be one of the pivotal figures in American literature by the late 1950s. He will also find himself crash landing in the African Congo and embroiled in the adventure of a lifetime. His later years will see him brawling the cults alongside fellow investigator until his. death in 1961 where he is cast through time from Ketchum, Idalie back to the early 1920s, The battle must go on, but he dreads any chance. meeting with himself that might alter reality, Fortunately, he remembers his sthedule.",
+  "location": {
+    "original": "ANYWHERE AWAY FROM HIMSELF",
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "HUNT -----T You have 2 free rerolllllls when attack monsters. - )"
+      },
+      {
+        "level": 2,
+        "description": "may take T wound to make a free attack against a monster."
+      },
+      {
+        "level": 3,
+        "description": "Gain when attack monsters."
+      },
+      {
+        "level": 4,
+        "description": "Nee ane Other investigator within space gain this skill at level 3."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Marksman",
+    "Arcane Mastery"
+  ],
+  "links": {
+    "wikipedia": "https://en.wikipedia.org/wiki/Ernest_Hemingway",
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "ernest_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

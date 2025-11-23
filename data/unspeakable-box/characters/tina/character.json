@@ -1,9 +1,67 @@
 {
-  "name": "Tina",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "tina",
+  "name": "TINA MACSHANE",
+  "season": "unspeakable-box",
+  "motto": "'t go looking for trouble. It finds me without any help.",
+  "story": "Cristiona Tina Mac Shand is an Irish expatriate living in New York City. Although penniless until emigrating just before the Great War, she made assets of her style, taste, and ability to blend into any social group, no matter-how high. A string of high-profile lovers lent het the means to build a legitimate business in womens clothing, Yet, the latest inj her conquesis proved to be a feinking leader inat New. York cult. She fas sitce wound a greater brawling, brawling thesé entities that wound, destroy everything she loves.",
+  "location": {
+    "original": "BELFAST, NORTHERN IRELAND",
+    "parsed": {
+      "city": "Belfast",
+      "administrative_division": "Northern Ireland",
+      "administrative_division_type": "county",
+      "country": "Northern Ireland",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 54.5973,
+      "lon": -5.9301
+    }
+  },
+  "special_power": {
+    "name": "FEMME FATALE bal vVws",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Fes - Once per reroll, before brawling dice, you may take 1 wound to gain - - )"
+      },
+      {
+        "level": 3,
+        "description": "ney OR die (your choice). -- 4"
+      },
+      {
+        "level": 4,
+        "description": "Nee nd Instead of taking 1 wound for your ability, give that wound to any figure in your space."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": false
+  },
   "common_powers": [
     "Stealth"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "tina_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

@@ -1,8 +1,43 @@
 {
+  "id": "olmstea",
   "name": "Olmstea",
-  "story": "Unlike his colleague Ezra, Olmstead was born with a silver spoon in his mouth. His family’s wealth allowed him to attend the best schools in the state of Rhode Island and he wanted for nothing during his youth. The influence of his father, a powerful political figure, allowed Olmstead to join the police, the perfect way to hide his shady activities. After his parents died, a quirk of bureaucracy left his entire inheritance to the Last Hope orphanage, throwing the detective out on the street. Unable to give up his vices, Olmstead spends his days working to pay off his ever-growing debts.",
-  "location": null,
+  "season": "comic-book-v2",
   "motto": null,
+  "story": "Unlike his colleague Ezra, Olmstead was born with a silver spoon in his mouth. His family’s wealth allowed him to attend the best schools in the state of Rhode Island and he wanted for nothing during his youth. The influence of his father, a powerful political figure, allowed Olmstead to join the police, the perfect way to hide his shady activities. After his parents died, a quirk of bureaucracy left his entire inheritance to the Last Hope orphanage, throwing the detective out on the street. Unable to give up his vices, Olmstead spends his days working to pay off his ever-growing debts.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": null,
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.3
+  }
 }

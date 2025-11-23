@@ -1,7 +1,72 @@
 {
-  "name": "Pops",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "pops",
+  "name": "‘POPS’ DUPERON",
+  "season": "unspeakable-box",
+  "motto": "Remember that Death himself may die.",
+  "story": "Pops Duperon has lived in the Louisiana backwoods and bayeu all his life, As such, the strange, the eldritch, and the horrific are nothing new to him. As a Voodoo practitioner and priest, Pops often lends his charms and talents to locals looking for relief from horrors the swamp may conjure, and laying many a curse on outsiders that tread fhere unwelcome. As a consultant and investigator himself, Pops lends a calming presence to his compenions, a highly. valuable skill in such a deadly line of-work.",
+  "location": {
+    "original": "AVOCA ISLAND, LOUISIANA",
+    "parsed": {
+      "city": "Avoca Island",
+      "administrative_division": "Louisiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 29.7833,
+      "lon": -91.5167
+    }
+  },
+  "special_power": {
+    "name": "SRS TSS STEN TERRE",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fay SALI PRES Other investigator in your space may choose not to activate their sanity. a SF )"
+      },
+      {
+        "level": 2,
+        "description": "SENCE instead, other investigator within 2 spaces of you may choose that."
+      },
+      {
+        "level": 3,
+        "description": "Also, they may heal 2 stress instead of activating their sanity. -- )"
+      },
+      {
+        "level": 4,
+        "description": "Instead, they may heal ALL stress instead of activating their sanity"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Arcane Mastery",
+    "Swiftness"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "pops_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

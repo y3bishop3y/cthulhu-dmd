@@ -1,7 +1,72 @@
 {
-  "name": "Margie",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "margie",
+  "name": "MARJORIE ‘MARGIE’",
+  "season": "unspeakable-box",
+  "motto": "MV AVER We VVNIEOU WT WE",
+  "story": "Marjorie Westmoreland, The Dowager Countess of Devon, is everything British aristocracy aspire to: proper, steadfast, brilliant, and decisive. In her youth, Margie, as she is andectionately known to other investigator, was something of a firebrand, learning the family business of brawling the Elder Gods pernicious influence since the stealth century, and taking to it with enthusiasm.",
+  "location": {
+    "original": "WESTMORELAND",
+    "parsed": {
+      "city": "Westmoreland",
+      "administrative_division": "Cumbria",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 54.4667,
+      "lon": -2.8333
+    }
+  },
+  "special_power": {
+    "name": "You may prevent any",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "gsc UPPER LI When you wound take wounds, you may up to 3. and lose the same number of sanity."
+      },
+      {
+        "level": 2,
+        "description": "ignore 1 QB on your rolls. oo. 6"
+      },
+      {
+        "level": 3,
+        "description": "may ignore 1 additional on your rolls"
+      },
+      {
+        "level": 4,
+        "description": "wed a number of wounds and lose the some number of sanity."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Swiftness",
+    "Brawling"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "margie_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

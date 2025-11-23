@@ -1,9 +1,71 @@
 {
-  "name": "Maxim",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "maxim",
+  "name": "MAXIM GREY",
+  "season": "unspeakable-box",
+  "motto": "If a man asks for a fight, who is to blame if he is himself destroyed?",
+  "story": "Maxim Grey wished for the quiet life of a clockmaker and tinkerer. Puttering about his shop gave him no end of peace until that fateful day when he intervened in a stress fight outside his establishment. Most investigator operate in the shadows, but all too often violence spills inté the public eye, and on this occasion, a gateway was involved. Maxim Grey was one of the few left standing when the red haze lifted from his eyes. He has slept poorly ever since.",
+  "location": {
+    "original": "CAPETOWN, SOUTH AFRICA",
+    "parsed": {
+      "city": "Cape Town",
+      "administrative_division": "Western Cape",
+      "administrative_division_type": "province",
+      "country": "South Africa",
+      "region": "Africa"
+    },
+    "coordinates": {
+      "lat": -33.9249,
+      "lon": 18.4241
+    }
+  },
+  "special_power": {
+    "name": "Instead, you may",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "DOG -- Whenever you lose I or more sanity, you may heal 1 wound to an enemy in your space."
+      },
+      {
+        "level": 2,
+        "description": "heal 1 wound to ALL enemies in your space. oo."
+      },
+      {
+        "level": 3,
+        "description": "you lose 1 or more sanity, you may heal 1 wound"
+      },
+      {
+        "level": 4,
+        "description": "NEY eee perme You may reduce loss of sanity by 1 from ANY SOURCE."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "maxim_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

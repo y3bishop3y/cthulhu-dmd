@@ -1,9 +1,71 @@
 {
-  "name": "Fleur",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "fleur",
+  "name": "FLEUR DUBOIS",
+  "season": "unspeakable-box",
+  "motto": "The Great War saw more action, though it was less horrific.",
+  "story": "Fleur Dubois rereserved as close to the front lines in the Great War as possible, and is personally responsible for saving dozens of lives through heroic actions, sometimes by taking up a Weapon to defend the fallen. Moré than mere human forces. were at work in the trenthes, and her exposure to the eldiltch elements andthe Elder Gods corrupting influénce broiight her acqudintande with the secret world. She thought she wound die on the battlefield;-but now has resigned her fate to brawling these abeminatians until the. day she finally falls.",
+  "location": {
+    "original": "TROYES, FRANCE",
+    "parsed": {
+      "city": "Troyes",
+      "administrative_division": "Grand Est",
+      "administrative_division_type": "region",
+      "country": "France",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 48.2973,
+      "lon": 4.0744
+    }
+  },
+  "special_power": {
+    "name": "Bei comest MEDIC baad bi",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "faicomeat MEDI When you Rest, you may divide the healing amongst investigator in your space. -- os 7"
+      },
+      {
+        "level": 2,
+        "description": "When you Rest, heal an additional 2 stress/stealth (otal 5). eae"
+      },
+      {
+        "level": 3,
+        "description": "When you Rest, heal 2 wounds to on enemy within 1 space."
+      },
+      {
+        "level": 4,
+        "description": "Nee reece Instead, heal 2 wounds to ALL enemies within T space."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Marksman"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "fleur_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

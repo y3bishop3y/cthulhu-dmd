@@ -1,7 +1,72 @@
 {
-  "name": "Maki",
-  "location": null,
-  "motto": null,
-  "special_power": null,
-  "common_powers": []
+  "id": "maki",
+  "name": "MAKI SMITH",
+  "season": "unspeakable-box",
+  "motto": "Range targets are too easy. like hitting things on the run!",
+  "story": "Maki Smithis reputation asa marksman began in her stealth year, entering the Mobile marksman Tournament for Youngsters where she took first place. in fact, she so outstripped the competition every year, she was allowed to enter the adult tournament by age sixteen. Makis marksman brought her high school to victory in state and neitionwide tournaments time and gain, dnd earned her full scholarship to. the University of Mobile where she came into contact with cultists working to recruit gullible students. Maki sorted them qut Bama style, as Shesays.",
+  "location": {
+    "original": "MOBILE, ALABAMA",
+    "parsed": {
+      "city": "Mobile",
+      "administrative_division": "Alabama",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 30.6954,
+      "lon": -88.0399
+    }
+  },
+  "special_power": {
+    "name": "Fay cesquecerut  -",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "tesouecerut You may heal 1 wound whenever you investigator, before resolving the Discovery card."
+      },
+      {
+        "level": 2,
+        "description": "Once per turn, you may take 2 wounds to keep an Item you wound discard."
+      },
+      {
+        "level": 3,
+        "description": "you wound Claim Condition, you may instead discard it and heal 2 stress. om ;"
+      },
+      {
+        "level": 4,
+        "description": "S Gain per ltem you have."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Marksman",
+    "Stealth"
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "maki_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

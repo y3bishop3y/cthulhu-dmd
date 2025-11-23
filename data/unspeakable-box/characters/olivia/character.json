@@ -1,9 +1,71 @@
 {
-  "name": "Olivia",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "olivia",
+  "name": "OLIVIA DUCHAMP",
+  "season": "unspeakable-box",
+  "motto": "! swear, thought that would miss.",
+  "story": "Olivia Duchamp flew against Germany in the Great War, racking up an impressive kill count, but an even more impressive record for survival. She was shot down more times than any other pilot and always walked away without a scratch. Her mishaps were nat d attack of skill, as her aerial acrobatics are without equal, but rather with enemy plands landing perfect hits. A seemingly innocuous stray.wound might cut a fuel line, or disable a flight surface. Fortunately, her incredible (un)luck holds in her investigator endeavors against the Elder Gods, often turning dismat failure ifio stunning victory.",
+  "location": {
+    "original": "PORTSMOUTH, ENGLAND",
+    "parsed": {
+      "city": "Portsmouth",
+      "administrative_division": "Hampshire",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 50.8198,
+      "lon": -1.088
+    }
+  },
+  "special_power": {
+    "name": "UNLUCKY  Vw",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "When you make a reroll that results in no successes, you may gain 1 success for each die you rolled."
+      },
+      {
+        "level": 2,
+        "description": "You may change 1 of your dice to a blank face, except when brawling against yourself."
+      },
+      {
+        "level": 3,
+        "description": "you may change up to 2 of your dice to a blank face. ng ;"
+      },
+      {
+        "level": 4,
+        "description": "Nee vusmnammeameaeste od Instead, you may change up to 3 of your dice to a blank face."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Swiftness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "olivia_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.85
+  }
 }

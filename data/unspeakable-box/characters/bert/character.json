@@ -1,15 +1,72 @@
 {
-  "name": "Bert",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "bert",
+  "name": "ALBERT EINSTEIN",
+  "season": "unspeakable-box",
+  "motto": "The cults would experience more success if they understood mathematics. No one tell them.",
+  "story": "Albert Einstein is the worlds foremost theoretical physicist, recipient of the Nobel Prize, and father of special relativity, ah entirely new branch of science. But what is less widely known is that his work on relativity related more to puzzling out the substance of the universe, and what he wound there horrified him to his soul. In his study-of the Necronomicori, Einstein discovered that mathematics lay at the core of arcanism and that magic is function of sciénce. Fortunately, most cultists have litile grasp of even basic scientific principles.",
+  "location": {
+    "original": "GENEVA, SWITZERLAND",
+    "parsed": {
+      "city": "Geneva",
+      "administrative_division": null,
+      "administrative_division_type": "canton",
+      "country": "Switzerland",
+      "region": "Europe"
+    },
+    "coordinates": {
+      "lat": 46.2044,
+      "lon": 6.1432
+    }
+  },
+  "special_power": {
+    "name": "SMARTS bad",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Fey Sants You may investigator in unsafe spaces (after Fighting the enemies)"
+      },
+      {
+        "level": 2,
+        "description": "Other investigator in your space may also investigator in unsafe spaces."
+      },
+      {
+        "level": 3,
+        "description": "After you or another Investigator in your space investigator, you heal 2 wounds. en ]"
+      },
+      {
+        "level": 4,
+        "description": "Nee nd Instead, all investigator in your space heal 2 wounds."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Arcane Mastery",
     "Toughness"
   ],
   "links": {
-    "wikipedia": "https://en.wikipedia.org/wiki/Herbert_West%E2%80%93Reanimator",
-    "grokpedia": "https://grokipedia.com/page/Herbert_West",
+    "wikipedia": "https://en.wikipedia.org/wiki/Albert_Einstein",
+    "grokpedia": null,
     "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": true,
+  "audio_file": "bert_audio_female.wav",
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.9
   }
 }

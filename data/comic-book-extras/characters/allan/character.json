@@ -1,10 +1,72 @@
 {
-  "name": "Allan",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "allan",
+  "name": "ALLAN JENKINS",
+  "season": "comic-book-extras",
+  "motto": "An investigation is conducted with purpose, and a couple of revolvers don’t hurt neither.",
+  "story": "If you spend your life investigator crime, youll encounter plenty of hard play, as they say. But Allan Jenkins figured hed be foiling plots, protecting wealthy businessmen, and investigator murders. Not poring aver arcand tomes, searchirig for mystical objects, and staring down fanatical, demon-worshiping cuttists. Yet, Allans a practical man who quickly ddeipts to each situation, He doesnt spook easy, and he gain afraid to-draw-down on the cultists and demons alike. Itll take more than a lot of wiggly-fingered mystic jutnbo to get the better of Al Jenkins!",
+  "location": {
+    "original": "NEW YORK, NEW YORK",
+    "parsed": {
+      "city": "New York City",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 40.7128,
+      "lon": -74.006
+    }
+  },
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fae] DETECTIVE After you investigator, gain 2 Detective tokens, You may discard a token to move 1 additional space during a Run."
+      },
+      {
+        "level": 2,
+        "description": "You may also discard a Detectitve token to revolt 1 die. oo 6"
+      },
+      {
+        "level": 3,
+        "description": "eamnae naman You may also discard a Detectitve token to be able to Rest in an unsafe space until the end of the turn."
+      },
+      {
+        "level": 4,
+        "description": "Nee Oe You may also discard 2 Detective tokens to perform an extra action"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Marksman",
     "Toughness"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.75
+  }
 }

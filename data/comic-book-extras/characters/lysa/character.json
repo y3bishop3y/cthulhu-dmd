@@ -1,9 +1,71 @@
 {
-  "name": "Lysa",
-  "location": null,
-  "motto": null,
-  "special_power": null,
+  "id": "lysa",
+  "name": "IVCA",
+  "season": "comic-book-extras",
+  "motto": "Malacoda is not a goat!",
+  "story": "Everyone at Last Hope arphanage considers Lysa a peculiar girl. Maybe its becausé Shes always carrying an old lantern in which she keeps the skullef a goat. Or maybe its because she calls it by names. Malacoda. lysa deesnt smile anymore. How could she after seeing her parehts die in the destruction of theif own house, attack by-horrible nionsters? However, that. terrible experiance has made Lysa/stronger, giving-het courage and. determination to take on. fhe inission of saving Last Hope from destruction. And besides, Malacoda is always there. to heal Lysa,-even In the moat desperate situdiiohis.",
+  "location": {
+    "original": "MASSACHUSETTS",
+    "parsed": {
+      "city": null,
+      "administrative_division": "Massachusetts",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
+    },
+    "coordinates": {
+      "lat": 42.4072,
+      "lon": -71.3824
+    }
+  },
+  "special_power": {
+    "name": "When rolling for",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "MALACODA If you end your turn in a safe space, make a reroll. Heal I stress or stealth for each success. (Lose sanity for af?)"
+      },
+      {
+        "level": 2,
+        "description": "only 1 enemy in your space, you are considered in.a safe space. oo 6"
+      },
+      {
+        "level": 3,
+        "description": "You may choose to not lose sanity for af using this skill, -_w"
+      },
+      {
+        "level": 4,
+        "description": "Nef need brawling for this skill, also heal 1 wound for each success to each enemy within space."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
     "Arcane Mastery"
-  ]
+  ],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg",
+      "webp": null
+    },
+    "back": {
+      "jpg": "back.jpg",
+      "webp": null
+    }
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.7
+  }
 }
