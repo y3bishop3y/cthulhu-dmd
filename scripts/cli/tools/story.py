@@ -336,7 +336,7 @@ def main(
         console.print(f"\n[green]Found character: {character_name}[/green]")
     else:
         full_text = story_text
-        console.print(f"\n[green]Found story for {character}[/green]")
+    console.print(f"\n[green]Found story for {character}[/green]")
     
     console.print(f"[dim]Text length: {len(full_text)} characters[/dim]")
 

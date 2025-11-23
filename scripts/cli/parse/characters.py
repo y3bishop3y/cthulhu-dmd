@@ -633,7 +633,7 @@ def parse_character_images(
         Tuple of (CharacterData, list of issues)
     """
     if not quiet:
-        console.print("[cyan]Parsing images for character...[/cyan]")
+    console.print("[cyan]Parsing images for character...[/cyan]")
 
     # Extract text from images
     if use_optimal_strategies:
@@ -647,10 +647,10 @@ def parse_character_images(
     # Validate extraction results
     if not front_text:
         if not quiet:
-            console.print("[yellow]Warning: No text extracted from front image[/yellow]")
+        console.print("[yellow]Warning: No text extracted from front image[/yellow]")
     if not back_text:
         if not quiet:
-            console.print("[yellow]Warning: No text extracted from back image[/yellow]")
+        console.print("[yellow]Warning: No text extracted from back image[/yellow]")
 
     # Load HTML-extracted story if available
     story_text = _load_story_from_file(story_file, quiet)
@@ -1018,7 +1018,7 @@ def main(
                 if verify:
                     result = _process_character_verify(
                         char_dir, front_path, back_path, use_optimal_strategies
-                    )
+                )
                     parsing_results.append(result)
                 else:
                     _process_character_normal(

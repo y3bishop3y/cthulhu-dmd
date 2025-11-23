@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cthulhu: Death May Die - Character Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        /* Custom styles for sidebar */
+        .sidebar-item {
+            transition: background-color 0.2s;
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-item.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .submenu.open {
+            max-height: 1000px;
+        }
+        
+        /* Theme variables */
+        :root {
+            --theme-primary: #10b981; /* Green (default) */
+            --theme-primary-hover: #059669;
+            --theme-primary-light: #34d399;
+        }
+        
+        /* Theme classes */
+        .theme-green {
+            --theme-primary: #10b981;
+            --theme-primary-hover: #059669;
+            --theme-primary-light: #34d399;
+        }
+        
+        .theme-yellow {
+            --theme-primary: #eab308;
+            --theme-primary-hover: #ca8a04;
+            --theme-primary-light: #fde047;
+        }
+        
+        .theme-purple {
+            --theme-primary: #a855f7;
+            --theme-primary-hover: #9333ea;
+            --theme-primary-light: #c084fc;
+        }
+        
+        .theme-red {
+            --theme-primary: #ef4444;
+            --theme-primary-hover: #dc2626;
+            --theme-primary-light: #f87171;
+        }
+        
+        .theme-blue {
+            --theme-primary: #3b82f6;
+            --theme-primary-hover: #2563eb;
+            --theme-primary-light: #60a5fa;
+        }
+        
+        .theme-cyan {
+            --theme-primary: #06b6d4;
+            --theme-primary-hover: #0891b2;
+            --theme-primary-light: #22d3ee;
+        }
+        
+        /* Apply theme colors */
+        .text-primary {
+            color: var(--theme-primary) !important;
+        }
+        
+        .bg-primary {
+            background-color: var(--theme-primary) !important;
+        }
+        
+        .border-primary {
+            border-color: var(--theme-primary) !important;
+        }
+        
+        .hover\:text-primary:hover {
+            color: var(--theme-primary-hover) !important;
+        }
+        
+        .hover\:border-primary:hover {
+            border-color: var(--theme-primary) !important;
+        }
+        
+        /* Make sure theme applies to all primary-colored elements with high specificity */
+        body.theme-green .text-primary,
+        body.theme-green h1.text-primary,
+        body.theme-green h2.text-primary,
+        body.theme-green h3.text-primary,
+        body.theme-green a.text-primary { 
+            color: #10b981 !important; 
+        }
+        body.theme-green .hover\:text-primary:hover { color: #059669 !important; }
+        body.theme-green .border-primary,
+        body.theme-green .hover\:border-primary:hover { border-color: #10b981 !important; }
+        
+        body.theme-yellow .text-primary,
+        body.theme-yellow h1.text-primary,
+        body.theme-yellow h2.text-primary,
+        body.theme-yellow h3.text-primary,
+        body.theme-yellow a.text-primary { 
+            color: #eab308 !important; 
+        }
+        body.theme-yellow .hover\:text-primary:hover { color: #ca8a04 !important; }
+        body.theme-yellow .border-primary,
+        body.theme-yellow .hover\:border-primary:hover { border-color: #eab308 !important; }
+        
+        body.theme-purple .text-primary,
+        body.theme-purple h1.text-primary,
+        body.theme-purple h2.text-primary,
+        body.theme-purple h3.text-primary,
+        body.theme-purple a.text-primary { 
+            color: #a855f7 !important; 
+        }
+        body.theme-purple .hover\:text-primary:hover { color: #9333ea !important; }
+        body.theme-purple .border-primary,
+        body.theme-purple .hover\:border-primary:hover { border-color: #a855f7 !important; }
+        
+        body.theme-red .text-primary,
+        body.theme-red h1.text-primary,
+        body.theme-red h2.text-primary,
+        body.theme-red h3.text-primary,
+        body.theme-red a.text-primary { 
+            color: #ef4444 !important; 
+        }
+        body.theme-red .hover\:text-primary:hover { color: #dc2626 !important; }
+        body.theme-red .border-primary,
+        body.theme-red .hover\:border-primary:hover { border-color: #ef4444 !important; }
+        
+        body.theme-blue .text-primary,
+        body.theme-blue h1.text-primary,
+        body.theme-blue h2.text-primary,
+        body.theme-blue h3.text-primary,
+        body.theme-blue a.text-primary { 
+            color: #3b82f6 !important; 
+        }
+        body.theme-blue .hover\:text-primary:hover { color: #2563eb !important; }
+        body.theme-blue .border-primary,
+        body.theme-blue .hover\:border-primary:hover { border-color: #3b82f6 !important; }
+        
+        body.theme-cyan .text-primary,
+        body.theme-cyan h1.text-primary,
+        body.theme-cyan h2.text-primary,
+        body.theme-cyan h3.text-primary,
+        body.theme-cyan a.text-primary { 
+            color: #06b6d4 !important; 
+        }
+        body.theme-cyan .hover\:text-primary:hover { color: #0891b2 !important; }
+        body.theme-cyan .border-primary,
+        body.theme-cyan .hover\:border-primary:hover { border-color: #06b6d4 !important; }
+        
+        /* Leaflet map styling */
+        .leaflet-container {
+            background: #f3f4f6 !important;
+        }
+        .leaflet-popup-content-wrapper {
+            background: #ffffff !important;
+            color: #1f2937 !important;
+            border: 1px solid #e5e7eb !important;
+        }
+        .leaflet-popup-tip {
+            background: #ffffff !important;
+        }
+        .leaflet-popup-content strong {
+            color: var(--theme-primary) !important;
+        }
+        
+        /* Sortable table styles */
+        .sort-indicator {
+            font-size: 0.75rem;
+            margin-left: 0.25rem;
+            opacity: 0.6;
+        }
+        th.cursor-pointer:hover .sort-indicator {
+            opacity: 1;
+        }
+    </style>
+</head>
+    <body class="bg-gray-900 text-white min-h-screen theme-green">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 border-r border-gray-700 flex flex-col">
+            <div class="p-4 border-b border-gray-700">
+                <a href="index.html" class="block hover:opacity-80 transition-opacity">
+                    <h1 class="text-xl font-bold text-primary">Cthulhu: DMD</h1>
+                    <p class="text-sm text-gray-400">Character Database</p>
+                </a>
+                
+                <!-- Theme Selector -->
+                <div class="mt-4">
+                    <label for="theme-selector" class="block text-xs text-gray-400 mb-1">Theme</label>
+                    <select 
+                        id="theme-selector" 
+                        class="w-full bg-gray-700 text-white text-sm rounded px-2 py-1 border border-gray-600 focus:outline-none focus:border-primary"
+                        onchange="changeTheme(this.value)"
+                    >
+                        <option value="green">Green (Cthulhu)</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="purple">Purple</option>
+                        <option value="red">Red</option>
+                        <option value="blue">Blue</option>
+                        <option value="cyan">Cyan</option>
+                    </select>
+                </div>
+            </div>
+            
+            <nav class="flex-1 overflow-y-auto p-2">
+                <!-- Seasons Category -->
+                <div class="mb-2">
+                    <button 
+                        id="seasons-toggle"
+                        class="w-full sidebar-item flex items-center justify-between p-2 rounded text-left font-semibold text-primary hover:bg-gray-700"
+                        onclick="toggleSubmenu('seasons-submenu', 'seasons-toggle')"
+                    >
+                        <span>Seasons</span>
+                        <span id="seasons-arrow" class="text-gray-400">▼</span>
+                    </button>
+                    <div id="seasons-submenu" class="submenu ml-4 mt-1">
+                        <!-- Seasons will be populated by JavaScript -->
+                    </div>
+                </div>
+                
+                <!-- More categories will be added here -->
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <div id="content">
+                <h2 class="text-3xl font-bold mb-6 text-primary">Welcome</h2>
+                <p class="text-gray-300">Select a season from the sidebar to view characters.</p>
+            </div>
+        </main>
+    </div>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>
+
