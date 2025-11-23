@@ -31,7 +31,10 @@
     "Romania": "county",
     "Ireland": "county",
     "Haiti": "department",
-    "Australia": "state"
+    "Australia": "state",
+    "Switzerland": "canton",
+    "Brazil": "state",
+    "South Africa": "province"
   },
   
   "country_to_region": {
@@ -58,7 +61,11 @@
     "Argentina": "South America",
     "Romania": "Europe",
     "Ireland": "Europe",
-    "Haiti": "Caribbean"
+    "Haiti": "Caribbean",
+    "Switzerland": "Europe",
+    "Brazil": "South America",
+    "South Africa": "Africa",
+    "Northern Ireland": "Europe"
   },
   
   "us_states": [
@@ -241,6 +248,177 @@
       "region": "North America",
       "lat": 40.7128,
       "lon": -74.0060
+    },
+    "NEW YORK, NEW YORK": {
+      "city": "New York City",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 40.7128,
+      "lon": -74.0060
+    },
+    "CHICAGO, ILLINOIS": {
+      "city": "Chicago",
+      "administrative_division": "Illinois",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 41.8781,
+      "lon": -87.6298
+    },
+    "GENEVA, SWITZERLAND": {
+      "city": "Geneva",
+      "administrative_division": null,
+      "administrative_division_type": "canton",
+      "country": "Switzerland",
+      "region": "Europe",
+      "lat": 46.2044,
+      "lon": 6.1432
+    },
+    "TROYES, FRANCE": {
+      "city": "Troyes",
+      "administrative_division": "Grand Est",
+      "administrative_division_type": "region",
+      "country": "France",
+      "region": "Europe",
+      "lat": 48.2973,
+      "lon": 4.0744
+    },
+    "SALVADOR, BRAZIL": {
+      "city": "Salvador",
+      "administrative_division": "Bahia",
+      "administrative_division_type": "state",
+      "country": "Brazil",
+      "region": "South America",
+      "lat": -12.9714,
+      "lon": -38.5014
+    },
+    "PARIS, FRANCE": {
+      "city": "Paris",
+      "administrative_division": "Île-de-France",
+      "administrative_division_type": "region",
+      "country": "France",
+      "region": "Europe",
+      "lat": 48.8566,
+      "lon": 2.3522
+    },
+    "LEEDS, ENGLAND": {
+      "city": "Leeds",
+      "administrative_division": "West Yorkshire",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe",
+      "lat": 53.8008,
+      "lon": -1.5491
+    },
+    "MOBILE, ALABAMA": {
+      "city": "Mobile",
+      "administrative_division": "Alabama",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 30.6954,
+      "lon": -88.0399
+    },
+    "CAPETOWN, SOUTH AFRICA": {
+      "city": "Cape Town",
+      "administrative_division": "Western Cape",
+      "administrative_division_type": "province",
+      "country": "South Africa",
+      "region": "Africa",
+      "lat": -33.9249,
+      "lon": 18.4241
+    },
+    "HOLLYWOOD, CALIFORNIA": {
+      "city": "Hollywood",
+      "administrative_division": "California",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 34.0928,
+      "lon": -118.3287
+    },
+    "PORTSMOUTH, ENGLAND": {
+      "city": "Portsmouth",
+      "administrative_division": "Hampshire",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe",
+      "lat": 50.8198,
+      "lon": -1.0880
+    },
+    "AVOCA ISLAND, LOUISIANA": {
+      "city": "Avoca Island",
+      "administrative_division": "Louisiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 29.7833,
+      "lon": -91.5167
+    },
+    "HARLEM, NEW YORK": {
+      "city": "Harlem",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 40.8075,
+      "lon": -73.9625
+    },
+    "BELFAST, NORTHERN IRELAND": {
+      "city": "Belfast",
+      "administrative_division": "Northern Ireland",
+      "administrative_division_type": "county",
+      "country": "Northern Ireland",
+      "region": "Europe",
+      "lat": 54.5973,
+      "lon": -5.9301
+    },
+    "WESTMORELAND": {
+      "city": "Westmoreland",
+      "administrative_division": "Cumbria",
+      "administrative_division_type": "county",
+      "country": "England",
+      "region": "Europe",
+      "lat": 54.4667,
+      "lon": -2.8333
+    },
+    "MASSACHUSETTS": {
+      "city": null,
+      "administrative_division": "Massachusetts",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 42.4072,
+      "lon": -71.3824
+    },
+    "MILAN, ITALY": {
+      "city": "Milan",
+      "administrative_division": "Lombardy",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe",
+      "lat": 45.4642,
+      "lon": 9.1900
+    },
+    "PROVIDENCE, RHODE ISLAND": {
+      "city": "Providence",
+      "administrative_division": "Rhode Island",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 41.8240,
+      "lon": -71.4128
+    },
+    "NEW ORLEANS, LOUISIANA": {
+      "city": "New Orleans",
+      "administrative_division": "Louisiana",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America",
+      "lat": 29.9511,
+      "lon": -90.0715
     },
     "UNKNOWN": {
       "city": null,
