@@ -1,22 +1,49 @@
 {
   "id": "adilah",
-  "name": "Adilah",
+  "name": "ADILAH VIDAL",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Magic and religion are the same. You cannot do one without tother.",
+  "story": "Adilah Vidal isa gifted Vodou priestess and fierce quardian against the horrors that exist out of mankinds sight and mind. Her rituals may seem strange to the modern eye, but investigator have long-since learned to value diverse beliefs and practices. Anything that aids the fight against the cults and their horrific gods is welcome whether that be a chicken-claw clutching a pouch of herbs or.a crucifix dipped in althemical ink. Adilahis protective wards have saved more than one investigator life, often at-d cost to herself that she pays without hesitation.",
   "location": {
-    "original": null,
+    "original": "LES CAYES, HAITI",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Les Cayes",
+      "administrative_division": "Sud",
+      "administrative_division_type": "department",
+      "country": "Haiti",
+      "region": "Caribbean"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 18.2,
+      "lon": -73.75
+    }
   },
-  "special_power": null,
+  "special_power": {
+    "name": "Bvorce ww WS YS ws",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Fad vopou Name an investigator as your Fecus at the beginning of the game. Whenever one of you Rests, the other heal 1 wound or stress. --"
+      },
+      {
+        "level": 2,
+        "description": "Instead, fhe other heal 3 wounds/ stress as if they were Resting"
+      },
+      {
+        "level": 3,
+        "description": "When your Focus vould take a wound, you may take that wound instead and heal T stress. -w"
+      },
+      {
+        "level": 4,
+        "description": "seamed When your Focus would die, you may toke 2 wounds to keep them alive with T stealth."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
+    "Arcane Mastery",
     "Brawling"
   ],
   "links": {
@@ -34,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "adilah_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.4
+    "completeness": 0.85
   }
 }

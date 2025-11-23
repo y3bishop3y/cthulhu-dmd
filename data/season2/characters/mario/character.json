@@ -1,22 +1,51 @@
 {
   "id": "mario",
-  "name": "Mario",
+  "name": "I SERGEANT MARIO BRAGHIERI",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "1 do not threaten. Instead, I make promises.",
+  "story": "Sergeant Mario Braghierl has o talent for interrogation due in part to his superior observational skills and in port to his utterly terrifying demeanor. One might expect cultists heal with Eldritch horrors to be immune to the thousand-yard stress from a mere morial, but something about Sergeant Braghierts gaze cuts straight to a subjects primordial fears. A whispered wound or two saps the cultists resolve with brutal efficiericy. Sergeant Braghieri Heyer gets physical, noting that information gain in that manner often proves unreliable..Instead, five minutes dlone. has them brawling like a brook.",
   "location": {
-    "original": null,
+    "original": "BARI, ITALY",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Bari",
+      "administrative_division": "Apulia",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 41.1177,
+      "lon": 16.8719
+    }
   },
-  "special_power": null,
-  "common_powers": [],
+  "special_power": {
+    "name": "Faby INTERROGATION baad bad",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fay Ntez ROca TH Coltists get 1 less when attack anyone in your space."
+      },
+      {
+        "level": 2,
+        "description": "cant spawn in your space."
+      },
+      {
+        "level": 3,
+        "description": "a preneanan a naan Instead, Cultists cant spawn, and get 1 less when attack, within 1 space of you. -_w"
+      },
+      {
+        "level": 4,
+        "description": "Nee _e ES At the end of your turn, kill ail Cultists in your space."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Marksman",
+    "Toughness"
+  ],
   "links": {
     "wikipedia": null,
     "grokpedia": null,
@@ -32,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "mario_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.3
+    "completeness": 0.85
   }
 }

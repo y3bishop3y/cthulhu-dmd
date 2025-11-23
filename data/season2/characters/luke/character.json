@@ -1,23 +1,50 @@
 {
   "id": "luke",
-  "name": "Luke",
+  "name": "FATHER LUKE",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Vengeance belongs to the Lord, lad. Let me show you.",
+  "story": "Father Luke never intended to be Gods terrible sword, but he finds the life suits him. As a shepherd of his tiny flock in the village of Lismore, he became aware of a gain movement towards oceultism among his congregation. Little oceurs that remains hidden in such small communities, and a few sudden disappearances aroused his suspicion. He expected something nefarious. when he investigator. He did not expect something-so horrific.",
   "location": {
-    "original": null,
+    "original": "LISMORE, IRELAND",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Lismore",
+      "administrative_division": "Waterford",
+      "administrative_division_type": "county",
+      "country": "Ireland",
+      "region": "Europe"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 52.1375,
+      "lon": -7.9333
+    }
   },
-  "special_power": null,
+  "special_power": {
+    "name": "When you attack,",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Fey Sct EVIL eee You may ignore monster abilities."
+      },
+      {
+        "level": 2,
+        "description": "Gain OO wren attack monsters. ne (C"
+      },
+      {
+        "level": 3,
+        "description": "asaneeeeeenmem you attack, you may target ANY NUMBER of monsters in your space split the wounds as you like)"
+      },
+      {
+        "level": 4,
+        "description": "Nee REED you kill monster, heal all your stress and wounds"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
-    "Toughness"
+    "Swiftness",
+    "Stealth"
   ],
   "links": {
     "wikipedia": null,
@@ -34,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "luke_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.4
+    "completeness": 0.85
   }
 }

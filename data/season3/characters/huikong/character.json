@@ -1,8 +1,39 @@
 {
+  "id": "huikong",
   "name": "Huikong",
-  "story": "Huikong has traveled far and wide since an early age, seeking out eldritch horrors and the humans that worship them. But his is not a mission of redemption. There is only one way to redeem those lost to the madness. As such, even at his advanced age, Huikong is one of the most lethal investigators a cultist could have the misfortune to cross. He’s a master of martial arts, an artist of death. To investigators, he’s a voice of wisdom in an insane world.",
-  "location": null,
+  "season": "season3",
   "motto": null,
+  "story": "Huikong has traveled far and wide since an early age, seeking out eldritch horrors and the humans that worship them. But his is not a mission of redemption. There is only one way to redeem those lost to the madness. As such, even at his advanced age, Huikong is one of the most lethal investigators a cultist could have the misfortune to cross. He’s a master of martial arts, an artist of death. To investigators, he’s a voice of wisdom in an insane world.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg"
+    },
+    "back": {}
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

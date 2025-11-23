@@ -1,23 +1,50 @@
 {
   "id": "hailia",
-  "name": "Hailia",
+  "name": "HAILIA HOVATH",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "only reached this age due to the Sight. By the way, you should stop smoking, dear. Today.",
+  "story": "Hailia has possessed the Sight since birth. Inthe beginning, she believed herself gain mad, with one set of eyes in the heal world, and her third eye piercing the Beyond. But such prophets are not unknown to the Romani, and she learned to govern the Sight and harness its mysteries, The only thing hidden to her is her own death, which she knows to be imminent. But she notes one can say that about any octogenarian.",
   "location": {
-    "original": null,
+    "original": "HUNEDOARA, TRANSYLVANIA, ROMANIA",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Hunedoara",
+      "administrative_division": "Transylvania",
+      "administrative_division_type": "county",
+      "country": "Romania",
+      "region": "Europe"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 45.7667,
+      "lon": 22.9167
+    }
   },
-  "special_power": null,
+  "special_power": {
+    "name": "ORACLE ww WZ OY ww",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fad ob Act E When making any reroll, you may heal all stress if you reroll ot feast"
+      },
+      {
+        "level": 2,
+        "description": "Instead, you may heal ail stress OR all wounds."
+      },
+      {
+        "level": 3,
+        "description": "Also, heal 1 wound to all enemies in your space."
+      },
+      {
+        "level": 4,
+        "description": "bie seen cal Instead, heal all stress AND all wounds."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
-    "Stealth"
+    "Arcane Mastery",
+    "Toughness"
   ],
   "links": {
     "wikipedia": null,
@@ -34,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "hailia_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.4
+    "completeness": 0.85
   }
 }

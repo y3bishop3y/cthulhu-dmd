@@ -1,8 +1,39 @@
 {
+  "id": "leon",
   "name": "Leon",
-  "story": "Leon was a soldier in the Great War, an officer and gentleman, fighting alongside the British who awarded him the Medal of Honor three times. He’s got two Congressional Medals of Honor, several medals from the French, and the Kaiser personally put a bounty on Leon’s head… Or rather, this is what Leon says about himself. Most don’t believe him and that’s probably wise. That said, he really does seem to know his stuff when it comes to a fight. But, his boasts always come down with a wink and a smile, so there’s really no harm in it.",
-  "location": null,
+  "season": "season3",
   "motto": null,
+  "story": "Leon was a soldier in the Great War, an officer and gentleman, fighting alongside the British who awarded him the Medal of Honor three times. He’s got two Congressional Medals of Honor, several medals from the French, and the Kaiser personally put a bounty on Leon’s head… Or rather, this is what Leon says about himself. Most don’t believe him and that’s probably wise. That said, he really does seem to know his stuff when it comes to a fight. But, his boasts always come down with a wink and a smile, so there’s really no harm in it.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg"
+    },
+    "back": {}
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

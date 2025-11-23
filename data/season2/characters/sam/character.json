@@ -1,22 +1,51 @@
 {
   "id": "sam",
-  "name": "Sam",
+  "name": "Unknown",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Don’t let these varmints trouble you none. Ain’t nothin’ we can’t sort out.",
+  "story": "if theres a pfacid center to the universe, its Sam wound. Asa Kansas farmer, the life of an occult investigator was the lost thing he ever expected. But, when his family was slaughtered and the farm burned at the hands of cultists, he figured a change of brawling was needed. One might expect Sam to be a cauldron of rage, but he channeled all that away long ago. What remains is a man of few wound and instead resolve; certain that whén he dies, heal-see his family gain,",
   "location": {
-    "original": null,
+    "original": "WICHITA, KANSAS",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Wichita",
+      "administrative_division": "Kansas",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 37.6872,
+      "lon": -97.3301
+    }
   },
-  "special_power": null,
-  "common_powers": [],
+  "special_power": {
+    "name": "CALM ww WO OS ew",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "i. When you Rest, heal 1 additional stress."
+      },
+      {
+        "level": 2,
+        "description": "You may Rest in an Unsafe space."
+      },
+      {
+        "level": 3,
+        "description": "When you Rest, also heal I additional wound."
+      },
+      {
+        "level": 4,
+        "description": "Nee ean a You have 1 free rest action each turn."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Swiftness",
+    "Brawling"
+  ],
   "links": {
     "wikipedia": null,
     "grokpedia": null,
@@ -32,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "sam_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.3
+    "completeness": 0.85
   }
 }

@@ -1,22 +1,49 @@
 {
   "id": "tony",
-  "name": "Tony",
+  "name": "MACHINIST’S",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "North is to your right. ...Your other right.",
+  "story": "While Tony learned only the machinists trade in the Navy, he always had a gift for direction and mathematics, and seemed a.shoe-in for officer candidacy school. Life went sideways when his ship encountered an anomalous island while steaming hame from Europe, appearing on no. current charts. Upon investigator, the landing party unleashed something horrible.-Details of the event are classified; but Toriys Iffe was forever changed. Theres a secret war-out there, dnd Tony is sworn to battle all enemies, foreign and domestic.",
   "location": {
-    "original": null,
+    "original": "New York City, New York",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "New York City",
+      "administrative_division": "New York",
+      "administrative_division_type": "state",
+      "country": "USA",
+      "region": "North America"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 40.7128,
+      "lon": -74.006
+    }
   },
-  "special_power": null,
+  "special_power": {
+    "name": "Big NAvication vv",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "fig NAvisation ; When you Run, you may move 2 additional spaces if you started in a Safe space."
+      },
+      {
+        "level": 2,
+        "description": "you may always move 2 additional spaces and ignore Fire."
+      },
+      {
+        "level": 3,
+        "description": "When you Run, heal 2 stress."
+      },
+      {
+        "level": 4,
+        "description": "eee When you Run, move any number of spaces. Ignore Fire and enemies dont fallow you. Lae"
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
+    "Arcane Mastery",
     "Toughness"
   ],
   "links": {
@@ -34,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "tony_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.4
+    "completeness": 0.85
   }
 }

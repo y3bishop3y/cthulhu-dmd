@@ -1,8 +1,39 @@
 {
+  "id": "peters",
   "name": "Peters",
-  "story": "Peters was a doctor at a mental institution, though not a psychologist. And place that houses wards of the state needs a physician and surgeon on hand. Luckily, Peters does both. But, more and more, the ravings coming out of some patients’ mouths began to make some sense. He started to worry about his own mental health until he discovered that a cult had taken control of the facility. When they came for him, he was ready. He’s sworn an oath to do no harm, but he doesn’t feel that applies to cultists or monsters.",
-  "location": null,
+  "season": "season3",
   "motto": null,
+  "story": "Peters was a doctor at a mental institution, though not a psychologist. And place that houses wards of the state needs a physician and surgeon on hand. Luckily, Peters does both. But, more and more, the ravings coming out of some patients’ mouths began to make some sense. He started to worry about his own mental health until he discovered that a cult had taken control of the facility. When they came for him, he was ready. He’s sworn an oath to do no harm, but he doesn’t feel that applies to cultists or monsters.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg"
+    },
+    "back": {}
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }

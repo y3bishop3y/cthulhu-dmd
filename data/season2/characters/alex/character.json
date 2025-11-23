@@ -1,22 +1,51 @@
 {
   "id": "alex",
-  "name": "Alex",
+  "name": "ALEX PARKER",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Tell me abaut this slime you found. Was it screaming or did it smell purple?",
+  "story": "gain up, Alexs family called him curious, though this may have been an understatement. There was no puzzle or enigma that wound draw Alex into its rabbit hole, sometimes. for monthis at a time. Early on, he took an interest_in.crime, and was more than onge sanctioned (arid rewarded) bythe: locdl police department for his interference (arid. assistance) invcriminal matters. His life-as-professiohal investigator tock a bizarre but fascinating turn when he.",
   "location": {
-    "original": null,
+    "original": "BRISBANE, AUSTRALIA",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Brisbane",
+      "administrative_division": "Queensland",
+      "administrative_division_type": "state",
+      "country": "Australia",
+      "region": "Oceania"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": -27.4698,
+      "lon": 153.0251
+    }
   },
-  "special_power": null,
-  "common_powers": [],
+  "special_power": {
+    "name": "Once per turn, after",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "iby Sureesteuts You may heal 1 stress when you draw a Discovery card, before resolving it."
+      },
+      {
+        "level": 2,
+        "description": "Instead, you may heal 2 stress."
+      },
+      {
+        "level": 3,
+        "description": "Instead, you may heal all stress."
+      },
+      {
+        "level": 4,
+        "description": "investigator, you may investigator gain, if able."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Stealth",
+    "Arcane Mastery"
+  ],
   "links": {
     "wikipedia": null,
     "grokpedia": null,
@@ -32,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "alex_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.3
+    "completeness": 0.85
   }
 }

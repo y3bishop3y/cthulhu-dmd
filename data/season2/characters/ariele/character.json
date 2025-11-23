@@ -1,23 +1,50 @@
 {
   "id": "ariele",
-  "name": "Ariele",
+  "name": "ARIELE VENTURI",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Lions, sharks, elephants... BORING! Gimme something that hunts back.",
+  "story": "Ariele Venturi took her first trophy in Africa at the age of thirteen. Since then, no game has been too big, no challenge too great. Across the world, and even across the seas, Shes hunted everything from tions, elephants, and tigers to giant squid and sharks. Yet one expedition to the deepst Congo brought her instead contact with the hidden world. Modern wildlife pales in comparis on to.the errors of the Eldritch world and the.thrill of stalking those abominations: which only see mankind as helpless prey.",
   "location": {
-    "original": null,
+    "original": "NAPOLI ITALY",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Naples",
+      "administrative_division": "Campania",
+      "administrative_division_type": "region",
+      "country": "Italy",
+      "region": "Europe"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 40.8518,
+      "lon": 14.2681
+    }
   },
-  "special_power": null,
+  "special_power": {
+    "name": "STRONG",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "Name a favored non-Elder One enemy at the start of the game. You gain when attack it."
+      },
+      {
+        "level": 2,
+        "description": "NTER ad Your favored enemy rolls 2 dice less of your choice when attack you."
+      },
+      {
+        "level": 3,
+        "description": "You have 2 free rerolllllls when attack your favored enemy. -.-)d"
+      },
+      {
+        "level": 4,
+        "description": "wee Se Choose second favored non-Elder One enemy."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
   "common_powers": [
-    "Stealth"
+    "Marksman",
+    "Arcane Mastery"
   ],
   "links": {
     "wikipedia": null,
@@ -34,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "ariele_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.4
+    "completeness": 0.85
   }
 }

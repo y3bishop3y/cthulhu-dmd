@@ -1,22 +1,51 @@
 {
   "id": "margarethe",
-  "name": "Margarethe",
+  "name": "MARGARETHE RICHTER",
   "season": "season2",
-  "motto": null,
-  "story": null,
+  "motto": "Hf the meat is too tough, you just need a sharper knife.",
+  "story": "Margarethe Richter was a paleoanthropologist and celebrity thef with a specialty in ancient food preparation and di Shes, Her exotic cuisines raised her to renown acress Europe, where di Shes from the ancient world graced. modern dining tables, sometimes for the first time in millennia. Finding these recipes took her to ruins and digs. across. the world and, inevitably, into contact with blasphemous secrets and otherworldly occultism practiced before mankind walked-upright. Shes retired from the spotlight, but still delights in exotic di Shes,.",
   "location": {
-    "original": null,
+    "original": "MUNICH, GERMANY",
     "parsed": {
-      "city": null,
-      "administrative_division": null,
-      "administrative_division_type": null,
-      "country": null,
-      "region": null
+      "city": "Munich",
+      "administrative_division": "Bavaria",
+      "administrative_division_type": "state",
+      "country": "Germany",
+      "region": "Europe"
     },
-    "coordinates": null
+    "coordinates": {
+      "lat": 48.1351,
+      "lon": 11.582
+    }
   },
-  "special_power": null,
-  "common_powers": [],
+  "special_power": {
+    "name": "Fay curcuee Y vw",
+    "is_special": true,
+    "levels": [
+      {
+        "level": 1,
+        "description": "pag urcee You may add and to any of your rolls."
+      },
+      {
+        "level": 2,
+        "description": "4 Instead, you may odd af AND J success."
+      },
+      {
+        "level": 3,
+        "description": "Instead, you may add andafp AND 2 successes."
+      },
+      {
+        "level": 4,
+        "description": "- Instead, you may odd apap AND 3 successes."
+      }
+    ],
+    "has_levels": true,
+    "is_complete": true
+  },
+  "common_powers": [
+    "Toughness",
+    "Arcane Mastery"
+  ],
   "links": {
     "wikipedia": null,
     "grokpedia": null,
@@ -32,12 +61,12 @@
       "webp": null
     }
   },
-  "has_audio": false,
-  "audio_file": null,
+  "has_audio": true,
+  "audio_file": "margarethe_audio_female.wav",
   "metadata": {
     "extracted_date": null,
     "last_updated": "2025-11-22",
     "data_source": "ocr",
-    "completeness": 0.3
+    "completeness": 0.85
   }
 }

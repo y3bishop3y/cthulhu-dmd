@@ -1,8 +1,39 @@
 {
+  "id": "ruth",
   "name": "Ruth",
-  "story": "Aa freelance investigative reporter, Ruth finds herself looking into the most unusual situations. From Organized crime to shady politicians, and even was profiteering, Ruth has seen it all. Or rather, thought she had until she looked into a so-called cult in a small town on the East Coast. What she found was… well, you probably get the idea. Over the years, Ruth has found it advantageous to see without being seen. To her pleasant surprise, these creatures of night and darkness are usually just as oblivious to a knife in the dark as normal people are.",
-  "location": null,
+  "season": "season3",
   "motto": null,
+  "story": "Aa freelance investigative reporter, Ruth finds herself looking into the most unusual situations. From Organized crime to shady politicians, and even was profiteering, Ruth has seen it all. Or rather, thought she had until she looked into a so-called cult in a small town on the East Coast. What she found was… well, you probably get the idea. Over the years, Ruth has found it advantageous to see without being seen. To her pleasant surprise, these creatures of night and darkness are usually just as oblivious to a knife in the dark as normal people are.",
+  "location": {
+    "original": null,
+    "parsed": {
+      "city": null,
+      "administrative_division": null,
+      "administrative_division_type": null,
+      "country": null,
+      "region": null
+    },
+    "coordinates": null
+  },
   "special_power": null,
-  "common_powers": []
+  "common_powers": [],
+  "links": {
+    "wikipedia": null,
+    "grokpedia": null,
+    "other": []
+  },
+  "images": {
+    "front": {
+      "jpg": "front.jpg"
+    },
+    "back": {}
+  },
+  "has_audio": false,
+  "audio_file": null,
+  "metadata": {
+    "extracted_date": null,
+    "last_updated": "2025-11-22",
+    "data_source": "ocr",
+    "completeness": 0.6
+  }
 }
